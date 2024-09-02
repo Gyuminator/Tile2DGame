@@ -5,6 +5,15 @@ VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tile2DGame_Engine", "Tile2DGame_Engine\Tile2DGame_Engine.vcxproj", "{3133B3EE-5DAA-41C8-8458-0B95B9EB8B6B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tile2DGame_Client", "Tile2DGame_Client\Tile2DGame_Client.vcxproj", "{3C356335-1DDE-483B-AF56-83A1174FE5B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BEE15431-6871-4134-A711-4CFA9AF68615} = {BEE15431-6871-4134-A711-4CFA9AF68615}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tile2DGame_SOURCE", "Tile2DGame_SOURCE\Tile2DGame_SOURCE.vcxitems", "{DE798633-5F9F-4394-A29D-80964A70B8F8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tile2DGame_Lib", "Tile2DGame_Lib\Tile2DGame_Lib.vcxproj", "{BEE15431-6871-4134-A711-4CFA9AF68615}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,11 +30,31 @@ Global
 		{3133B3EE-5DAA-41C8-8458-0B95B9EB8B6B}.Release|x64.Build.0 = Release|x64
 		{3133B3EE-5DAA-41C8-8458-0B95B9EB8B6B}.Release|x86.ActiveCfg = Release|Win32
 		{3133B3EE-5DAA-41C8-8458-0B95B9EB8B6B}.Release|x86.Build.0 = Release|Win32
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Debug|x64.ActiveCfg = Debug|x64
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Debug|x64.Build.0 = Debug|x64
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Debug|x86.Build.0 = Debug|Win32
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Release|x64.ActiveCfg = Release|x64
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Release|x64.Build.0 = Release|x64
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Release|x86.ActiveCfg = Release|Win32
+		{3C356335-1DDE-483B-AF56-83A1174FE5B6}.Release|x86.Build.0 = Release|Win32
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Debug|x64.ActiveCfg = Debug|x64
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Debug|x64.Build.0 = Debug|x64
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Debug|x86.ActiveCfg = Debug|Win32
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Debug|x86.Build.0 = Debug|Win32
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Release|x64.ActiveCfg = Release|x64
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Release|x64.Build.0 = Release|x64
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Release|x86.ActiveCfg = Release|Win32
+		{BEE15431-6871-4134-A711-4CFA9AF68615}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F12AE7C-D747-4108-8425-96BE2AD543FC}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Tile2DGame_SOURCE\Tile2DGame_SOURCE.vcxitems*{bee15431-6871-4134-a711-4cfa9af68615}*SharedItemsImports = 4
+		Tile2DGame_SOURCE\Tile2DGame_SOURCE.vcxitems*{de798633-5f9f-4394-a29d-80964a70b8f8}*SharedItemsImports = 9
 	EndGlobalSection
 EndGlobal

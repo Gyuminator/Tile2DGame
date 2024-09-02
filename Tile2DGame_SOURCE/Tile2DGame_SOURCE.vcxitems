@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{de798633-5f9f-4394-a29d-80964a70b8f8}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gMacro.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />
+  </ItemGroup>
+</Project>
