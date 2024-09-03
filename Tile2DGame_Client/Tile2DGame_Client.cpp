@@ -1,6 +1,8 @@
 ﻿// Tile2DGame_Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 #pragma once
+#include <crtdbg.h>
+
 #include "framework.h"
 #include "Tile2DGame_Client.h"
 
@@ -32,6 +34,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc(213);
+
     // TODO: 여기에 코드를 입력합니다.
 
     // 전역 문자열을 초기화합니다.
@@ -46,6 +51,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TILE2DGAMECLIENT));
+
+    GET_SINGLETON(Application).Initialize(hInstance, hWnd, DesktopRect);
 
     MSG msg;
 
@@ -68,8 +75,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             GET_SINGLETON(Application).GameLoop();
         }
     }
-
-
 
     return (int) msg.wParam;
 }

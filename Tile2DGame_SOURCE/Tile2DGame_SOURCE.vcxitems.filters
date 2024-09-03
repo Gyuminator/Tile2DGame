@@ -13,6 +13,18 @@
     <Filter Include="SingletonBase">
       <UniqueIdentifier>{af9342b6-8003-475d-bb74-c03d008688b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{a8495f82-898e-4a37-9a6e-752a92c52bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{59bf5700-e910-4cc0-bb25-53d65574f237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{7e3398d6-84cc-4cf3-8ce4-398c8b00a853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{047d4ea4-755f-455e-add0-eab62c32facc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
@@ -40,11 +52,40 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h">
       <Filter>Time</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp">
       <Filter>Time</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@ namespace t2g
 		void Init();
 		void Update();
 		void Render();
+		void Release();
 	};
 
 	__interface INamed

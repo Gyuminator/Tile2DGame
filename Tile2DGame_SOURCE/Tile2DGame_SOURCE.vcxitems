@@ -16,16 +16,27 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMacro.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />
   </ItemGroup>
 </Project>

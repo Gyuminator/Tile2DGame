@@ -2,6 +2,7 @@
 #include "t2gInterfaces.h"
 #include "t2gMacro.h"
 #include <cassert>
+#include <memory>
 
 namespace t2g
 {
@@ -12,26 +13,29 @@ namespace t2g
 	public:
 		static T& GetInst()
 		{
-			if (inst == nullptr)
-				inst = new T;
-			return *inst;
+			if (inst.get() == nullptr)
+				inst.reset(new T);
+			return *inst.get();
 		}
 		static void DeleteInst()
 		{
-			SAFE_DELETE(inst)
+			inst.reset();
 		}
 
-	private:
-		static T* inst;
+	public:
 
 	protected:
 		SingletonBase<T>() { assert(inst == nullptr && "SingletonBase<T>: Instance already exists!"); }
 		virtual ~SingletonBase<T>() {}
+
+	private:
+		static std::unique_ptr<T> inst;
+
 	private:
 		SingletonBase<T>(const SingletonBase<T>&) = delete;
 		SingletonBase<T>& operator=(const SingletonBase<T>&) = delete;
 	};
 
 	template<typename T>
-	T* SingletonBase<T>::inst = nullptr;
+	std::unique_ptr<T> SingletonBase<T>::inst = std::make_unique<T>();
 }

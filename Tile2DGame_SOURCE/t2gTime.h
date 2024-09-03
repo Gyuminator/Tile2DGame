@@ -12,9 +12,10 @@ namespace t2g
 		Time();
 		virtual ~Time() {};
 	public:
-		virtual void Init();
-		virtual void Update();
-		virtual void Render();
+		virtual void Init() override;
+		virtual void Update() override;
+		virtual void Render() override;
+		virtual void Release() override {}
 
 	public:
 		float GetDT() { return mDeltaTime; }
@@ -27,6 +28,7 @@ namespace t2g
 
 		std::wstring mTextToDraw;
 		RECT mRectToDraw;
+		float mAccTime;
 	};
 }
 
