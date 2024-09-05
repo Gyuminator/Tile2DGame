@@ -6,6 +6,7 @@
 #include "t2gFunc.h"
 #include "t2gObject.h"
 #include "t2gSafePtr.h"
+#include "t2gSceneManager.h"
 
 using t2g::enums::eKeys;
 using t2g::enums::eKeyState;
@@ -25,7 +26,7 @@ namespace t2g
 		, mWndSize{}
 	{
 	}
-	void Application::Initialize(HINSTANCE hInst, HWND hWnd, RECT desktopRect)
+	void Application::Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect)
 	{
 		mHinstance = hInst;
 		mHwnd = hWnd;
@@ -35,6 +36,8 @@ namespace t2g
 		mWndSize = POINT(mWndRect.right - mWndRect.left, mWndRect.bottom - mWndRect.top);
 
 		CreateBackBuffer();
+
+		GET_SINGLETON(SceneManager).Init();
 	}
 	void Application::GameLoop()
 	{
@@ -48,6 +51,8 @@ namespace t2g
 	{
 		GET_SINGLETON(Time).Update();
 
+		GET_SINGLETON(SceneManager).Update();
+
 		if (CheckKey(eKeys::Esc, eKeyState::Down))
 		{
 			PostQuitMessage(0);
@@ -58,8 +63,9 @@ namespace t2g
 	{
 		Rectangle(mBackHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
 
+		GET_SINGLETON(SceneManager).Render();
+
 		GET_SINGLETON(Time).Render();
-		
 
 		BitBlt(mHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
 			mBackHdc, mWndRect.left, mWndRect.top, SRCCOPY);

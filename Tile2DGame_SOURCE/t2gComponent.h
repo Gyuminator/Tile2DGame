@@ -1,30 +1,61 @@
 #pragma once
+#include <memory>
+#include <functional>
+#include <unordered_set>
+#include <vector>
+
 #include "t2gInterfaces.h"
 #include "t2gSafePtr.h"
 
-class Object;
+using std::unique_ptr;
+using std::make_unique;
+using std::function;
+using std::unordered_set;
+
+using t2g::SafePtr;
 
 namespace t2g
 {
-	class Component : public IGameLoop
+	class Object;
+
+	class Component
 	{
 	public:
-		Component() : mOwner(nullptr) {}
-		virtual ~Component() {}
+		template<typename T>
+		static unique_ptr<T> CreateComponent()
+		{
+			static_assert(std::is_base_of<Component, T>::value, "Component::CreateComponent: T must derived Component");
+			unique_ptr<T> uptr(new T);
+			return std::move(uptr);
+		}
+
+	protected:
+		Component() : mOwner(nullptr), mIsActive(true) {}
+	public:
+		virtual ~Component() { }
 
 	public:
-		void Init() override;
-		void Update() override;
-		void Render() override;
-		void Release() override;
+		void Update() { update(); }
+		void Render() { render(); }
+	private:
+		virtual void update() = 0;
+		virtual void render() = 0;
 
 	public:
-		void SetOwner(Object* pObj) { mOwner = pObj; }
-		SafePtr<Object> GetOwner() { return mOwner; }
+		virtual eComponentType GetComponentType() const = 0;
+		virtual eUpdateLayer GetUpdateLayer() const = 0;
+		virtual eRenderLayer GetRenderLayer() const = 0;
+		virtual void SyncBindings() = 0;
+
+	public:
+		SafePtr<Object> GetOwner() const { return mOwner; }
+		void SetOwner(SafePtr<Object> pObj) { mOwner = pObj; }
+
+		bool IsActive() const { return mIsActive; }
 
 	private:
 		SafePtr<Object> mOwner;
-
+		bool mIsActive;
 	};
 }
 

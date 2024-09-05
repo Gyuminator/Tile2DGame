@@ -30,21 +30,48 @@ namespace t2g::enums
 		Script,
 		TextureRenderer,
 		Camera,
+		Controller,
 
+		EnumEnd
 	};
 	
-	enum class eLayerTag : UINT8
+	enum class eRenderLayer : UINT8
 	{
 		BackGround,
 		Tile,
-		Bottom,
-		Mid,
-		Top,
+		Middle,
 		Bullet,
 		Effect,
 		UI,
 
-		END
+		EnumEnd
+	};
+
+	enum class eUpdateLayer : UINT8
+	{
+		Input,
+		Physics,
+		Transform,
+		Collision,
+		Script,
+
+		EnumEnd
+	};
+
+	enum class eScene : UINT16
+	{
+		Loading,
+		Title,
+		Play,
+
+		EnumEnd
+	};
+
+	enum class eObjectType : UINT16
+	{
+		Player,
+
+		EnumEnd
 	};
 	
 };

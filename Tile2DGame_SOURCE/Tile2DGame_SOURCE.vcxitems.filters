@@ -25,6 +25,12 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{047d4ea4-755f-455e-add0-eab62c32facc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{a67ab1ae-0b85-4817-b6e4-4fb2849bf09d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{cd1ebc28-5bf8-4ebf-a3bd-f69fdf0715c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
@@ -67,7 +73,29 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLoadingScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLayer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -80,12 +108,34 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

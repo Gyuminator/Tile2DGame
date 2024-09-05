@@ -5,6 +5,8 @@
 
 namespace t2g::func
 {
+	using std::unique_ptr;
+
 	using t2g::enums::eKeys;
 	using t2g::enums::eKeyState;
 
@@ -12,4 +14,11 @@ namespace t2g::func
 	{
 		return GET_SINGLETON(Input).CheckKey(key, state);
 	}
+
+	/*template<typename T>
+	inline std::unique_ptr<T> SafeCreate()
+	{
+		unique_ptr<T> uptr(new T);
+		return std::move(uptr);
+	}*/
 }

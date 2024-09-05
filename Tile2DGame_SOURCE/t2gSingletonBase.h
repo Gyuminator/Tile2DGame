@@ -1,18 +1,20 @@
 #pragma once
-#include "t2gInterfaces.h"
-#include "t2gMacro.h"
 #include <cassert>
 #include <memory>
+
+#include "t2gInterfaces.h"
+#include "t2gMacro.h"
 
 namespace t2g
 {
 	template<typename T>
 	class SingletonBase : public IGameLoop
 	{
-		static_assert(std::is_class<T>::value == true, "SingletonBase<T>: T must be class!");
+		static_assert(std::is_class<T>::value == true, "SingletonBase<T>: T must be class");
 	public:
 		static T& GetInst()
 		{
+			static_assert(std::is_base_of<SingletonBase<T>, T>::value == true, "SingletonBase<T>: SingletonBase<T> must be Base of T");
 			if (inst.get() == nullptr)
 				inst.reset(new T);
 			return *inst.get();
@@ -25,7 +27,7 @@ namespace t2g
 	public:
 
 	protected:
-		SingletonBase<T>() { assert(inst == nullptr && "SingletonBase<T>: Instance already exists!"); }
+		SingletonBase<T>() { assert(inst == nullptr && "SingletonBase<T>: Instance already exists"); }
 		virtual ~SingletonBase<T>() {}
 
 	private:

@@ -15,7 +15,7 @@ void t2g::Time::Init()
 {
 	assert(QueryPerformanceFrequency(&mFrequencyPerSecond) && "Time::Init: Falid Get mFrequencyPerSecond");
 	QueryPerformanceCounter(&mPrevCount);
-	mRectToDraw = RECT(0, 0, 500, 20);
+	mRectToDraw = RECT(0, 0, 150, 20);
 }
 
 void t2g::Time::Update()
@@ -34,5 +34,5 @@ void t2g::Time::Update()
 void t2g::Time::Render()
 {
 	HDC hBackDC = GET_SINGLETON(Application).GetBackDC();
-	DrawText(hBackDC, mTextToDraw.c_str(), mTextToDraw.size(), &mRectToDraw, DT_LEFT | DT_TOP);
+	DrawText(hBackDC, mTextToDraw.c_str(), (int)mTextToDraw.size(), &mRectToDraw, DT_LEFT | DT_TOP);
 }

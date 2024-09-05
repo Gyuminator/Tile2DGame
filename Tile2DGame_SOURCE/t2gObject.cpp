@@ -1,38 +1,59 @@
 #include "t2gObject.h"
+#include "t2gScene.h"
+#include "t2gTransform.h"
+#include "t2gPlayerController.h"
 
 t2g::Object::Object()
 	: mName{}
-	, mLayerTag(eLayerTag::END)
-	, mComponents{}
 	, mAttacher{}
 	, mAttachedObjects{}
 {
-	Init();
 }
 
 t2g::Object::~Object()
 {
-	Release();
+
 }
 
-void t2g::Object::Init()
+void t2g::Object::Init(eObjectType type)
 {
-	
-}
-
-void t2g::Object::Update()
-{
-	for (eComponentType type : mComponentKeys)
+	switch (type)
 	{
-		mComponents[type];
+	case eObjectType::Player:
+	{
+		AddComponent<Transform>();
+		AddComponent<PlayerController>();
+		break;
+	}
+	default:
+		break;
+	}
+
+	SyncComponents();
+}
+
+void t2g::Object::BindComponentToScene(SafePtr<Component> component)
+{
+	if (mOwner.IsEmpty())
+		return;
+
+	mOwner->BindComponent(component);
+}
+
+void t2g::Object::SyncComponents()
+{
+	for (auto& pair : mComponents)
+	{
+		pair.second->SyncBindings();
 	}
 }
 
-void t2g::Object::Render()
+const SafePtr<Component> t2g::Object::GetComponent(eComponentType type)
 {
-}
+	const auto& pair = mComponents.find(type);
+	if (pair == mComponents.end())
+		return SafePtr<Component>(nullptr);
 
-void t2g::Object::Release()
-{
+	return pair->second.get();
 }
 

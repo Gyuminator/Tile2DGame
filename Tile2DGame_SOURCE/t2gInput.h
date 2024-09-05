@@ -1,6 +1,6 @@
 #pragma once
 #include "t2gInterfaces.h"
-#include <bitset>
+#include "t2gSingletonBase.h"
 #include "t2gEnums.h"
 
 using t2g::enums::eKeys;
@@ -8,7 +8,7 @@ using t2g::enums::eKeyState;
 
 namespace t2g
 {
-	class Input : public IGameLoop
+	class Input : public SingletonBase<Input>
 	{
 		struct KeyInfo
 		{
@@ -21,10 +21,10 @@ namespace t2g
 		virtual ~Input();
 
 	public:
-		void Init() override;
 		void Update() override;
 		void Render() override;
-		void Release() override {}
+	public:
+		void Init();
 
 	public:
 		bool CheckKey(eKeys key, eKeyState state) { return mKeyInfos[(UINT16)key].State == state; }

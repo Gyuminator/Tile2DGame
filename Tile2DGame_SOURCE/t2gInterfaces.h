@@ -1,19 +1,21 @@
 #pragma once
 #include <string>
+#include "t2gEnums.h"
+#include "t2gSafePtr.h"
 
 namespace t2g
 {
+	using namespace enums;
+
 	__interface IGameLoop
 	{
-		void Init();
 		void Update();
 		void Render();
-		void Release();
 	};
 
 	__interface INamed
 	{
-		const std::wstring& GetName();
+		const std::wstring& GetName() const;
 	};
 
 }

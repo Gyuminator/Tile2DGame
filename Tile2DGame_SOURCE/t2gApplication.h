@@ -11,13 +11,12 @@ namespace t2g
 		~Application() {}
 
 	public:
-		void GameLoop();
-
-		void Initialize(HINSTANCE hInst, HWND hWnd, RECT desktopRect);
-		void Init() override { assert(false && "Application use Initialize instead of Init."); }
 		void Update() override;
 		void Render() override;
-		void Release() override;
+	public:
+		void GameLoop();
+		void Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect);
+		void Release();
 
 		void CreateBackBuffer();
 	public:
