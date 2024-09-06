@@ -13,7 +13,9 @@ t2g::Time::Time()
 
 void t2g::Time::Init()
 {
-	assert(QueryPerformanceFrequency(&mFrequencyPerSecond) && "Time::Init: Falid Get mFrequencyPerSecond");
+	BOOL result = QueryPerformanceFrequency(&mFrequencyPerSecond);
+	assert(result && "Time::Init: Falid Get mFrequencyPerSecond");
+
 	QueryPerformanceCounter(&mPrevCount);
 	mRectToDraw = RECT(0, 0, 150, 20);
 }

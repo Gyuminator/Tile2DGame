@@ -2,6 +2,7 @@
 #include "t2gScene.h"
 #include "t2gTransform.h"
 #include "t2gPlayerController.h"
+#include "t2gImageRenderer.h"
 
 t2g::Object::Object()
 	: mName{}
@@ -23,6 +24,10 @@ void t2g::Object::Init(eObjectType type)
 	{
 		AddComponent<Transform>();
 		AddComponent<PlayerController>();
+		AddComponent<ImageRenderer>();
+		SafePtr<ImageRenderer> imageRenderer = GetComponent(eComponentType::ImageRenderer);
+		imageRenderer->SetImageName(eImageName::Player);
+		imageRenderer->SetFrame(3, 4, 0, 0);
 		break;
 	}
 	default:

@@ -20,6 +20,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImage.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gLayer.h" />
@@ -30,6 +32,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h" />
@@ -42,12 +45,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImage.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp" />

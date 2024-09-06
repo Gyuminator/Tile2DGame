@@ -10,8 +10,11 @@
 #include <bitset>
 #include <functional>
 
-//#include <gdiplus.h>
-//#pragma comment (lib, "gdiplus.lib")
+#include <objidl.h>
+#include <gdiplus.h>
+using namespace Gdiplus;
+#pragma comment (lib,"Gdiplus.lib")
+
 
 #include "t2gMath.h"
 #include "t2gRect.h"

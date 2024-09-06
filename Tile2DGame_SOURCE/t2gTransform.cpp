@@ -33,6 +33,6 @@ void t2g::Transform::showText()
 		(LONG)mLocation.x, (LONG)mLocation.y,
 		(LONG)mLocation.x + 300, (LONG)mLocation.y + 20);
 
-	DrawText(backDC, L"플레이어", lstrlenW(L"플레이어"), &rect, DT_LEFT | DT_TOP);
+	//DrawText(backDC, L"플레이어", lstrlenW(L"플레이어"), &rect, DT_LEFT | DT_TOP);
 }
 

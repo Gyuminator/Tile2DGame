@@ -23,6 +23,8 @@ namespace t2g
 		HDC GetBackDC() { return mBackHdc; }
 		HWND GetHWnd() { return mHwnd; }
 
+		const RECT& GetWindowRect() { return mWndRect; }
+
 	private:
 		HINSTANCE mHinstance;
 		HWND mHwnd;

@@ -9,7 +9,7 @@ namespace t2g
 	{
 	public:
 		PlayerController() : mTransform(nullptr) {}
-		~PlayerController() {}
+		virtual ~PlayerController() {}
 
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::Controller; }

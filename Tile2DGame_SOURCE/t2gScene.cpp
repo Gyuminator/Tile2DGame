@@ -1,6 +1,9 @@
 #include "t2gScene.h"
 #include "t2gComponent.h"
 #include "t2gObject.h"
+#include "t2gTransform.h"
+#include "t2gApplication.h"
+#include "t2gImageManager.h"
 
 t2g::Scene::Scene()
 	: mObjects{}
@@ -34,7 +37,19 @@ void t2g::Scene::Render()
 
 void t2g::Scene::Init()
 {
-	AddObject(eObjectType::Player);
+	const RECT& rect = GET_SINGLETON(Application).GetWindowRect();
+	GET_SINGLETON(ImageManager).Load(eImageName::Player, L"Character\\plant.png");
+
+	for (int i = 0; i < 100; ++i)
+	{
+		AddObject(eObjectType::Player);
+	}
+
+	for (auto& obj : mObjects)
+	{
+		SafePtr<Transform> sp = obj->GetComponent(eComponentType::Transform);
+		sp->SetLocation(Vector3(float(rand() % rect.right), float(rand() % rect.bottom), 0.f));
+	}
 }
 
 void t2g::Scene::AddObject(eObjectType type)
@@ -53,5 +68,5 @@ void t2g::Scene::BindComponent(SafePtr<Component> component)
 
 	const eRenderLayer rlayer = component->GetRenderLayer();
 	if (rlayer != eRenderLayer::EnumEnd)
-		mUpdateComponentsLayers[(UINT)rlayer].insert(component);
+		mRenderComponentsLayers[(UINT)rlayer].insert(component);
 }

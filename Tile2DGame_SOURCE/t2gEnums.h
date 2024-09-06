@@ -28,7 +28,7 @@ namespace t2g::enums
 	{
 		Transform,
 		Script,
-		TextureRenderer,
+		ImageRenderer,
 		Camera,
 		Controller,
 
@@ -74,4 +74,18 @@ namespace t2g::enums
 		EnumEnd
 	};
 	
+	enum class eImageName : UINT32
+	{
+		Player,
+
+		EnumEnd
+	};
+
+	enum class eSceneBufferName : UINT8
+	{
+		Tile,
+
+		EnumEnd
+	};
+
 };
