@@ -15,12 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImage.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageFrame.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h" />
@@ -37,15 +38,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTitleScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImage.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp" />
@@ -57,6 +61,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTitleScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp" />

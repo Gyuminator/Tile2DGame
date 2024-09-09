@@ -1,38 +1,47 @@
 #pragma once
 #include <memory>
 #include <unordered_set>
+#include <unordered_map>
 #include <functional>
+#include <vector>
 
 #include "t2gInterfaces.h"
 #include "t2gEnums.h"
-#include "t2gLayer.h"
 #include "t2gFunc.h"
 #include "t2gSafePtr.h"
 #include "t2gEvent.h"
+#include "t2gObject.h"
+#include "t2gComponent.h"
 
 using std::unique_ptr;
 using std::unordered_set;
+using std::unordered_map;
 using std::function;
+using std::vector;
 
-using t2g::enums::eUpdateLayer;
+using namespace t2g::enums;
 
-class Object;
+//class Object;
+//using t2g::Component;
 
 namespace t2g
 {
 	using namespace func;
 
+	class Object;
+	class Component;
+
 	class Scene
 	{
 	public:
-		typedef unordered_set<unique_ptr<Object>> Objects;
+		typedef unordered_map<UINT, unique_ptr<Object>> Objects;
 		typedef unordered_set<SafePtr<Component>> Components;
 		// typedef unordered_set<Event> Events;
 
 	private:
 		Scene();
 	public:
-		virtual ~Scene() {};
+		virtual ~Scene() {}
 
 		template<typename T>
 		static unique_ptr<T> CreateScene()
@@ -47,13 +56,17 @@ namespace t2g
 		void Render();
 
 	public:
-		void Init();
+		void Init(SIZE sceneSize);
 		void Exit() {};
 		void Enter() {};
 
 	public:
-		void AddObject(eObjectType type);
+		SafePtr<t2g::Object> AddObject(eObjectType type);
+		SafePtr<t2g::Object> AddTile();
 		void BindComponent(SafePtr<Component> component);
+
+	public:
+		SIZE GetSize() { return mSize; }
 
 	private:
 		virtual void init() {}
@@ -61,6 +74,13 @@ namespace t2g
 		virtual void enter() {}
 
 	private:
+		void LoadImagesOfScene();
+
+	private:
+		SIZE mSize;
+
+		vector<unique_ptr<Object>> mTiles;
+
 		Components mUpdateComponentsLayers[(UINT)eUpdateLayer::EnumEnd];
 		Components mRenderComponentsLayers[(UINT)eRenderLayer::EnumEnd];
 

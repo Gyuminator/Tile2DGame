@@ -28,6 +28,9 @@ namespace t2g
 		void render() override;
 
 	public:
+		void Init(const Vector3& location, const Vector3& rotation, const Vector3& scale);
+
+	public:
 		const Vector3& GetLocation() const { return mLocation; }
 		const Vector3& GetRotation() const { return mRotation; }
 		const Vector3& GetScale() const { return mScale; }

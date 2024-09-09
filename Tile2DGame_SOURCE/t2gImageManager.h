@@ -1,11 +1,10 @@
 #pragma once
 #include <unordered_map>
 
-#include "t2gRect.h"
+#include "t2gSprite.h"
 #include "t2gSingletonBase.h"
 #include "t2gApplication.h"
-
-using namespace Gdiplus;
+#include "t2gSafePtr.h"
 
 using std::unordered_map;
 
@@ -13,7 +12,6 @@ namespace t2g
 {
 	class ImageManager : public SingletonBase<ImageManager>
 	{
-
 	public:
 		ImageManager();
 		virtual ~ImageManager();
@@ -26,25 +24,50 @@ namespace t2g
 		void Init();
 		void Release();
 
-		void Load(const eImageName eName, const std::wstring fileName);
+		void Load(const eImageName eName, const std::wstring fileName, INT xCount, INT yCount);
 		void UnLoad(const eImageName eName);
 
-		void DrawImage(Image* img, Rect& dest, Rect& src)
+		void DrawImage(SafePtr<Sprite> sprite, Rect& dest, const Rect& src)
 		{
-			GetGraphics().DrawImage
+			GetGraphicsOfBackDC().DrawImage
 			(
-				img,
+				(Image*)sprite->GetImage().GetKey(),
+				dest,
+				src.X, src.Y, src.Width, src.Height,
+				UnitPixel
+			);
+		}
+		void DrawTile(SafePtr<Sprite> sprite, Rect& dest, const Rect& src)
+		{
+			GetGraphicsOfTileDC().DrawImage
+			(
+				(Image*)sprite->GetImage().GetKey(),
+				dest,
+				src.X, src.Y, src.Width, src.Height,
+				UnitPixel
+			);
+		}
+		void DrawTile(eImageName eName, Rect& dest, const Rect& src)
+		{
+			GetGraphicsOfTileDC().DrawImage
+			(
+				(Image*)mImages[eName].GetImage().GetKey(),
 				dest,
 				src.X, src.Y, src.Width, src.Height,
 				UnitPixel
 			);
 		}
 
-		Image* FindImage(const eImageName eName);
+		SafePtr<Sprite> FindImage(const eImageName eName);
 
-		Graphics& GetGraphics()
+		Graphics& GetGraphicsOfBackDC()
 		{
 			static Graphics g(GET_SINGLETON(Application).GetBackDC());
+			return g;
+		}
+		Graphics& GetGraphicsOfTileDC()
+		{
+			static Graphics g(GET_SINGLETON(Application).GetTileDC());
 			return g;
 		}
 
@@ -55,7 +78,7 @@ namespace t2g
 
 		const std::wstring mPath;
 
-		unordered_map<eImageName, Image> mImages;
+		unordered_map<eImageName, Sprite> mImages;
 	};
 }
 

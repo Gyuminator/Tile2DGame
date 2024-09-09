@@ -1,6 +1,9 @@
 #pragma once
-#include "t2gImageManager.h"
+#include "t2gImageFrame.h"
 #include "t2gComponent.h"
+#include "t2gMath.h"
+
+using namespace t2g::math;
 
 namespace t2g
 {
@@ -23,18 +26,22 @@ namespace t2g
 		void render() override;
 
 	public:
-		void Init(eImageName eName);
+		void Init(eImageName eName, INT xPos, INT yPos);
 
 	public:
-		void SetImageName(eImageName eName) { mImageName = eName; }
-
-		void SetFrame(INT xCount, INT yCount, INT xPos, INT yPos);
 
 	private:
-		eImageName mImageName;
+		void SyncRenderSize();
+		void SyncRenderPos(Vector3 location);
+
+	private:
+		ImageFrame mImageFrame;
+
 		SafePtr<Transform> mTransform;
 
-		Rect mFrameRect;
+		Rect mRenderRect;
+
+		PointF mAnchor;
 		POINT mOffset;
 
 	};

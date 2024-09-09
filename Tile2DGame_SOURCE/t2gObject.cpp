@@ -5,7 +5,8 @@
 #include "t2gImageRenderer.h"
 
 t2g::Object::Object()
-	: mName{}
+	: mID(AccID++)
+	, mName{}
 	, mAttacher{}
 	, mAttachedObjects{}
 {
@@ -22,12 +23,21 @@ void t2g::Object::Init(eObjectType type)
 	{
 	case eObjectType::Player:
 	{
-		AddComponent<Transform>();
+		AddComponent<Transform>()->Init
+		(
+			Vector3(100.f, 100.f, 0.f),
+			Vector3(0.f, 0.f, 0.f),
+			Vector3(1.f, 1.f, 0.f)
+		);
 		AddComponent<PlayerController>();
-		AddComponent<ImageRenderer>();
-		SafePtr<ImageRenderer> imageRenderer = GetComponent(eComponentType::ImageRenderer);
-		imageRenderer->SetImageName(eImageName::Player);
-		imageRenderer->SetFrame(3, 4, 0, 0);
+		AddComponent<ImageRenderer>()->Init(eImageName::Tile_01, 0, 2);
+
+		break;
+	}
+	case eObjectType::Tile:
+	{
+
+
 		break;
 	}
 	default:

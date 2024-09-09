@@ -4,13 +4,15 @@
 #include "t2gTransform.h"
 #include "t2gApplication.h"
 #include "t2gImageManager.h"
+#include "t2gImageRenderer.h"
+#include "t2gTileRenderer.h"
 
 t2g::Scene::Scene()
-	: mObjects{}
+	: mSize{ 1, 1 }
+	, mObjects{}
 	, mUpdateComponentsLayers{}
 	, mRenderComponentsLayers{}
 {
-	Init();
 }
 
 void t2g::Scene::Update()
@@ -35,29 +37,55 @@ void t2g::Scene::Render()
 	}
 }
 
-void t2g::Scene::Init()
+void t2g::Scene::Init(SIZE sceneSize)
 {
-	const RECT& rect = GET_SINGLETON(Application).GetWindowRect();
-	GET_SINGLETON(ImageManager).Load(eImageName::Player, L"Character\\plant.png");
+	mSize = sceneSize;
+	HBITMAP tileBitmap = CreateCompatibleBitmap
+	(
+		GET_SINGLETON(Application).GetTileDC(),
+		sceneSize.cx * Application::TileSize, sceneSize.cy * Application::TileSize
+	);
+	GET_SINGLETON(Application).ChangeTileBitmap(tileBitmap);
+	LoadImagesOfScene();
 
-	for (int i = 0; i < 100; ++i)
+	AddObject(eObjectType::Player);
+	//AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_01, 0, 0, INT(mTiles.size() - 1));
+	//AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_01, 1, 0, INT(mTiles.size() - 1));
+	//AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_01, 2, 0, INT(mTiles.size() - 1));
+	//AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_01, 3, 0, INT(mTiles.size() - 1));
+	for (size_t i = 0; i < mSize.cx * mSize.cy; ++i)
 	{
-		AddObject(eObjectType::Player);
+		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_01, 0, 0, INT(mTiles.size() - 1));
 	}
 
-	for (auto& obj : mObjects)
+	for (auto& iter : mTiles)
 	{
-		SafePtr<Transform> sp = obj->GetComponent(eComponentType::Transform);
-		sp->SetLocation(Vector3(float(rand() % rect.right), float(rand() % rect.bottom), 0.f));
+		SafePtr<TileRenderer> tileRender = iter->GetComponent(eComponentType::TileRenderer);
+		tileRender->Render();
 	}
 }
 
-void t2g::Scene::AddObject(eObjectType type)
+SafePtr<t2g::Object> t2g::Scene::AddObject(eObjectType type)
 {
 	unique_ptr<Object> uptr = Object::CreateObject();
+	SafePtr<Object> sptr(uptr.get());
+
 	uptr->SetOwner(this);
 	uptr->Init(type);
-	mObjects.insert(std::move(uptr));
+	mObjects.emplace(sptr->GetID(), std::move(uptr));
+
+	return sptr;
+}
+
+SafePtr<t2g::Object> t2g::Scene::AddTile()
+{
+	unique_ptr<Object> uptr = Object::CreateObject();
+	SafePtr<Object> sptr(uptr.get());
+
+	uptr->SetOwner(this);
+	mTiles.emplace_back(std::move(uptr));
+
+	return sptr;
 }
 
 void t2g::Scene::BindComponent(SafePtr<Component> component)
@@ -70,3 +98,11 @@ void t2g::Scene::BindComponent(SafePtr<Component> component)
 	if (rlayer != eRenderLayer::EnumEnd)
 		mRenderComponentsLayers[(UINT)rlayer].insert(component);
 }
+
+void t2g::Scene::LoadImagesOfScene()
+{
+	GET_SINGLETON(ImageManager).Load(eImageName::Player, L"Character\\plant.png", 3, 4);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_01, L"Tile\\Outside_A2.png", 16, 12);
+}
+
+UINT t2g::Object::AccID = 0;

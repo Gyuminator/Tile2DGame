@@ -12,7 +12,7 @@ t2g::Transform::Transform()
 
 void t2g::Transform::SyncBindings()
 {
-	mRender = (&Transform::showText);
+	//mRender = (&Transform::showText);
 }
 
 void t2g::Transform::update()
@@ -22,7 +22,14 @@ void t2g::Transform::update()
 
 void t2g::Transform::render()
 {
-	((*this).*mRender)();
+	//((*this).*mRender)();
+}
+
+void t2g::Transform::Init(const Vector3& location, const Vector3& rotation, const Vector3& scale)
+{
+	mLocation = location;
+	mRotation = rotation;
+	mScale = scale;
 }
 
 void t2g::Transform::showText()

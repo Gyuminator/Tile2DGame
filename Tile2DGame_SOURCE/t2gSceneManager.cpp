@@ -12,6 +12,7 @@ t2g::SceneManager::SceneManager()
 void t2g::SceneManager::Init()
 {
 	//ChangeScene<PlayScene>(eScene::Play);
+	AddScene<Scene>(eScene::Play)->Init(SIZE(10, 10));
 	ChangeScene<Scene>(eScene::Play);
 }
 

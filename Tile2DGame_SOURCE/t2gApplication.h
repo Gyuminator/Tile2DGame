@@ -7,8 +7,11 @@ namespace t2g
 	class Application : public SingletonBase<Application>
 	{
 	public:
+		constexpr static INT TileSize = 48;
+
+	public:
 		Application();
-		~Application() {}
+		~Application() { Release(); }
 
 	public:
 		void Update() override;
@@ -18,10 +21,15 @@ namespace t2g
 		void Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect);
 		void Release();
 
+		void ChangeTileBitmap(HBITMAP hBitmap);
+
+	private:
 		void CreateBackBuffer();
+		void CreateTileBuffer();
 	public:
-		HDC GetBackDC() { return mBackHdc; }
 		HWND GetHWnd() { return mHwnd; }
+		HDC GetBackDC() { return mBackHdc; }
+		HDC GetTileDC() { return mTileHdc; }
 
 		const RECT& GetWindowRect() { return mWndRect; }
 
@@ -30,7 +38,9 @@ namespace t2g
 		HWND mHwnd;
 		HDC mHdc;
 		HDC mBackHdc;
+		HDC mTileHdc;
 		HBITMAP mBackBitmap;
+		HBITMAP mTileBitmap;
 
 		RECT mWndRect;
 		POINT mWndSize;

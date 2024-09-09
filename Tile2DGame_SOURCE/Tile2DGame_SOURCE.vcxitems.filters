@@ -31,7 +31,7 @@
     <Filter Include="Event">
       <UniqueIdentifier>{cd1ebc28-5bf8-4ebf-a3bd-f69fdf0715c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource">
+    <Filter Include="Image">
       <UniqueIdentifier>{eeba4167-1b0c-4ab1-9609-234a18b6374e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -106,12 +106,19 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImage.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageFrame.h">
+      <Filter>Image</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageManager.h">
-      <Filter>Resource</Filter>
+      <Filter>Image</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -160,11 +167,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImage.cpp">
-      <Filter>Resource</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp">
+      <Filter>Image</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Image</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
   </ItemGroup>
 </Project>

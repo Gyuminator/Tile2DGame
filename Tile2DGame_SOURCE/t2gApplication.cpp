@@ -21,7 +21,9 @@ namespace t2g
 		, mHwnd(nullptr)
 		, mHdc(nullptr)
 		, mBackHdc(nullptr)
+		, mTileHdc(nullptr)
 		, mBackBitmap(nullptr)
+		, mTileBitmap(nullptr)
 		, mWndRect{}
 		, mWndSize{}
 	{
@@ -36,6 +38,7 @@ namespace t2g
 		mWndSize = POINT(mWndRect.right - mWndRect.left, mWndRect.bottom - mWndRect.top);
 
 		CreateBackBuffer();
+		CreateTileBuffer();
 
 		GET_SINGLETON(SceneManager).Init();
 	}
@@ -61,7 +64,9 @@ namespace t2g
 	}
 	void Application::Render()
 	{
-		Rectangle(mBackHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
+		//Rectangle(mBackHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
+		BitBlt(mBackHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
+			mTileHdc, mWndRect.left, mWndRect.top, SRCCOPY);
 
 		GET_SINGLETON(SceneManager).Render();
 
@@ -72,6 +77,7 @@ namespace t2g
 	}
 	void Application::Release()
 	{
+		DeleteDC(mTileHdc);
 		DeleteDC(mBackHdc);
 		ReleaseDC(mHwnd, mHdc);
 	}
@@ -83,5 +89,16 @@ namespace t2g
 		DeleteObject(oldBitmap);
 
 		SelectObject(mBackHdc, GetStockObject(WHITE_PEN));
+	}
+
+	void Application::CreateTileBuffer()
+	{
+		mTileHdc = CreateCompatibleDC(mBackHdc);
+	}
+
+	void Application::ChangeTileBitmap(HBITMAP hBitmap)
+	{
+		HBITMAP oldBitmap = (HBITMAP)SelectObject(mTileHdc, hBitmap);
+		DeleteObject(oldBitmap);
 	}
 }

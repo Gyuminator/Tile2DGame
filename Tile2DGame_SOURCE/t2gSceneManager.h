@@ -38,21 +38,25 @@ namespace t2g
 
 	public:
 		template<typename T>
+		SafePtr<Scene> AddScene(const eScene eName)
+		{
+			mScenes.emplace(eName, Scene::CreateScene<T>());
+			return mScenes.find(eName)->second.get();
+		};
+		template<typename T>
 		void ChangeScene(const eScene eName)
 		{
 			// 씬 찾기
 			auto iter = mScenes.find(eName);
 			if (iter == mScenes.end())
-			{
-				// 없으면 만들기
-				mScenes.emplace(eName, Scene::CreateScene<T>());
-				iter = mScenes.find(eName);
-			}
+				return;
 
 			ExitCurScene();
 			EnterNextScene(iter->second.get());
 		}
 
+
+	public:
 		SafePtr<Scene> GetCurScene() { return mCurScene; }
 
 	private:

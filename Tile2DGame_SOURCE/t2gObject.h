@@ -31,6 +31,9 @@ namespace t2g
 
 	class Object
 	{
+	private:
+		static UINT AccID;
+
 	public:
 		typedef unordered_map<eComponentType, unique_ptr<Component>> UniqueComponentMap;
 		typedef unordered_set<SafePtr<Component>> SafeComponentSet;
@@ -52,8 +55,11 @@ namespace t2g
 		void Init(eObjectType type);
 
 	public:
+		UINT GetID() { return mID; }
+
+	public:
 		template<typename T>
-		void AddComponent();
+		decltype(auto) AddComponent();
 
 	private:
 		void BindComponentToScene(SafePtr<Component> component);
@@ -63,11 +69,14 @@ namespace t2g
 		const wstring& GetName() const { return mName; }
 		void SetName(const wstring& name) { mName = name; }
 
+		SafePtr<Scene> GetOwner() { return mOwner; }
 		void SetOwner(SafePtr<Scene> scene) { mOwner = scene; }
 
 		const SafePtr<Component> GetComponent(eComponentType type);
 
 	private:
+		UINT mID;
+
 		wstring mName;
 		SafePtr<Scene> mOwner;
 
@@ -85,14 +94,18 @@ namespace t2g
 namespace t2g
 {
 	template<typename T>
-	void Object::AddComponent()
+	decltype(auto) Object::AddComponent()
 	{
 		unique_ptr<T> uptr = Component::CreateComponent<T>();
 		uptr->SetOwner(this);
 		BindComponentToScene(uptr.get());
 
+		SafePtr<T> result = uptr.get();
+
 		eComponentType type = uptr->GetComponentType();
 		mComponents.emplace(type, std::move(uptr));
+
+		return result;
 	}
 }
 
