@@ -29,20 +29,31 @@ namespace t2g
 		void Init(eImageName eName, INT xPos, INT yPos);
 
 	public:
+		const Rect& GetRenderRect() { return mRenderRect; }
+		Point GetSrcPos() { return mSrcPos; }
+		SafePtr<Transform> GetTransform() { return mTransform; }
+		eImageName GetImageName() { return mImageName; }
+
+		void SetSrcPos(const Point& pos) { mSrcPos = pos; }
+		void SetImageName(const eImageName eName) { mImageName = eName; }
+
+	protected:
+		void AdjustRenderRect(SafePtr<Sprite> sprite);
 
 	private:
-		void SyncRenderSize();
+		void SyncRenderSize(SafePtr<Sprite> sprite);
 		void SyncRenderPos(Vector3 location);
 
 	private:
-		ImageFrame mImageFrame;
+		Rect mRenderRect;
+
+		Point mSrcPos;
+		PointF mAnchor;
+		POINT mOffset;
 
 		SafePtr<Transform> mTransform;
 
-		Rect mRenderRect;
-
-		PointF mAnchor;
-		POINT mOffset;
+		eImageName mImageName;
 
 	};
 }

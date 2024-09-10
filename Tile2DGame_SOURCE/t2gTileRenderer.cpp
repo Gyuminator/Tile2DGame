@@ -9,11 +9,14 @@ void t2g::TileRenderer::render()
 		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 		INT(mTileIndex / sceneSize.cx * Application::TileSize),
 		Application::TileSize, Application::TileSize };
-	GET_SINGLETON(ImageManager).DrawTile(mImageFrame.GetName(), destRect, mImageFrame.GetFrame());
+	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfTileDC(),
+		mImageName, destRect, mSrcPos);
 }
 
 void t2g::TileRenderer::Init(eImageName eName, INT srcPosX, INT srcPosY, UINT index)
 {
-	mImageFrame.Init(eName, srcPosX, srcPosY);
+	mImageName = eName;
+	mSrcPos.X = srcPosX;
+	mSrcPos.Y = srcPosY;
 	mTileIndex = index;
 }

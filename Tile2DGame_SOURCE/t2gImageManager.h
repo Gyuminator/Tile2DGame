@@ -7,6 +7,7 @@
 #include "t2gSafePtr.h"
 
 using std::unordered_map;
+using namespace Gdiplus;
 
 namespace t2g
 {
@@ -27,36 +28,56 @@ namespace t2g
 		void Load(const eImageName eName, const std::wstring fileName, INT xCount, INT yCount);
 		void UnLoad(const eImageName eName);
 
-		void DrawImage(SafePtr<Sprite> sprite, Rect& dest, const Rect& src)
+		void DrawImage(Graphics& graphics, SafePtr<Sprite> sprite, const Rect& dest, const Point& srcPos)
+		{
+			graphics.DrawImage
+			(
+				(Image*)sprite->GetImage().GetKey(),
+				dest,
+				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
+				sprite->GetFrameWidth(), sprite->GetFrameHeight(),
+				UnitPixel
+			);
+		}
+		void DrawImage(Graphics& graphics, eImageName eName, const Rect& dest, const Point& srcPos)
+		{
+			if (mImages.find(eName) == mImages.end())
+				return;
+
+			SafePtr<Sprite> sprite = &mImages[eName];
+			DrawImage(graphics, sprite, dest, srcPos);
+		}
+
+		/*void DrawImage(SafePtr<Sprite> sprite, Rect& dest, const Point& srcPos)
 		{
 			GetGraphicsOfBackDC().DrawImage
 			(
 				(Image*)sprite->GetImage().GetKey(),
 				dest,
-				src.X, src.Y, src.Width, src.Height,
+				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
+				sprite->GetFrameWidth(), sprite->GetFrameHeight(),
 				UnitPixel
 			);
 		}
-		void DrawTile(SafePtr<Sprite> sprite, Rect& dest, const Rect& src)
+		void DrawTile(SafePtr<Sprite> sprite, Rect& dest, const Point& srcPos)
 		{
 			GetGraphicsOfTileDC().DrawImage
 			(
 				(Image*)sprite->GetImage().GetKey(),
 				dest,
-				src.X, src.Y, src.Width, src.Height,
+				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
+				sprite->GetFrameWidth(), sprite->GetFrameHeight(),
 				UnitPixel
 			);
 		}
-		void DrawTile(eImageName eName, Rect& dest, const Rect& src)
+		void DrawTile(eImageName eName, Rect& dest, const Point& srcPos)
 		{
-			GetGraphicsOfTileDC().DrawImage
-			(
-				(Image*)mImages[eName].GetImage().GetKey(),
-				dest,
-				src.X, src.Y, src.Width, src.Height,
-				UnitPixel
-			);
-		}
+			if (mImages.find(eName) == mImages.end())
+				return;
+
+			SafePtr<Sprite> sprite = &mImages[eName];
+			DrawTile(sprite, dest, srcPos);
+		}*/
 
 		SafePtr<Sprite> FindImage(const eImageName eName);
 

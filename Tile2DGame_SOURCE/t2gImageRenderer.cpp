@@ -4,11 +4,12 @@
 #include "t2gImageManager.h"
 
 t2g::ImageRenderer::ImageRenderer()
-	: mImageFrame{}
-	, mTransform(nullptr)
-	, mRenderRect{}
-	, mOffset{}
+	: mRenderRect{}
+	, mSrcPos{}
 	, mAnchor{}
+	, mOffset{}
+	, mImageName(eImageName::EnumEnd)
+	, mTransform(nullptr)
 {}
 
 void t2g::ImageRenderer::SyncBindings()
@@ -21,30 +22,42 @@ void t2g::ImageRenderer::render()
 	if (mTransform.IsEmpty())
 		return;
 
-	SafePtr<Sprite> sprite = GET_SINGLETON(ImageManager).FindImage(mImageFrame.GetName());
+	SafePtr<Sprite> sprite = GET_SINGLETON(ImageManager).FindImage(mImageName);
 	if (sprite.IsEmpty())
 		return;
 
-	SyncRenderPos(mTransform->GetLocation());
+	AdjustRenderRect(sprite);
 
-	Vector3 scale = mTransform->GetScale();
-	std::rect::ScalingRectbyScale(mRenderRect, mTransform->GetScale());
-
-	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);
-
-	GET_SINGLETON(ImageManager).DrawImage(sprite, mRenderRect, mImageFrame.GetFrame());
+	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfBackDC(),
+		sprite, mRenderRect, mSrcPos);
 }
 
 void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
 {
-	mImageFrame.Init(eName, xPos, yPos);
-	SyncRenderSize();
+	mSrcPos.X = xPos;
+	mSrcPos.Y = yPos;
+
+	mImageName = eName;
+	SafePtr<Sprite> sprite = GET_SINGLETON(ImageManager).FindImage(mImageName);
+	if (sprite.IsEmpty())
+		return;
+
+	//mImageFrame.Init(xPos, yPos, sprite->GetFrameWidth(), sprite->GetFrameHeight());
 }
 
-void t2g::ImageRenderer::SyncRenderSize()
+void t2g::ImageRenderer::AdjustRenderRect(SafePtr<Sprite> sprite)
 {
-	mRenderRect.Width = mImageFrame.GetWidth();
-	mRenderRect.Height = mImageFrame.GetHeight();
+	SyncRenderPos(mTransform->GetLocation());
+	SyncRenderSize(sprite);
+
+	std::rect::ScalingRectbyScale(mRenderRect, mTransform->GetScale());
+	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);
+}
+
+void t2g::ImageRenderer::SyncRenderSize(SafePtr<Sprite> sprite)
+{
+	mRenderRect.Width = sprite->GetFrameWidth();
+	mRenderRect.Height = sprite->GetFrameHeight();
 }
 
 void t2g::ImageRenderer::SyncRenderPos(Vector3 location)

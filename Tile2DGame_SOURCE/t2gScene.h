@@ -57,11 +57,11 @@ namespace t2g
 
 	public:
 		void Init(SIZE sceneSize);
-		void Exit() {};
-		void Enter() {};
+		void Exit();
+		void Enter();
 
 	public:
-		SafePtr<t2g::Object> AddObject(eObjectType type);
+		SafePtr<t2g::Object> AddObject();
 		SafePtr<t2g::Object> AddTile();
 		void BindComponent(SafePtr<Component> component);
 

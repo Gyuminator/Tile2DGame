@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp" />

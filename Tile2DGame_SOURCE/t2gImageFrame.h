@@ -11,32 +11,42 @@ namespace t2g
 	class ImageFrame
 	{
 	public:
-		ImageFrame() : mImageName(eImageName::EnumEnd), FrameRect{} {}
+		/*ImageFrame() : FrameRect{} {}*/
+		ImageFrame() : mPos{} {}
 
 	public:
-		void SetFrame(INT xPos, INT yPos);
+		// eImageName GetName() { return mImageName; }
+		//const Rect& GetFrame() { return FrameRect; }
+		//INT GetWidth() { return FrameRect.Width; }
+		//INT GetHeight() { return FrameRect.Height; }
 
-		eImageName GetName() { return mImageName; }
-		const Rect& GetFrame() { return FrameRect; }
-		INT GetWidth() { return FrameRect.Width; }
-		INT GetHeight() { return FrameRect.Height; }
+		//void SetFrame(INT srcPosX, INT srcPosY, INT frameWidth, INT frameHeight);
 
 	private:
-		eImageName mImageName;
-
-		Rect FrameRect;
+		//eImageName mImageName;
+		Point mPos;
+		//Rect FrameRect;
 
 	public:
 		//인라인
-		void Init(eImageName eName, INT xPos, INT yPos)
+		/*void Init(eImageName eName, INT srcPosX, INT srcPosY)
 		{
 			mImageName = eName;
-			SetFrame(xPos, yPos);
+			SetFrame(srcPosX, srcPosY);
+		}*/
+		void Init(/*eImageName eName, */INT srcPosX, INT srcPosY, INT srcWidth, INT srcHeight)
+		{
+			// mImageName = eName;
+			/*FrameRect.Width = srcWidth;
+			FrameRect.Height = srcHeight;*/
+			SetPos(srcPosX, srcPosY);
 		}
 		void SetPos(INT xPos, INT yPos)
 		{
-			FrameRect.X = FrameRect.Width * xPos;
-			FrameRect.Y = FrameRect.Height * yPos;
+			/*FrameRect.X = FrameRect.Width * xPos;
+			FrameRect.Y = FrameRect.Height * yPos;*/
+			mPos.X = xPos;
+			mPos.Y = yPos;
 		}
 	};
 }

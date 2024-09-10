@@ -61,9 +61,11 @@ namespace t2g
 		template<typename T>
 		decltype(auto) AddComponent();
 
-	private:
-		void BindComponentToScene(SafePtr<Component> component);
+		void BindComponentsToScene();
 		void SyncComponents();
+
+	private:
+		//void BindComponentToScene(SafePtr<Component> component);
 
 	public:
 		const wstring& GetName() const { return mName; }
@@ -98,14 +100,13 @@ namespace t2g
 	{
 		unique_ptr<T> uptr = Component::CreateComponent<T>();
 		uptr->SetOwner(this);
-		BindComponentToScene(uptr.get());
 
-		SafePtr<T> result = uptr.get();
+		SafePtr<T> sptr = uptr.get();
 
 		eComponentType type = uptr->GetComponentType();
 		mComponents.emplace(type, std::move(uptr));
 
-		return result;
+		return sptr;
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include "t2gImageFrame.h"
+//#include "t2gEnums.h"
+#include "t2gImageManager.h"
 
 using std::vector;
 
@@ -11,9 +12,12 @@ namespace t2g
 	class Animation
 	{
 	public:
+		void AddSrcPos(Point srcPos) { mSrcPos.push_back(srcPos); }
+
+		size_t GetLength() { return mSrcPos.size(); }
 
 	private:
-		vector<ImageFrame> mImageFrames;
+		vector<Point> mSrcPos;
 
 	};
 }

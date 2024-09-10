@@ -34,6 +34,9 @@
     <Filter Include="Image">
       <UniqueIdentifier>{eeba4167-1b0c-4ab1-9609-234a18b6374e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Renderer">
+      <UniqueIdentifier>{af0e2c40-6e0d-4f7d-a56d-3b45e1698179}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
@@ -103,9 +106,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gLayer.h">
       <Filter>Layer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageFrame.h">
       <Filter>Image</Filter>
     </ClInclude>
@@ -118,7 +118,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h">
       <Filter>Image</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -164,9 +172,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp">
       <Filter>Layer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp">
       <Filter>Image</Filter>
     </ClCompile>
@@ -179,6 +184,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp">
       <Filter>Image</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

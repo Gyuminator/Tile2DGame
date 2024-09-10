@@ -64,7 +64,7 @@ namespace t2g
 	}
 	void Application::Render()
 	{
-		//Rectangle(mBackHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
+		//Rectangle(mTileHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
 		BitBlt(mBackHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
 			mTileHdc, mWndRect.left, mWndRect.top, SRCCOPY);
 
@@ -96,9 +96,14 @@ namespace t2g
 		mTileHdc = CreateCompatibleDC(mBackHdc);
 	}
 
-	void Application::ChangeTileBitmap(HBITMAP hBitmap)
+	void Application::ChangeTileBitmapSize(SIZE sceneSize)
 	{
-		HBITMAP oldBitmap = (HBITMAP)SelectObject(mTileHdc, hBitmap);
+		HBITMAP tileBitmap = CreateCompatibleBitmap
+		(
+			GET_SINGLETON(Application).GetBackDC(),
+			sceneSize.cx * Application::TileSize, sceneSize.cy * Application::TileSize
+		);
+		HBITMAP oldBitmap = (HBITMAP)SelectObject(mTileHdc, tileBitmap);
 		DeleteObject(oldBitmap);
 	}
 }

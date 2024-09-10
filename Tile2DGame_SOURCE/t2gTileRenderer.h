@@ -10,7 +10,7 @@ namespace t2g
 	class TileRenderer : public Component
 	{
 	public:
-		TileRenderer() : mTileIndex(0), mImageFrame{} {}
+		TileRenderer() : mTileIndex(0), mImageName(eImageName::EnumEnd), mSrcPos{} {}
 		virtual ~TileRenderer() {}
 
 	public:
@@ -34,8 +34,9 @@ namespace t2g
 
 	private:
 		UINT mTileIndex;
+		eImageName mImageName;
 
-		ImageFrame mImageFrame;
+		Point mSrcPos;
 	};
 }
 

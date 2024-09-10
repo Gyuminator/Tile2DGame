@@ -19,41 +19,24 @@ t2g::Object::~Object()
 
 void t2g::Object::Init(eObjectType type)
 {
-	switch (type)
-	{
-	case eObjectType::Player:
-	{
-		AddComponent<Transform>()->Init
-		(
-			Vector3(100.f, 100.f, 0.f),
-			Vector3(0.f, 0.f, 0.f),
-			Vector3(1.f, 1.f, 0.f)
-		);
-		AddComponent<PlayerController>();
-		AddComponent<ImageRenderer>()->Init(eImageName::Tile_01, 0, 2);
-
-		break;
-	}
-	case eObjectType::Tile:
-	{
 
 
-		break;
-	}
-	default:
-		break;
-	}
-
-	SyncComponents();
 }
 
-void t2g::Object::BindComponentToScene(SafePtr<Component> component)
+void t2g::Object::BindComponentsToScene()
 {
-	if (mOwner.IsEmpty())
-		return;
+	assert(mOwner.IsValid() && "Object::BindComponentsToScene: Empty mOwner");
 
-	mOwner->BindComponent(component);
+	for (auto& pair : mComponents)
+	{
+		mOwner->BindComponent(pair.second.get());
+	}
 }
+
+//void t2g::Object::BindComponentToScene(SafePtr<Component> component)
+//{
+//	mOwner->BindComponent(component);
+//}
 
 void t2g::Object::SyncComponents()
 {

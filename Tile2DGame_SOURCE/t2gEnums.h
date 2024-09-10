@@ -30,12 +30,13 @@ namespace t2g::enums
 		Script,
 		ImageRenderer,
 		TileRenderer,
+		AnimationRenderer,
 		Camera,
 		Controller,
 
 		EnumEnd
 	};
-	
+
 	enum class eRenderLayer : UINT8
 	{
 		BackGround,
@@ -75,7 +76,7 @@ namespace t2g::enums
 
 		EnumEnd
 	};
-	
+
 	enum class eImageName : UINT32
 	{
 		Player,
@@ -88,6 +89,20 @@ namespace t2g::enums
 	{
 		BackDC,
 		TileDC,
+
+		EnumEnd
+	};
+
+	enum class eAnimState : UINT8
+	{
+		Idle_Left,
+		Idle_Right,
+		Idle_Up,
+		Idle_Down,
+		Walk_Left,
+		Walk_Right,
+		Walk_Up,
+		Walk_Down,
 
 		EnumEnd
 	};

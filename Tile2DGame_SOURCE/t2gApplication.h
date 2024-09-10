@@ -21,7 +21,7 @@ namespace t2g
 		void Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect);
 		void Release();
 
-		void ChangeTileBitmap(HBITMAP hBitmap);
+		void ChangeTileBitmapSize(SIZE sceneSize);
 
 	private:
 		void CreateBackBuffer();
