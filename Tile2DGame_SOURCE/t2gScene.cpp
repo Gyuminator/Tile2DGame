@@ -75,6 +75,10 @@ void t2g::Scene::Init(SIZE sceneSize)
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 0, 0 });
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 1, 0 });
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 2, 0 });
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Left, &AnimationRenderer::ChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Right, &AnimationRenderer::ChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Up, &AnimationRenderer::ChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Down, &AnimationRenderer::ChangeDirectionByRotation);
 	playerAnimRender->SetCurState(eAnimState::Idle_Right);
 	player->SyncComponents();
 	player->BindComponentsToScene();
@@ -118,6 +122,12 @@ SafePtr<t2g::Object> t2g::Scene::AddTile()
 
 	return sptr;
 }
+
+SafePtr<t2g::Object> t2g::Scene::AddCamera()
+{
+	return SafePtr<t2g::Object>();
+}
+
 
 void t2g::Scene::BindComponent(SafePtr<Component> component)
 {

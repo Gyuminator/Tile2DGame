@@ -93,12 +93,12 @@ namespace t2g::enums
 		EnumEnd
 	};
 
-	enum class eAnimState : UINT8
+	enum class eAnimState : UINT16
 	{
-		Idle_Left,
 		Idle_Right,
-		Idle_Up,
 		Idle_Down,
+		Idle_Left,
+		Idle_Up,
 		Walk_Left,
 		Walk_Right,
 		Walk_Up,

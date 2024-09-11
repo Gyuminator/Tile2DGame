@@ -63,6 +63,8 @@ namespace t2g
 	public:
 		SafePtr<t2g::Object> AddObject();
 		SafePtr<t2g::Object> AddTile();
+		SafePtr<t2g::Object> AddCamera();
+
 		void BindComponent(SafePtr<Component> component);
 
 	public:
@@ -77,14 +79,15 @@ namespace t2g
 		void LoadImagesOfScene();
 
 	private:
-		SIZE mSize;
-
-		vector<unique_ptr<Object>> mTiles;
+		Objects mObjects;
 
 		Components mUpdateComponentsLayers[(UINT)eUpdateLayer::EnumEnd];
 		Components mRenderComponentsLayers[(UINT)eRenderLayer::EnumEnd];
 
-		Objects mObjects;
+		vector<unique_ptr<Object>> mTiles;
+		vector<unique_ptr<Object>> mCameras;
+
+		SIZE mSize;
 
 	};
 }

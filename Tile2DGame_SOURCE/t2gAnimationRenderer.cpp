@@ -2,13 +2,14 @@
 #include "t2gMacro.h"
 #include "t2gImageManager.h"
 #include "t2gTime.h"
+#include "t2gTransform.h"
 
 t2g::AnimationRenderer::AnimationRenderer()
 	: mAnimations{}
 	, mDuration{}
 	, mAccTime{}
-	, mCurIndex{}
-	, mCurState(eAnimState::EnumEnd)
+	, mAnimIndex{}
+	, mAnimState(eAnimState::EnumEnd)
 {
 }
 
@@ -19,22 +20,23 @@ void t2g::AnimationRenderer::SyncBindings()
 
 void t2g::AnimationRenderer::update()
 {
-	if (eAnimState::EnumEnd == mCurState)
+	if (eAnimState::EnumEnd == mAnimState)
 		return;
 
-	if (mStateChangers.find(mCurState) != mStateChangers.end())
+	auto iter = mStateChangers.find(mAnimState);
+	if (iter != mStateChangers.end())
 	{
-		
+		changeAnimState(iter->second(*this));
 	}
 
 	mAccTime += GET_SINGLETON(Time).GetDT();
 	if (mAccTime > mDuration)
 	{
 		mAccTime = 0.f;
-		++mCurIndex;
-		if (IsIndexOver())
-			mCurIndex = 0;
-		SetSrcPos(mAnimations[mCurState][mCurIndex]);
+		++mAnimIndex;
+		if (isIndexOver())
+			mAnimIndex = 0;
+		SetSrcPos(mAnimations[mAnimState][mAnimIndex]);
 	}
 }
 
@@ -43,7 +45,7 @@ void t2g::AnimationRenderer::render()
 	if (GetTransform().IsEmpty())
 		return;
 
-	if (eAnimState::EnumEnd == mCurState)
+	if (eAnimState::EnumEnd == mAnimState)
 		return;
 
 	SafePtr<Sprite> sprite = GET_SINGLETON(ImageManager).FindImage(GetImageName());
@@ -69,4 +71,28 @@ void t2g::AnimationRenderer::AddFrame(eAnimState eState, Point srcPos)
 		mAnimations.insert(make_pair(eState, vector<Point>{}));
 
 	mAnimations[eState].push_back(srcPos);
+}
+
+void t2g::AnimationRenderer::changeAnimState(eAnimState eState)
+{
+	if (mAnimState == eState)
+		return;
+
+	mAnimState = eState;
+	mAnimIndex = 0;
+	mAccTime = 0.f;
+	SetSrcPos(mAnimations[mAnimState][mAnimIndex]);
+}
+
+eAnimState t2g::AnimationRenderer::ChangeDirectionByRotation()
+{
+	SafePtr<Transform> transform = GetTransform();
+	if (transform.IsEmpty())
+		return mAnimState;
+
+	const Vector3 rotation = transform->GetRotation();
+	UINT zABS = abs((INT)rotation.z);
+	UINT16 factor = zABS % 360 / 90;
+	factor += (UINT16)eAnimState::Idle_Right;
+	return (eAnimState)factor;
 }

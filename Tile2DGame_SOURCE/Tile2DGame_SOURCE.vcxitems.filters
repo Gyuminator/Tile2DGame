@@ -127,6 +127,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -193,5 +194,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gCamera.cpp" />
   </ItemGroup>
 </Project>

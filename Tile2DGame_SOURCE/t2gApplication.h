@@ -28,6 +28,7 @@ namespace t2g
 		void CreateTileBuffer();
 	public:
 		HWND GetHWnd() { return mHwnd; }
+		HDC GetMainDC() { return mHdc; }
 		HDC GetBackDC() { return mBackHdc; }
 		HDC GetTileDC() { return mTileHdc; }
 

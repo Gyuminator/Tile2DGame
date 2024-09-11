@@ -17,7 +17,7 @@ namespace t2g
 	{
 	public:
 		typedef vector<Point> Animation;
-		typedef function<void(AnimationRenderer&)> StateChanger;
+		typedef function<eAnimState(AnimationRenderer&)> StateChanger;
 
 	public:
 		AnimationRenderer();
@@ -36,13 +36,15 @@ namespace t2g
 	public:
 		void Init(eImageName eName, FLOAT duration = 0.5f);
 		void AddFrame(eAnimState eState, Point srcPos);
+		void BindStateChanger(eAnimState eState, StateChanger func) { mStateChangers[eState] = func; }
 
 	public:
 		void SetAnimation(const eAnimState eState, const Animation anim) { mAnimations[eState] = anim; }
-		void SetCurState(const eAnimState eState) { mCurState = eState; }
+		void SetCurState(const eAnimState eState) { mAnimState = eState; }
 
 	private:
-		bool IsIndexOver() { return mCurIndex == mAnimations[mCurState].size(); }
+		bool isIndexOver() { return mAnimIndex == mAnimations[mAnimState].size(); }
+		void changeAnimState(eAnimState eState);
 
 	private:
 		unordered_map<eAnimState, Animation> mAnimations;
@@ -51,10 +53,13 @@ namespace t2g
 		FLOAT mDuration;
 		FLOAT mAccTime;
 
-		UINT16 mCurIndex;
+		UINT16 mAnimIndex;
 
-		eAnimState mCurState;
+		eAnimState mAnimState;
 
+	public:
+		// 상태 전이 함수들
+		eAnimState ChangeDirectionByRotation();
 	};
 }
 
