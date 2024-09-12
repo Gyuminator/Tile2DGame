@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 
 #include "t2gRect.h"
 #include "t2gSafePtr.h"
@@ -20,7 +19,8 @@ namespace t2g
 		{}
 
 	public:
-		SafePtr<Image> GetImage() { return &mImage; }
+		//SafePtr<Image> GetImage() { return &mImage; }
+		Image& GetImage() { return mImage; }
 		INT GetFrameWidth() { return mFrameSize.Width; }
 		INT GetFrameHeight() { return mFrameSize.Height; }
 

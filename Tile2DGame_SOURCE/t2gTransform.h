@@ -21,11 +21,8 @@ namespace t2g
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::Transform; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::UI; }
-		void SyncBindings() override;
-	private:
-		void update() override;
-		void render() override;
+		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
+		void SyncWithOtherComponents() override;
 
 	public:
 		void Init(const Vector3& location, const Vector3& rotation, const Vector3& scale);

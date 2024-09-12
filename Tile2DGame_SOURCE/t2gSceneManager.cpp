@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "t2gSceneManager.h"
-#include "t2gPlayScene.h"
 
 t2g::SceneManager::SceneManager()
 	: mCurScene{}

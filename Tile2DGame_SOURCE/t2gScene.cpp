@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gScene.h"
+
 #include "t2gComponent.h"
 #include "t2gObject.h"
 #include "t2gTransform.h"
@@ -8,12 +10,15 @@
 #include "t2gTileRenderer.h"
 #include "t2gPlayerController.h"
 #include "t2gAnimationRenderer.h"
+#include "t2gCamera.h"
 
 t2g::Scene::Scene()
-	: mSize{ 1, 1 }
-	, mObjects{}
+	: mObjects{}
 	, mUpdateComponentsLayers{}
 	, mRenderComponentsLayers{}
+	, mTiles{}
+	, mCameras{}
+	, mSize{ 1, 1 }
 {
 }
 
@@ -37,6 +42,10 @@ void t2g::Scene::Render()
 			components->Render();
 		}
 	}
+	for (auto camera : mCameras)
+	{
+		camera->Render();
+	}
 }
 
 void t2g::Scene::Init(SIZE sceneSize)
@@ -55,7 +64,7 @@ void t2g::Scene::Init(SIZE sceneSize)
 		Vector3(0.f, 0.f, 0.f),
 		Vector3(1.f, 1.f, 0.f)
 	);
-	player->AddComponent<PlayerController>();
+	player->AddComponent<PlayerController>()->Init();
 	//player->AddComponent<ImageRenderer>()->Init(eImageName::Player, 0, 2);
 	player->AddComponent<AnimationRenderer>()->Init(eImageName::Player);
 	SafePtr<AnimationRenderer> playerAnimRender = player->GetComponent(eComponentType::AnimationRenderer);
@@ -75,10 +84,10 @@ void t2g::Scene::Init(SIZE sceneSize)
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 0, 0 });
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 1, 0 });
 	playerAnimRender->AddFrame(eAnimState::Idle_Down, { 2, 0 });
-	playerAnimRender->BindStateChanger(eAnimState::Idle_Left, &AnimationRenderer::ChangeDirectionByRotation);
-	playerAnimRender->BindStateChanger(eAnimState::Idle_Right, &AnimationRenderer::ChangeDirectionByRotation);
-	playerAnimRender->BindStateChanger(eAnimState::Idle_Up, &AnimationRenderer::ChangeDirectionByRotation);
-	playerAnimRender->BindStateChanger(eAnimState::Idle_Down, &AnimationRenderer::ChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Left, &AnimationRenderer::scChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Right, &AnimationRenderer::scChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Up, &AnimationRenderer::scChangeDirectionByRotation);
+	playerAnimRender->BindStateChanger(eAnimState::Idle_Down, &AnimationRenderer::scChangeDirectionByRotation);
 	playerAnimRender->SetCurState(eAnimState::Idle_Right);
 	player->SyncComponents();
 	player->BindComponentsToScene();

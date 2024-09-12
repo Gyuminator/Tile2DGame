@@ -10,18 +10,14 @@ namespace t2g
 	class TileRenderer : public Component
 	{
 	public:
-		TileRenderer() : mTileIndex(0), mImageName(eImageName::EnumEnd), mSrcPos{} {}
+		TileRenderer() : mTileIndex(0), mImageName(eImageName::EnumEnd), mSrcRect{} {}
 		virtual ~TileRenderer() {}
 
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::TileRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
 		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
-		void SyncBindings() override {};
-
-	private:
-		void update() override {};
-		void render() override;
+		void SyncWithOtherComponents() override {};
 
 	public:
 		void Init(eImageName eName, INT srcPosX, INT srcPosY, UINT TileIndex);
@@ -29,14 +25,14 @@ namespace t2g
 	public:
 		void SetTileIndex(UINT i) { mTileIndex = i; }
 
-	private:
-		
+	protected:
+		eDelegateResult cbDrawTile();
 
 	private:
 		UINT mTileIndex;
 		eImageName mImageName;
 
-		Point mSrcPos;
+		Point mSrcRect;
 	};
 }
 

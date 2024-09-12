@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_map>
-
 #include "t2gSprite.h"
 #include "t2gSingletonBase.h"
 #include "t2gApplication.h"
@@ -28,11 +26,22 @@ namespace t2g
 		void Load(const eImageName eName, const std::wstring fileName, INT xCount, INT yCount);
 		void UnLoad(const eImageName eName);
 
+		void DrawImage(Graphics& graphics, SafePtr<Sprite> sprite, const Rect& dest, const Rect& srcRect)
+		{
+			graphics.DrawImage
+			(
+				&sprite->GetImage(),
+				dest,
+				srcRect.X, srcRect.Y,
+				srcRect.Width, srcRect.Height,
+				UnitPixel
+			);
+		}
 		void DrawImage(Graphics& graphics, SafePtr<Sprite> sprite, const Rect& dest, const Point& srcPos)
 		{
 			graphics.DrawImage
 			(
-				(Image*)sprite->GetImage().GetKey(),
+				&sprite->GetImage(),
 				dest,
 				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
 				sprite->GetFrameWidth(), sprite->GetFrameHeight(),

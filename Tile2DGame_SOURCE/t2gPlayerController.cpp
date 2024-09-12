@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gPlayerController.h"
+
 #include "t2gInput.h"
 #include "t2gObject.h"
 #include "t2gTransform.h"
@@ -6,16 +8,19 @@
 
 using namespace std::enums;
 
-void t2g::PlayerController::SyncBindings()
+void t2g::PlayerController::SyncWithOtherComponents()
 {
 	mTransform = GetOwner()->GetComponent(eComponentType::Transform);
 }
 
-void t2g::PlayerController::update()
+void t2g::PlayerController::Init()
 {
-	if (mTransform.IsEmpty())
-		return;
+	BindToUpdates(&PlayerController::cbCheckTransform);
+	BindToUpdates(&PlayerController::cbProcArrowKeys);
+}
 
+eDelegateResult t2g::PlayerController::cbProcArrowKeys()
+{
 	Vector3 location = mTransform->GetLocation();
 	Vector3 rotation = mTransform->GetRotation();
 
@@ -42,4 +47,14 @@ void t2g::PlayerController::update()
 
 	mTransform->SetLocation(location);
 	mTransform->SetRotation(rotation);
+
+	return eDelegateResult::OK;
+}
+
+eDelegateResult t2g::PlayerController::cbCheckTransform()
+{
+	if (mTransform.IsEmpty())
+		return eDelegateResult::Return;
+	else
+		return eDelegateResult::Erase;
 }

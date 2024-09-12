@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "t2gImageFrame.h"
 
 //void t2g::ImageFrame::SetFrame(INT xPos, INT yPos)

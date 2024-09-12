@@ -27,11 +27,7 @@ namespace t2g
 		eComponentType GetComponentType() const override { return eComponentType::AnimationRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::Script; }
 		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
-		void SyncBindings() override;
-
-	private:
-		void update() override;
-		void render() override;
+		void SyncWithOtherComponents() override;
 
 	public:
 		void Init(eImageName eName, FLOAT duration = 0.5f);
@@ -41,6 +37,11 @@ namespace t2g
 	public:
 		void SetAnimation(const eAnimState eState, const Animation anim) { mAnimations[eState] = anim; }
 		void SetCurState(const eAnimState eState) { mAnimState = eState; }
+
+	protected:
+		eDelegateResult cbCheckStateValid();
+		eDelegateResult cbProcStateChanger();
+		eDelegateResult cbAnimate();
 
 	private:
 		bool isIndexOver() { return mAnimIndex == mAnimations[mAnimState].size(); }
@@ -59,7 +60,7 @@ namespace t2g
 
 	public:
 		// 상태 전이 함수들
-		eAnimState ChangeDirectionByRotation();
+		eAnimState scChangeDirectionByRotation();
 	};
 }
 

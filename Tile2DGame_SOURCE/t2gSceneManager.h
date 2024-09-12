@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_map>
-
 #include "t2gSingletonBase.h"
 #include "t2gEnums.h"
 #include "t2gSafePtr.h"

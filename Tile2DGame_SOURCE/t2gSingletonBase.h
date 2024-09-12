@@ -1,6 +1,5 @@
 #pragma once
-#include <cassert>
-#include <memory>
+#include "stdafx.h"
 
 #include "t2gInterfaces.h"
 #include "t2gMacro.h"

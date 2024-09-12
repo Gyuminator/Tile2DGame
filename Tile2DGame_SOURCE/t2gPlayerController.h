@@ -15,11 +15,14 @@ namespace t2g
 		eComponentType GetComponentType() const override { return eComponentType::Controller; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::Input; }
 		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
-		void SyncBindings() override;
+		void SyncWithOtherComponents() override;
 
-	private:
-		void update() override;
-		void render() override {};
+	public:
+		void Init();
+
+	protected:
+		eDelegateResult cbProcArrowKeys();
+		eDelegateResult cbCheckTransform();
 
 	private:
 		SafePtr<Transform> mTransform;

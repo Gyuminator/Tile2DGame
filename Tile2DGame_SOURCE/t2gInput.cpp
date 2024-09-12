@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gInput.h"
+
 #include "t2gApplication.h"
 
 t2g::Input::Input()

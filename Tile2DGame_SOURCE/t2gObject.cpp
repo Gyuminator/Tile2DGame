@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gObject.h"
+
 #include "t2gScene.h"
 #include "t2gTransform.h"
 #include "t2gPlayerController.h"
@@ -29,20 +31,15 @@ void t2g::Object::BindComponentsToScene()
 
 	for (auto& pair : mComponents)
 	{
-		mOwner->BindComponent(pair.second.get());
+		pair.second->BindToScene(mOwner);
 	}
 }
-
-//void t2g::Object::BindComponentToScene(SafePtr<Component> component)
-//{
-//	mOwner->BindComponent(component);
-//}
 
 void t2g::Object::SyncComponents()
 {
 	for (auto& pair : mComponents)
 	{
-		pair.second->SyncBindings();
+		pair.second->SyncWithOtherComponents();
 	}
 }
 

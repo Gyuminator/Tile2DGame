@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "t2gTime.h"
 #include "t2gApplication.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "stdafx.h"
 
 namespace t2g::math
 {

@@ -1,22 +1,9 @@
 #pragma once
-#include <memory>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-#include <functional>
 
 #include "t2gInterfaces.h"
 #include "t2gComponent.h"
 #include "t2gEnums.h"
 #include "t2gSafePtr.h"
-
-using std::wstring;
-using std::unique_ptr;
-using std::make_unique;
-using std::unordered_map;
-using std::unordered_set;
-using std::vector;
-using std::function;
 
 using t2g::enums::eComponentType;
 using t2g::enums::eObjectType;
@@ -65,7 +52,6 @@ namespace t2g
 		void SyncComponents();
 
 	private:
-		//void BindComponentToScene(SafePtr<Component> component);
 
 	public:
 		const wstring& GetName() const { return mName; }

@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gImageManager.h"
+
 #include "t2gApplication.h"
 
 t2g::ImageManager::ImageManager()

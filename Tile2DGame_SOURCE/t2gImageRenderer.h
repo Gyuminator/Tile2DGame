@@ -19,39 +19,46 @@ namespace t2g
 		eComponentType GetComponentType() const override { return eComponentType::ImageRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
 		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
-		void SyncBindings() override;
-
-	private:
-		void update() override {};
-		void render() override;
+		void SyncWithOtherComponents() override;
 
 	public:
 		void Init(eImageName eName, INT xPos, INT yPos);
 
 	public:
 		const Rect& GetRenderRect() { return mRenderRect; }
-		Point GetSrcPos() { return mSrcPos; }
+		Rect GetSrcRect() { return mSrcRect; }
 		SafePtr<Transform> GetTransform() { return mTransform; }
 		eImageName GetImageName() { return mImageName; }
 
-		void SetSrcPos(const Point& pos) { mSrcPos = pos; }
+		void SetSrcRect(const Rect& rect) { mSrcRect = rect; }
+		void SetSrcPos(const Point& pos)
+		{
+			mSrcRect.X = pos.X * mSrcRect.Width;
+			mSrcRect.Y = pos.Y * mSrcRect.Height;
+		}
 		void SetImageName(const eImageName eName) { mImageName = eName; }
 
 	protected:
-		void AdjustRenderRect(SafePtr<Sprite> sprite);
+		void AdjustRenderRect();
+
+	protected:
+		eDelegateResult cbCheckTransform();
+		eDelegateResult cbCheckImageLoading();
+		eDelegateResult cbDrawImage();
 
 	private:
-		void SyncRenderSize(SafePtr<Sprite> sprite);
+		void SyncRenderSize();
 		void SyncRenderPos(Vector3 location);
 
 	private:
 		Rect mRenderRect;
+		Rect mSrcRect;
 
-		Point mSrcPos;
 		PointF mAnchor;
 		POINT mOffset;
 
 		SafePtr<Transform> mTransform;
+		SafePtr<Sprite> mSprite;
 
 		eImageName mImageName;
 

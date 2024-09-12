@@ -1,8 +1,6 @@
 #pragma once
-#include <Windows.h>
 #include "t2gSingletonBase.h"
 #include "t2gMacro.h"
-#include <string>
 
 namespace t2g
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "stdafx.h"
 
 namespace t2g::enums
 {
@@ -103,6 +103,15 @@ namespace t2g::enums
 		Walk_Right,
 		Walk_Up,
 		Walk_Down,
+
+		EnumEnd
+	};
+
+	enum class eDelegateResult : UINT8
+	{
+		OK,
+		Erase,
+		Return,
 
 		EnumEnd
 	};

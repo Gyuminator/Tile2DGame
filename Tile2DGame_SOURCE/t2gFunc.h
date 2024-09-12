@@ -1,4 +1,6 @@
 #pragma once
+#include "stdafx.h"
+
 #include "t2gSingletonBase.h"
 #include "t2gInput.h"
 #include "t2gMacro.h"

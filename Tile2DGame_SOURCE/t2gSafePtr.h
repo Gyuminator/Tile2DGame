@@ -1,5 +1,4 @@
 #pragma once
-#include <xhash>
 
 namespace t2g
 {

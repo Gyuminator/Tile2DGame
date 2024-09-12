@@ -1,5 +1,4 @@
 #pragma once
-#include <Windows.h>
 #include "t2gSingletonBase.h"
 
 namespace t2g

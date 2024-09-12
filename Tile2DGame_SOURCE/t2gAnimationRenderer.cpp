@@ -1,8 +1,13 @@
+#include "stdafx.h"
 #include "t2gAnimationRenderer.h"
+
 #include "t2gMacro.h"
 #include "t2gImageManager.h"
 #include "t2gTime.h"
 #include "t2gTransform.h"
+#include "t2gObject.h"
+#include "t2gScene.h"
+#include "t2gCamera.h"
 
 t2g::AnimationRenderer::AnimationRenderer()
 	: mAnimations{}
@@ -13,22 +18,55 @@ t2g::AnimationRenderer::AnimationRenderer()
 {
 }
 
-void t2g::AnimationRenderer::SyncBindings()
+void t2g::AnimationRenderer::SyncWithOtherComponents()
 {
-	__super::SyncBindings();
+	__super::SyncWithOtherComponents();
 }
 
-void t2g::AnimationRenderer::update()
+void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
 {
-	if (eAnimState::EnumEnd == mAnimState)
-		return;
+	SetImageName(eName);
+	mDuration = duration;
 
+	BindToRenders(&AnimationRenderer::cbCheckStateValid);
+	BindToRenders(&AnimationRenderer::cbProcStateChanger);
+	BindToRenders(&AnimationRenderer::cbAnimate);
+
+	BindToRenders(&AnimationRenderer::cbCheckTransform);
+	BindToRenders(&AnimationRenderer::cbCheckStateValid);
+	BindToRenders(&AnimationRenderer::cbCheckImageLoading, true);
+	BindToRenders(&AnimationRenderer::cbDrawImage);
+}
+
+void t2g::AnimationRenderer::AddFrame(eAnimState eState, Point srcPos)
+{
+	if (mAnimations.find(eState) == mAnimations.end())
+		mAnimations.insert(make_pair(eState, vector<Point>{}));
+
+	mAnimations[eState].push_back(srcPos);
+}
+
+eDelegateResult t2g::AnimationRenderer::cbCheckStateValid()
+{
+	if (mAnimState == eAnimState::EnumEnd)
+		return eDelegateResult::Return;
+	if (mAnimations.find(mAnimState) == mAnimations.end())
+		return eDelegateResult::Return;
+
+	return eDelegateResult::Erase;
+}
+
+eDelegateResult t2g::AnimationRenderer::cbProcStateChanger()
+{
 	auto iter = mStateChangers.find(mAnimState);
 	if (iter != mStateChangers.end())
-	{
 		changeAnimState(iter->second(*this));
-	}
 
+	return eDelegateResult::OK;
+}
+
+eDelegateResult t2g::AnimationRenderer::cbAnimate()
+{
 	mAccTime += GET_SINGLETON(Time).GetDT();
 	if (mAccTime > mDuration)
 	{
@@ -38,39 +76,8 @@ void t2g::AnimationRenderer::update()
 			mAnimIndex = 0;
 		SetSrcPos(mAnimations[mAnimState][mAnimIndex]);
 	}
-}
 
-void t2g::AnimationRenderer::render()
-{
-	if (GetTransform().IsEmpty())
-		return;
-
-	if (eAnimState::EnumEnd == mAnimState)
-		return;
-
-	SafePtr<Sprite> sprite = GET_SINGLETON(ImageManager).FindImage(GetImageName());
-	if (sprite.IsEmpty())
-		return;
-
-	AdjustRenderRect(sprite);
-
-	GET_SINGLETON(ImageManager).DrawImage(
-		GET_SINGLETON(ImageManager).GetGraphicsOfBackDC(),
-		sprite, GetRenderRect(), GetSrcPos());
-}
-
-void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
-{
-	SetImageName(eName);
-	mDuration = duration;
-}
-
-void t2g::AnimationRenderer::AddFrame(eAnimState eState, Point srcPos)
-{
-	if (mAnimations.find(eState) == mAnimations.end())
-		mAnimations.insert(make_pair(eState, vector<Point>{}));
-
-	mAnimations[eState].push_back(srcPos);
+	return eDelegateResult::OK;
 }
 
 void t2g::AnimationRenderer::changeAnimState(eAnimState eState)
@@ -84,7 +91,7 @@ void t2g::AnimationRenderer::changeAnimState(eAnimState eState)
 	SetSrcPos(mAnimations[mAnimState][mAnimIndex]);
 }
 
-eAnimState t2g::AnimationRenderer::ChangeDirectionByRotation()
+eAnimState t2g::AnimationRenderer::scChangeDirectionByRotation()
 {
 	SafePtr<Transform> transform = GetTransform();
 	if (transform.IsEmpty())

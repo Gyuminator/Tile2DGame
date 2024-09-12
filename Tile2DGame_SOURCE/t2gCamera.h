@@ -8,45 +8,58 @@ using namespace t2g::math;
 namespace t2g
 {
 	class Transform;
+	class Component;
 
 	class Camera : public Component
 	{
 	public:
+		//typedef std::unordered_set<eObjectType> RenderTargetTypes;
+
+	public:
 		Camera();
-		virtual ~Camera() {}
+		virtual ~Camera() { Release(); }
 
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::Camera; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
 		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
-		void SyncBindings() override;
+		void SyncWithOtherComponents() override;
 
-	private:
-		void update() override {};
-		void render() override;
+		void BindToScene(SafePtr<Scene> scene) override;
 
 	public:
-		void Init(eImageName eName, INT xPos, INT yPos);
+		void Init(const Rect& viewport, const Rect& cameraView);
+		void Release();
 
 	public:
-		const Rect& GetWriteRect() { return mWriteRect; }
+		const Rect& GetViewportRect() { return mViewportRect; }
+		const Rect& GetCameraViewRect() { return mCameraViewRect; }
 		SafePtr<Transform> GetTransform() { return mTransform; }
+		HDC GetCameraDC() { return mCameraDC; }
+		Graphics& GetGraphics() { return mGraphics; }
 
 	protected:
-		void AdjustRenderRect(SafePtr<Sprite> sprite);
+		void AdjustRenderRect(SafePtr<Sprite> sprite) {};
 
 	private:
-		void SyncRenderSize(SafePtr<Sprite> sprite);
-		void SyncRenderPos(Vector3 location);
+		void SyncRenderSize(SafePtr<Sprite> sprite) {};
+		void SyncRenderPos(Vector3 location) {};
+		void CreateCameraBuffer();
 
 	private:
-		Rect mWriteRect;
-		Rect mReadRect;
+		unordered_set<eObjectType> mRenderTargetTypes;
+
+		Rect mViewportRect;    // 뷰포트
+		Rect mCameraViewRect;  // 카메라 시야
+
+		const HDC mMainDC;
+		HDC mCameraDC;
+		Graphics mGraphics;
+
+		SafePtr<Transform> mTransform;
 
 		PointF mAnchor;
 		POINT mOffset;
-
-		SafePtr<Transform> mTransform;
 
 		FLOAT mDistance;
 	};

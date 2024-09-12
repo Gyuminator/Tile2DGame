@@ -1,5 +1,6 @@
 #pragma once
-#include <string>
+#include "stdafx.h"
+
 #include "t2gEnums.h"
 #include "t2gSafePtr.h"
 

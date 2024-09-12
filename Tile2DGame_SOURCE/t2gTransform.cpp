@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "t2gTransform.h"
+
 #include "t2gApplication.h"
 
 t2g::Transform::Transform()
@@ -10,19 +12,9 @@ t2g::Transform::Transform()
 {
 }
 
-void t2g::Transform::SyncBindings()
+void t2g::Transform::SyncWithOtherComponents()
 {
 	//mRender = (&Transform::showText);
-}
-
-void t2g::Transform::update()
-{
-	
-}
-
-void t2g::Transform::render()
-{
-	//((*this).*mRender)();
 }
 
 void t2g::Transform::Init(const Vector3& location, const Vector3& rotation, const Vector3& scale)

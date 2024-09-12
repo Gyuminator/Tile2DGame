@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)stdafx.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
@@ -27,13 +28,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gLoadingScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMacro.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h" />
@@ -43,10 +42,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTitleScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -56,11 +60,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp" />
@@ -68,7 +70,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTitleScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp" />
   </ItemGroup>
 </Project>

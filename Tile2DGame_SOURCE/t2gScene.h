@@ -1,23 +1,8 @@
 #pragma once
-#include <memory>
-#include <unordered_set>
-#include <unordered_map>
-#include <functional>
-#include <vector>
-
-#include "t2gInterfaces.h"
 #include "t2gEnums.h"
-#include "t2gFunc.h"
 #include "t2gSafePtr.h"
-#include "t2gEvent.h"
 #include "t2gObject.h"
 #include "t2gComponent.h"
-
-using std::unique_ptr;
-using std::unordered_set;
-using std::unordered_map;
-using std::function;
-using std::vector;
 
 using namespace t2g::enums;
 
@@ -26,10 +11,9 @@ using namespace t2g::enums;
 
 namespace t2g
 {
-	using namespace func;
-
 	class Object;
 	class Component;
+	class Camera;
 
 	class Scene
 	{
@@ -68,6 +52,7 @@ namespace t2g
 		void BindComponent(SafePtr<Component> component);
 
 	public:
+		const vector<SafePtr<Camera>>& GetCameras() { return mCameras; }
 		SIZE GetSize() { return mSize; }
 
 	private:
@@ -85,7 +70,7 @@ namespace t2g
 		Components mRenderComponentsLayers[(UINT)eRenderLayer::EnumEnd];
 
 		vector<unique_ptr<Object>> mTiles;
-		vector<unique_ptr<Object>> mCameras;
+		vector<SafePtr<Camera>> mCameras;
 
 		SIZE mSize;
 

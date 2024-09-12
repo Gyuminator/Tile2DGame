@@ -25,9 +25,6 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{047d4ea4-755f-455e-add0-eab62c32facc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Layer">
-      <UniqueIdentifier>{a67ab1ae-0b85-4817-b6e4-4fb2849bf09d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Event">
       <UniqueIdentifier>{cd1ebc28-5bf8-4ebf-a3bd-f69fdf0715c3}</UniqueIdentifier>
     </Filter>
@@ -91,20 +88,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gLoadingScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTitleScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h">
       <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLayer.h">
-      <Filter>Layer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageFrame.h">
       <Filter>Image</Filter>
@@ -127,7 +115,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gCamera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)stdafx.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gCamera.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -158,20 +149,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTitleScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp">
       <Filter>Event</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLayer.cpp">
-      <Filter>Layer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp">
       <Filter>Image</Filter>
@@ -194,6 +176,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gCamera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)stdafx.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gCamera.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

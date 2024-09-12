@@ -1,9 +1,5 @@
 #pragma once
-#include <Windows.h>
-#include <objidl.h>
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment (lib,"Gdiplus.lib")
+#include "stdafx.h"
 
 #include "t2gMath.h"
 

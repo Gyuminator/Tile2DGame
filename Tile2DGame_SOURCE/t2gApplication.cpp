@@ -1,5 +1,6 @@
+#include "stdafx.h"
 #include "t2gApplication.h"
-#include <string>
+
 #include "t2gTime.h"
 #include "t2gEnums.h"
 #include "t2gInput.h"
