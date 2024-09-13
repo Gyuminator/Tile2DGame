@@ -67,20 +67,40 @@ eDelegateResult t2g::ImageRenderer::cbDrawImage()
 {
 	AdjustRenderRect();
 
-	auto& cameras = GetOwner()->GetOwner()->GetCameras();
+	auto camera = GetOwner()->GetOwner()->GetCurCamera();
 	Rect tempRc;
-	for (auto camera : cameras)
+	Rect tempRenderRc = mRenderRect;
+	ScalingRect(tempRenderRc, 1.f / camera->GetDistance());
+
+	if (Rect::Intersect(tempRc, camera->GetCameraViewRect(), tempRenderRc))
 	{
-		if (Rect::Intersect(tempRc, camera->GetCameraViewRect(), GetRenderRect()))
-		{
+		Vector3 camLocation = camera->GetTransform()->GetLocation();
+		Rect resultRenderRc = tempRc;
+		PointF renderAnchor = GetAnchorByPos(camera->GetCameraViewRect(), Point(tempRc.X, tempRc.Y));
+		Point renderPos = GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
+		resultRenderRc.X = renderPos.X;
+		resultRenderRc.Y = renderPos.Y;
+		/*resultRenderRc.X += camera->GetViewportRect().X - camera->GetCameraViewRect().X;
+		resultRenderRc.Y += camera->GetViewportRect().Y - camera->GetCameraViewRect().Y;*/
+		/*resultRenderRc.X -= camera->GetCameraViewRect().X;
+		resultRenderRc.Y -= camera->GetCameraViewRect().Y;*/
+		PointF ltAnchor = GetAnchorByPos(tempRenderRc,
+			Point(tempRc.GetLeft(), tempRc.GetTop()));
+		PointF rbAnchor = GetAnchorByPos(tempRenderRc,
+			Point(tempRc.GetRight(), tempRc.GetBottom()));
+		Rect resultSrcRc = MakeRectByAnchors(mSrcRect, ltAnchor, rbAnchor);
 
-			GET_SINGLETON(ImageManager).DrawImage(camera->GetGraphics(),
-				mSprite, mRenderRect, mSrcRect);
-		}
+		Graphics graphics(GET_SINGLETON(Application).GetBackDC());
+		/*Graphics graphics(camera->GetCameraDC());*/
+		GET_SINGLETON(ImageManager).DrawImage(graphics,
+			mSprite, resultRenderRc, resultSrcRc);
 	}
+	/*RECT rcRECT(900, 500, 1000, 550);
+	DrawText(camera->GetCameraDC(), L"12345", 5, &rcRECT, 0);*/
+	//}
 
-	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfBackDC(),
-		mSprite, mRenderRect, mSrcRect);
+	/*GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfBackDC(),
+		mSprite, mRenderRect, mSrcRect);*/
 
 	return eDelegateResult::OK;
 }

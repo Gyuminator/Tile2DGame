@@ -28,13 +28,17 @@ void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
 	SetImageName(eName);
 	mDuration = duration;
 
-	BindToRenders(&AnimationRenderer::cbCheckStateValid);
-	BindToRenders(&AnimationRenderer::cbProcStateChanger);
-	BindToRenders(&AnimationRenderer::cbAnimate);
+	BindToUpdates(&AnimationRenderer::cbCheckTransform);
+	BindToUpdates(&AnimationRenderer::cbCheckStateValid);
+	BindToUpdates(&AnimationRenderer::cbCheckImageLoading);
+
+	BindToUpdates(&AnimationRenderer::cbProcStateChanger);
+	BindToUpdates(&AnimationRenderer::cbAnimate);
 
 	BindToRenders(&AnimationRenderer::cbCheckTransform);
 	BindToRenders(&AnimationRenderer::cbCheckStateValid);
-	BindToRenders(&AnimationRenderer::cbCheckImageLoading, true);
+	BindToRenders(&AnimationRenderer::cbCheckImageLoading);
+
 	BindToRenders(&AnimationRenderer::cbDrawImage);
 }
 

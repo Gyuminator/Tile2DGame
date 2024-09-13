@@ -30,7 +30,7 @@ namespace t2g
 		void SyncWithOtherComponents() override;
 
 	public:
-		void Init(eImageName eName, FLOAT duration = 0.5f);
+		void Init(eImageName eName, FLOAT duration = 0.3f);
 		void AddFrame(eAnimState eState, Point srcPos);
 		void BindStateChanger(eAnimState eState, StateChanger func) { mStateChangers[eState] = func; }
 

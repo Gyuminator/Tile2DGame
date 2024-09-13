@@ -2,11 +2,14 @@
 #include "t2gComponent.h"
 #include "t2gRect.h"
 #include "t2gSprite.h"
+#include "t2gEnums.h"
 
 using namespace t2g::math;
+using namespace t2g::enums;
 
 namespace t2g
 {
+	using namespace Gdiplus;
 	class Transform;
 	class Component;
 
@@ -28,8 +31,10 @@ namespace t2g
 		void BindToScene(SafePtr<Scene> scene) override;
 
 	public:
-		void Init(const Rect& viewport, const Rect& cameraView);
+		void Init(const Rect& viewport);
 		void Release();
+
+	public:
 
 	public:
 		const Rect& GetViewportRect() { return mViewportRect; }
@@ -37,9 +42,15 @@ namespace t2g
 		SafePtr<Transform> GetTransform() { return mTransform; }
 		HDC GetCameraDC() { return mCameraDC; }
 		Graphics& GetGraphics() { return mGraphics; }
+		FLOAT GetDistance() { return mDistance; }
+
+		void SetDistance(FLOAT distance) { mDistance = distance; }
 
 	protected:
-		void AdjustRenderRect(SafePtr<Sprite> sprite) {};
+		eDelegateResult cbCheckTransform();
+		eDelegateResult cbSyncCameraView();
+		eDelegateResult cbBltToViewport();
+		eDelegateResult cbRenderTile();
 
 	private:
 		void SyncRenderSize(SafePtr<Sprite> sprite) {};
@@ -59,7 +70,7 @@ namespace t2g
 		SafePtr<Transform> mTransform;
 
 		PointF mAnchor;
-		POINT mOffset;
+		Point mOffset;
 
 		FLOAT mDistance;
 	};

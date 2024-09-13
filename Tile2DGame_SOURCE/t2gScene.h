@@ -47,12 +47,14 @@ namespace t2g
 	public:
 		SafePtr<t2g::Object> AddObject();
 		SafePtr<t2g::Object> AddTile();
-		SafePtr<t2g::Object> AddCamera();
+
+		void PushCamera(SafePtr<t2g::Camera> camera);
 
 		void BindComponent(SafePtr<Component> component);
 
 	public:
 		const vector<SafePtr<Camera>>& GetCameras() { return mCameras; }
+		SafePtr<Camera> GetCurCamera() { return mCurCamera; }
 		SIZE GetSize() { return mSize; }
 
 	private:
@@ -71,6 +73,8 @@ namespace t2g
 
 		vector<unique_ptr<Object>> mTiles;
 		vector<SafePtr<Camera>> mCameras;
+
+		SafePtr<Camera> mCurCamera;
 
 		SIZE mSize;
 

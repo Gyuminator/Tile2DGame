@@ -80,6 +80,7 @@ namespace t2g::enums
 	enum class eImageName : UINT32
 	{
 		Player,
+		Plant_00,
 		Tile_01,
 
 		EnumEnd

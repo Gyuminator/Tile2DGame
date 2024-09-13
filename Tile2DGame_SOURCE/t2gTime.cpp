@@ -36,6 +36,6 @@ void t2g::Time::Update()
 
 void t2g::Time::Render()
 {
-	HDC hBackDC = GET_SINGLETON(Application).GetBackDC();
-	DrawText(hBackDC, mTextToDraw.c_str(), (int)mTextToDraw.size(), &mRectToDraw, DT_LEFT | DT_TOP);
+	HDC hdc = GET_SINGLETON(Application).GetBackDC();
+	DrawText(hdc, mTextToDraw.c_str(), (int)mTextToDraw.size(), &mRectToDraw, DT_LEFT | DT_TOP);
 }

@@ -51,6 +51,7 @@ namespace t2g
 
 		Render();
 	}
+
 	void Application::Update()
 	{
 		GET_SINGLETON(Time).Update();
@@ -63,11 +64,12 @@ namespace t2g
 		}
 
 	}
+
 	void Application::Render()
 	{
 		//Rectangle(mTileHdc, mWndRect.left, mWndRect.top, mWndRect.right, mWndRect.bottom);
-		BitBlt(mBackHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
-			mTileHdc, mWndRect.left, mWndRect.top, SRCCOPY);
+		/*BitBlt(mBackHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
+			mTileHdc, mWndRect.left, mWndRect.top, SRCCOPY);*/
 
 		GET_SINGLETON(SceneManager).Render();
 
