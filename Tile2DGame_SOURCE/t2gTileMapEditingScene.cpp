@@ -31,10 +31,12 @@ void t2g::TileMapEditingScene::init()
 	CreateToolTiles();
 	DrawTileToolBuffer();
 
-	for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
+	/*for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 	{
 		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, 0, 0, INT(GetTiles().size() - 1));
-	}
+	}*/
+
+	LoadMap();
 
 	CameraSetting();
 
@@ -49,25 +51,56 @@ void t2g::TileMapEditingScene::init()
 
 void t2g::TileMapEditingScene::SaveMap()
 {
-	wstring path = L"..\\Resource\\Map\\";
-	path += L"map_00.txt";
-
-	std::ofstream out(path, std::ios::binary);
-
-	int i;
-	if (out.is_open())
+	if (func::CheckKey(eKeys::Ctrl, eKeyState::Pressed) &&
+		func::CheckKey(eKeys::S, eKeyState::Down))
 	{
-		SIZE sceneSize = GetSize();
-		out.write((char*)(&sceneSize), sizeof(sceneSize));
-		auto& tiles = GetTiles();
-		for (auto& tile : tiles)
+		wstring path = L"..\\Resource\\Map\\";
+		path += L"map_00.map";
+
+		std::ofstream out(path, std::ios::binary);
+
+		if (out.is_open())
 		{
-			SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
-			Point srcPos = tileRender->GetSrcPos();
-			eImageName eImage = tileRender->GetImageName();
-			out.write((char*)(&srcPos), sizeof(srcPos));
-			out.write((char*)(&eImage), sizeof(eImage));
+			SIZE sceneSize = GetSize();
+			out.write((char*)(&sceneSize), sizeof(sceneSize));
+			auto& tiles = GetTiles();
+			for (auto& tile : tiles)
+			{
+				SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
+				Point srcPos = tileRender->GetSrcPos();
+				eImageName eImage = tileRender->GetImageName();
+				out.write((char*)(&srcPos), sizeof(srcPos));
+				out.write((char*)(&eImage), sizeof(eImage));
+			}
 		}
+	}
+
+}
+
+void t2g::TileMapEditingScene::LoadMap()
+{
+	wstring path = L"..\\Resource\\Map\\";
+	path += L"map_00.map";
+
+	std::ifstream in(path, std::ios::binary);
+
+	if (in.is_open())
+	{
+		SIZE sceneSize;
+		in.read((char*)(&sceneSize), sizeof(sceneSize));
+		SetSize(sceneSize);
+
+		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
+		{
+			Point srcPos;
+			in.read((char*)(&srcPos), sizeof(srcPos));
+			eImageName eImage;
+			in.read((char*)(&eImage), sizeof(eImage));
+
+			AddTile()->AddComponent<TileRenderer>()->Init(eImage, srcPos.X, srcPos.Y,
+				INT(GetTiles().size() - 1));
+		}
+
 	}
 }
 

@@ -65,6 +65,8 @@ namespace t2g
 		SafePtr<Camera> GetCurCamera() { return mCurCamera; }
 		SIZE GetSize() { return mSize; }
 
+		void SetSize(SIZE sceneSize) { mSize = sceneSize; }
+
 	private:
 		virtual void init();
 		virtual void enter() {}
