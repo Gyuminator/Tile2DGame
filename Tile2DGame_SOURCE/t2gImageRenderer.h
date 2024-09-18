@@ -1,13 +1,22 @@
 #pragma once
-#include "t2gImageFrame.h"
 #include "t2gComponent.h"
 #include "t2gMath.h"
+#include "t2gSafePtr.h"
+#include "t2gSprite.h"
 
 using namespace t2g::math;
 
 namespace t2g
 {
 	class Transform;
+
+	struct DataByAdjustCamera
+	{
+		Rect tempRc;
+		Rect tempRenderRc;
+		Rect resultRenderRc;
+		bool isIntersect;
+	};
 
 	class ImageRenderer : public Component
 	{
@@ -36,12 +45,14 @@ namespace t2g
 			mSrcRect.X = pos.X * mSrcRect.Width;
 			mSrcRect.Y = pos.Y * mSrcRect.Height;
 		}
+		void SetAnchor(PointF anchor) { mAnchor = anchor; }
 		void SetImageName(const eImageName eName) { mImageName = eName; }
 
 	protected:
 		void AdjustRenderRect();
+		DataByAdjustCamera MakeDataByAdjustCamera();
 
-	protected:
+	public:
 		eDelegateResult cbCheckTransform();
 		eDelegateResult cbCheckImageLoading();
 		eDelegateResult cbDrawImage();

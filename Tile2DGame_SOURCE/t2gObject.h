@@ -4,9 +4,10 @@
 #include "t2gComponent.h"
 #include "t2gEnums.h"
 #include "t2gSafePtr.h"
+#include "t2gTypes.h"
 
 using t2g::enums::eComponentType;
-using t2g::enums::eObjectType;
+using t2g::enums::eObjectTag;
 using t2g::enums::eRenderLayer;
 using t2g::enums::eUpdateLayer;
 using t2g::SafePtr;
@@ -39,10 +40,9 @@ namespace t2g
 		~Object();
 
 	public:
-		void Init(eObjectType type);
+		void Init(eObjectTag type);
 
 	public:
-		UINT GetID() { return mID; }
 
 	public:
 		template<typename T>
@@ -51,36 +51,56 @@ namespace t2g
 		void BindComponentsToScene();
 		void SyncComponents();
 
+		void BindBackEvent(eEventCallPoint callPoint, function<eDelegateResult()> func) { mEvents[callPoint].push_back(func); }
+		void BindFrontEvent(eEventCallPoint callPoint, function<eDelegateResult()> func) { mEvents[callPoint].push_front(func); }
+		void EventProc(eEventCallPoint callPoint);
+
 	private:
 
 	public:
 		const wstring& GetName() const { return mName; }
-		void SetName(const wstring& name) { mName = name; }
-
 		SafePtr<Scene> GetOwner() { return mOwner; }
+		UINT GetID() { return mID; }
+		eObjectTag GetTag() { return mTag; }
+
+		void SetName(const wstring& name) { mName = name; }
 		void SetOwner(SafePtr<Scene> scene) { mOwner = scene; }
+		void SetTag(eObjectTag tag) { mTag = tag; }
+
 
 		const SafePtr<Component> GetComponent(eComponentType type);
+		template<typename T>
+		SafePtr<T> GetComponent(eComponentType type);
 
 	private:
-		UINT mID;
-
-		wstring mName;
-		SafePtr<Scene> mOwner;
-
 		SafeComponentSet mUpdateComponents;
 		SafeComponentSet mRenderComponents;
 
 		UniqueComponentMap mComponents;
 
-		SafePtr<Object> mAttacher;
+		Events mEvents;
+
+		wstring mName;
+
 		vector<SafePtr<Object>> mAttachedObjects;
+		SafePtr<Object> mAttacher;
+
+		SafePtr<Scene> mOwner;
+
+		UINT mID;
+		eObjectTag mTag;
 	};
-}
 
+	template<typename T>
+	SafePtr<T> Object::GetComponent(eComponentType type)
+	{
+		const auto& pair = mComponents.find(type);
+		if (pair == mComponents.end())
+			return SafePtr<T>(nullptr);
 
-namespace t2g
-{
+		return static_cast<SafePtr<T>>(SafePtr<Component>(pair->second.get()));
+	}
+
 	template<typename T>
 	decltype(auto) Object::AddComponent()
 	{
@@ -95,4 +115,5 @@ namespace t2g
 		return sptr;
 	}
 }
+
 

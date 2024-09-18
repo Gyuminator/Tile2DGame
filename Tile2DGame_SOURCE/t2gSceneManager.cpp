@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "t2gSceneManager.h"
 
+#include "t2gTileMapEditingScene.h"
+
 t2g::SceneManager::SceneManager()
 	: mCurScene{}
 	, mLoadingScene{}
@@ -12,8 +14,10 @@ t2g::SceneManager::SceneManager()
 void t2g::SceneManager::Init()
 {
 	//ChangeScene<PlayScene>(eScene::Play);
-	AddScene<Scene>(eScene::Play)->Init(SIZE(80, 60));
-	ChangeScene<Scene>(eScene::Play);
+	/*AddScene<Scene>(eScene::Play)->Init(SIZE(80, 60));
+	ChangeScene<Scene>(eScene::Play);*/
+	AddScene<TileMapEditingScene>(eScene::TileMapEditing)->Init(SIZE(80, 60));
+	ChangeScene<TileMapEditingScene>(eScene::TileMapEditing);
 }
 
 void t2g::SceneManager::Update()

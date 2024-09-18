@@ -28,6 +28,7 @@ namespace t2g
 
 	public:
 		bool CheckKey(eKeys key, eKeyState state) { return mKeyInfos[(UINT16)key].State == state; }
+		Point GetMousePos() { return { mMousePos.x, mMousePos.y }; }
 
 	private:
 		void virtualKeyMapping();
@@ -37,6 +38,7 @@ namespace t2g
 
 	private:
 		KeyInfo mKeyInfos[(size_t)eKeys::END];
+		POINT mMousePos;
 		/*std::bitset<(size_t)enums::eKeys::END> mCurPressed;
 		std::bitset<(size_t)enums::eKeys::END> mPrevPressed;*/
 

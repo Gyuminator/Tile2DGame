@@ -75,6 +75,11 @@ namespace t2g
 
 		GET_SINGLETON(Time).Render();
 
+		if (GET_SINGLETON(Input).CheckKey(eKeys::LBtn, eKeyState::Pressed))
+		{
+			GET_SINGLETON(Input).Render();
+		}
+
 		BitBlt(mHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
 			mBackHdc, mWndRect.left, mWndRect.top, SRCCOPY);
 	}
@@ -91,12 +96,21 @@ namespace t2g
 		HBITMAP oldBitmap = (HBITMAP)SelectObject(mBackHdc, mBackBitmap);
 		DeleteObject(oldBitmap);
 
-		SelectObject(mBackHdc, GetStockObject(WHITE_PEN));
+		HBRUSH oldBrush = (HBRUSH)SelectObject(mBackHdc, GetStockObject(HOLLOW_BRUSH));
+		HPEN oldPen = (HPEN)SelectObject(mBackHdc, CreatePen(PS_SOLID, 1, RGB(255, 0, 255)));
+
+		DeleteObject(oldBrush);
+		DeleteObject(oldPen);
 	}
 
 	void Application::CreateTileBuffer()
 	{
 		mTileHdc = CreateCompatibleDC(mBackHdc);
+
+		mBlackTilePieceHdc = CreateCompatibleDC(mTileHdc);
+		HBITMAP bitmap = CreateCompatibleBitmap(mTileHdc, TileSize, TileSize);
+		HBITMAP oldBitmap = (HBITMAP)SelectObject(mBlackTilePieceHdc, bitmap);
+		DeleteObject(oldBitmap);
 	}
 
 	void Application::ChangeTileBitmapSize(SIZE sceneSize)

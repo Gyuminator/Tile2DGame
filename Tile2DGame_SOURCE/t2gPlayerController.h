@@ -20,7 +20,7 @@ namespace t2g
 	public:
 		void Init();
 
-	protected:
+	public:
 		eDelegateResult cbProcArrowKeys();
 		eDelegateResult cbCheckTransform();
 

@@ -4,6 +4,8 @@
 #include "t2gMath.h"
 #include "t2gSafePtr.h"
 
+using namespace t2g::enums;
+
 namespace t2g
 {
 	using namespace enums;
@@ -21,7 +23,7 @@ namespace t2g
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::Transform; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
+		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
 		void SyncWithOtherComponents() override;
 
 	public:
@@ -35,6 +37,9 @@ namespace t2g
 		void SetLocation(const Vector3& vector3) { mLocation = vector3; }
 		void SetRotation(const Vector3& vector3) { mRotation = vector3; }
 		void SetScale(const Vector3& vector3) { mScale = vector3; }
+
+	public:
+		eDelegateResult cbTest();
 
 	private:
 		Vector3 mLocation;

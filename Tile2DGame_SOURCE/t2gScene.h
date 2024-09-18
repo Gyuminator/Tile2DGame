@@ -3,6 +3,7 @@
 #include "t2gSafePtr.h"
 #include "t2gObject.h"
 #include "t2gComponent.h"
+#include "t2gTypes.h"
 
 using namespace t2g::enums;
 
@@ -20,9 +21,8 @@ namespace t2g
 	public:
 		typedef unordered_map<UINT, unique_ptr<Object>> Objects;
 		typedef unordered_set<SafePtr<Component>> Components;
-		// typedef unordered_set<Event> Events;
 
-	private:
+	protected:
 		Scene();
 	public:
 		virtual ~Scene() {}
@@ -36,31 +36,41 @@ namespace t2g
 		}
 
 	public:
+		void Init(SIZE sceneSize);
+		void Enter();
 		void Update();
 		void Render();
-
-	public:
-		void Init(SIZE sceneSize);
 		void Exit();
-		void Enter();
 
 	public:
-		SafePtr<t2g::Object> AddObject();
+		SafePtr<t2g::Object> AddObject(eObjectTag tag);
 		SafePtr<t2g::Object> AddTile();
 
 		void PushCamera(SafePtr<t2g::Camera> camera);
 
 		void BindComponent(SafePtr<Component> component);
 
+		void PoolingObject(UINT id) {}
+
+		void BindBackEvent(eEventCallPoint callPoint, function<eDelegateResult()> func) { mEvents[callPoint].push_back(func); }
+		void BindFrontEvent(eEventCallPoint callPoint, function<eDelegateResult()> func) { mEvents[callPoint].push_front(func); }
+		void EventProc(eEventCallPoint callPoint);
+
+		/*void BindObject(unique_ptr<Object> object);
+		void UnBindObject(unique_ptr<Object> object);*/
+
 	public:
+		const vector<unique_ptr<Object>>& GetTiles() { return mTiles; }
 		const vector<SafePtr<Camera>>& GetCameras() { return mCameras; }
 		SafePtr<Camera> GetCurCamera() { return mCurCamera; }
 		SIZE GetSize() { return mSize; }
 
 	private:
-		virtual void init() {}
-		virtual void exit() {}
+		virtual void init();
 		virtual void enter() {}
+		virtual void update() {}
+		virtual void render() {}
+		virtual void exit() {}
 
 	private:
 		void LoadImagesOfScene();
@@ -70,6 +80,8 @@ namespace t2g
 
 		Components mUpdateComponentsLayers[(UINT)eUpdateLayer::EnumEnd];
 		Components mRenderComponentsLayers[(UINT)eRenderLayer::EnumEnd];
+
+		Events mEvents;
 
 		vector<unique_ptr<Object>> mTiles;
 		vector<SafePtr<Camera>> mCameras;

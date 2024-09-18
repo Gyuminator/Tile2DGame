@@ -14,17 +14,21 @@ namespace t2g
 		SafePtr(SafePtr<T1> other) : ptr(static_cast<T*>((T1*)other.GetKey())) {}
 
 	public:
-		T& operator*() { return *ptr; }
-		T* operator->() { return ptr; }
+		T& operator*() const { return *ptr; }
+		T* operator->() const { return ptr; }
 		bool operator==(const SafePtr& other) const
 		{
 			return this->ptr == other.ptr;
 		}
+		/*void operator=(const T* ptr)
+		{
+			this->ptr = ptr;
+		}*/
 
 	public:
-		bool IsEmpty() { return ptr == nullptr; }
-		bool IsValid() { return ptr != nullptr; }
-		long long GetKey() { return (long long)ptr; }
+		bool IsEmpty() const { return ptr == nullptr; }
+		bool IsValid() const { return ptr != nullptr; }
+		long long GetKey() const { return (long long)ptr; }
 
 	private:
 		T* ptr;

@@ -30,6 +30,7 @@ namespace t2g
 		HDC GetMainDC() { return mHdc; }
 		HDC GetBackDC() { return mBackHdc; }
 		HDC GetTileDC() { return mTileHdc; }
+		HDC GetBlackTilePieceDC() { return mBlackTilePieceHdc; }
 
 		const RECT& GetWindowRect() { return mWndRect; }
 
@@ -39,6 +40,7 @@ namespace t2g
 		HDC mHdc;
 		HDC mBackHdc;
 		HDC mTileHdc;
+		HDC mBlackTilePieceHdc;
 		HBITMAP mBackBitmap;
 		HBITMAP mTileBitmap;
 

@@ -50,12 +50,16 @@ namespace t2g
 		void SetOwner(SafePtr<Object> pObj) { mOwner = pObj; }
 
 		bool IsActive() const { return mIsActive; }
-		
-	protected:
+
+	public:
 		template<typename T>
-		void BindToUpdates(eDelegateResult(T::* dd)(), bool pushFront = false);
+		void BindBackToUpdates(eDelegateResult(T::* dd)());
 		template<typename T>
-		void BindToRenders(eDelegateResult(T::* dd)(), bool pushFront = false);
+		void BindFrontToUpdates(eDelegateResult(T::* dd)());
+		template<typename T>
+		void BindBackToRenders(eDelegateResult(T::* dd)());
+		template<typename T>
+		void BindFrontToRenders(eDelegateResult(T::* dd)());
 
 	private:
 		void procDelegates(MultiDynamicDelegate& dd);
@@ -69,22 +73,28 @@ namespace t2g
 	};
 
 	template<typename T>
-	void Component::BindToUpdates(eDelegateResult(T::* dd)(), bool pushFront)
+	void Component::BindBackToUpdates(eDelegateResult(T::* dd)())
 	{
 		DD castedDD = static_cast<DD>(dd);
-		if (pushFront)
-			mUpdates.push_front(castedDD);
-		else
-			mUpdates.push_back(castedDD);
+		mUpdates.push_back(castedDD);
 	}
 	template<typename T>
-	void Component::BindToRenders(eDelegateResult(T::* dd)(), bool pushFront)
+	void Component::BindFrontToUpdates(eDelegateResult(T::* dd)())
 	{
 		DD castedDD = static_cast<DD>(dd);
-		if (pushFront)
-			mRenders.push_front(castedDD);
-		else
-			mRenders.push_back(castedDD);
+		mUpdates.push_front(castedDD);
+	}
+	template<typename T>
+	void Component::BindBackToRenders(eDelegateResult(T::* dd)())
+	{
+		DD castedDD = static_cast<DD>(dd);
+		mRenders.push_back(castedDD);
+	}
+	template<typename T>
+	void Component::BindFrontToRenders(eDelegateResult(T::* dd)())
+	{
+		DD castedDD = static_cast<DD>(dd);
+		mRenders.push_front(castedDD);
 	}
 }
 

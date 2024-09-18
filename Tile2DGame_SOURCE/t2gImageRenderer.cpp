@@ -6,6 +6,10 @@
 #include "t2gImageManager.h"
 #include "t2gScene.h"
 #include "t2gCamera.h"
+#include "t2gRect.h"
+#include "t2gFunc.h"
+
+using namespace t2g::rect;
 
 t2g::ImageRenderer::ImageRenderer()
 	: mRenderRect{}
@@ -29,9 +33,9 @@ void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
 
 	mImageName = eName;
 
-	BindToRenders(&ImageRenderer::cbCheckTransform);
-	BindToRenders(&ImageRenderer::cbCheckImageLoading, true);
-	BindToRenders(&ImageRenderer::cbDrawImage);
+	BindBackToRenders(&ImageRenderer::cbCheckImageLoading);
+	BindBackToRenders(&ImageRenderer::cbCheckTransform);
+	BindBackToRenders(&ImageRenderer::cbDrawImage);
 }
 
 void t2g::ImageRenderer::AdjustRenderRect()
@@ -42,6 +46,34 @@ void t2g::ImageRenderer::AdjustRenderRect()
 	std::rect::ScalingRectbyScale(mRenderRect, mTransform->GetScale());
 	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);
 }
+
+t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
+{
+	DataByAdjustCamera datas;
+	datas.isIntersect = false;
+
+	auto camera = GetOwner()->GetOwner()->GetCurCamera();
+
+	if (camera->GetRenderExcludeTags().contains(GetOwner()->GetTag()))
+		return datas;
+
+	datas.tempRenderRc = GetRenderRect();
+	rect::ScalingRect(datas.tempRenderRc, 1.f / camera->GetDistance());
+
+	if (Rect::Intersect(datas.tempRc, camera->GetCameraViewRect(), datas.tempRenderRc))
+	{
+		datas.isIntersect = true;
+		datas.resultRenderRc = datas.tempRc;
+		PointF renderAnchor = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.X, datas.tempRc.Y));
+		Point renderPos = rect::GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
+		datas.resultRenderRc.X = renderPos.X;
+		datas.resultRenderRc.Y = renderPos.Y;
+	}
+
+	return datas;
+}
+
+
 
 eDelegateResult t2g::ImageRenderer::cbCheckTransform()
 {
@@ -67,48 +99,54 @@ eDelegateResult t2g::ImageRenderer::cbDrawImage()
 {
 	AdjustRenderRect();
 
-	auto camera = GetOwner()->GetOwner()->GetCurCamera();
+	DataByAdjustCamera data = MakeDataByAdjustCamera();
+
+	if (data.isIntersect)
+	{
+		PointF ltAnchor = rect::GetAnchorByPos(data.tempRenderRc,
+			Point(data.tempRc.GetLeft(), data.tempRc.GetTop()));
+		PointF rbAnchor = rect::GetAnchorByPos(data.tempRenderRc,
+			Point(data.tempRc.GetRight(), data.tempRc.GetBottom()));
+		Rect resultSrcRc = rect::MakeRectByAnchors(GetSrcRect(), ltAnchor, rbAnchor);
+
+		Graphics graphics(func::GetBackDC());
+		GET_SINGLETON(ImageManager).DrawImage(graphics,
+			mSprite, data.resultRenderRc, resultSrcRc);
+	}
+
+	/*auto camera = GetOwner()->GetOwner()->GetCurCamera();
 	Rect tempRc;
-	Rect tempRenderRc = mRenderRect;
-	ScalingRect(tempRenderRc, 1.f / camera->GetDistance());
+	Rect tempRenderRc = GetRenderRect();
+	rect::ScalingRect(tempRenderRc, 1.f / camera->GetDistance());
 
 	if (Rect::Intersect(tempRc, camera->GetCameraViewRect(), tempRenderRc))
 	{
-		Vector3 camLocation = camera->GetTransform()->GetLocation();
 		Rect resultRenderRc = tempRc;
-		PointF renderAnchor = GetAnchorByPos(camera->GetCameraViewRect(), Point(tempRc.X, tempRc.Y));
-		Point renderPos = GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
+		PointF renderAnchor = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(tempRc.X, tempRc.Y));
+		Point renderPos = rect::GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
 		resultRenderRc.X = renderPos.X;
 		resultRenderRc.Y = renderPos.Y;
-		/*resultRenderRc.X += camera->GetViewportRect().X - camera->GetCameraViewRect().X;
-		resultRenderRc.Y += camera->GetViewportRect().Y - camera->GetCameraViewRect().Y;*/
-		/*resultRenderRc.X -= camera->GetCameraViewRect().X;
-		resultRenderRc.Y -= camera->GetCameraViewRect().Y;*/
-		PointF ltAnchor = GetAnchorByPos(tempRenderRc,
-			Point(tempRc.GetLeft(), tempRc.GetTop()));
-		PointF rbAnchor = GetAnchorByPos(tempRenderRc,
-			Point(tempRc.GetRight(), tempRc.GetBottom()));
-		Rect resultSrcRc = MakeRectByAnchors(mSrcRect, ltAnchor, rbAnchor);
 
-		Graphics graphics(GET_SINGLETON(Application).GetBackDC());
-		/*Graphics graphics(camera->GetCameraDC());*/
+		PointF ltAnchor = rect::GetAnchorByPos(tempRenderRc,
+			Point(tempRc.GetLeft(), tempRc.GetTop()));
+		PointF rbAnchor = rect::GetAnchorByPos(tempRenderRc,
+			Point(tempRc.GetRight(), tempRc.GetBottom()));
+		Rect resultSrcRc = rect::MakeRectByAnchors(GetSrcRect(), ltAnchor, rbAnchor);
+
+		Graphics graphics(func::GetBackDC());
 		GET_SINGLETON(ImageManager).DrawImage(graphics,
 			mSprite, resultRenderRc, resultSrcRc);
-	}
-	/*RECT rcRECT(900, 500, 1000, 550);
-	DrawText(camera->GetCameraDC(), L"12345", 5, &rcRECT, 0);*/
-	//}
-
-	/*GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfBackDC(),
-		mSprite, mRenderRect, mSrcRect);*/
+	}*/
 
 	return eDelegateResult::OK;
 }
 
 void t2g::ImageRenderer::SyncRenderSize()
 {
-	mRenderRect.Width = mSprite->GetFrameWidth();
-	mRenderRect.Height = mSprite->GetFrameHeight();
+	/*mRenderRect.Width = mSprite->GetFrameWidth();
+	mRenderRect.Height = mSprite->GetFrameHeight();*/
+	mRenderRect.Width = mSrcRect.Width;
+	mRenderRect.Height = mSrcRect.Height;
 }
 
 void t2g::ImageRenderer::SyncRenderPos(Vector3 location)

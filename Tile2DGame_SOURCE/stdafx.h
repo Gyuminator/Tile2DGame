@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <cassert>
 #include <iostream>
+#include <fstream>
 
 #include <vector>
 using std::vector;
@@ -13,6 +14,9 @@ using std::unordered_map;
 using std::make_pair;
 #include <unordered_set>
 using std::unordered_set;
+#include <tuple>
+using std::tuple;
+using std::make_tuple;
 
 
 #include <string>

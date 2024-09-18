@@ -34,6 +34,42 @@
     <Filter Include="Component\Renderer">
       <UniqueIdentifier>{af0e2c40-6e0d-4f7d-a56d-3b45e1698179}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Image\Animation">
+      <UniqueIdentifier>{7328cf43-f624-4571-997a-7e11cccb6635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Image\Manager">
+      <UniqueIdentifier>{3b6a43cc-3999-4196-9a09-20335072f753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Image\Sprite">
+      <UniqueIdentifier>{ff2056e5-4e1a-4337-96d1-43253d2bcd93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera">
+      <UniqueIdentifier>{93069b57-9446-45c8-afe9-6b2e83029288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Controller">
+      <UniqueIdentifier>{31f075bf-bfaa-450b-9b60-952864ddfffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Transform">
+      <UniqueIdentifier>{44e01775-b774-4db7-8132-522be05e5f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Loading">
+      <UniqueIdentifier>{6eaf7921-7bd8-4425-9950-b32d7e306770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TileMap">
+      <UniqueIdentifier>{424cda11-442f-4181-b7f9-ee56207f06b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Manager">
+      <UniqueIdentifier>{7a32c948-3b98-43b6-b805-4d4d9ee4f695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Enum">
+      <UniqueIdentifier>{5802d9db-04ca-4e58-92aa-c0912d4ade6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Func">
+      <UniqueIdentifier>{a44e0995-5c7a-4fe2-ac92-db07346661b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Types">
+      <UniqueIdentifier>{626eb446-d1c0-4ddb-acd5-1120e398109d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
@@ -55,14 +91,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h">
       <Filter>SingletonBase</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h">
       <Filter>Time</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInput.h">
       <Filter>Input</Filter>
@@ -73,38 +103,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h">
-      <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLoadingScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h">
       <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageFrame.h">
-      <Filter>Image</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageManager.h">
-      <Filter>Image</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h">
-      <Filter>Image</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h">
-      <Filter>Image</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageRenderer.h">
       <Filter>Component\Renderer</Filter>
@@ -116,8 +122,44 @@
       <Filter>Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)stdafx.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimation.h">
+      <Filter>Image\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gImageManager.h">
+      <Filter>Image\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h">
+      <Filter>Image\Sprite</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gCamera.h">
-      <Filter>Component</Filter>
+      <Filter>Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gPlayerController.h">
+      <Filter>Component\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h">
+      <Filter>Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gLoadingScene.h">
+      <Filter>Scene\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.h">
+      <Filter>Scene\TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSceneManager.h">
+      <Filter>Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h">
+      <Filter>Utility\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gFunc.h">
+      <Filter>Utility\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTypes.h">
+      <Filter>Utility\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gShapeRenderer.h">
+      <Filter>Component\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,41 +173,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp">
       <Filter>Event</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageFrame.cpp">
-      <Filter>Image</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp">
-      <Filter>Image</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp">
-      <Filter>Image</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp">
-      <Filter>Image</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp">
       <Filter>Component\Renderer</Filter>
@@ -177,8 +195,44 @@
       <Filter>Component\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)stdafx.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimation.cpp">
+      <Filter>Image\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp">
+      <Filter>Image\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp">
+      <Filter>Image\Sprite</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gCamera.cpp">
-      <Filter>Component</Filter>
+      <Filter>Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp">
+      <Filter>Component\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp">
+      <Filter>Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp">
+      <Filter>Scene\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.cpp">
+      <Filter>Scene\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp">
+      <Filter>Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gEnums.cpp">
+      <Filter>Utility\Enum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTypes.cpp">
+      <Filter>Utility\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gFunc.cpp">
+      <Filter>Utility\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gShapeRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

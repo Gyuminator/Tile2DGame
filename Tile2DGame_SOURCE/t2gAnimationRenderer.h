@@ -38,7 +38,7 @@ namespace t2g
 		void SetAnimation(const eAnimState eState, const Animation anim) { mAnimations[eState] = anim; }
 		void SetCurState(const eAnimState eState) { mAnimState = eState; }
 
-	protected:
+	public:
 		eDelegateResult cbCheckStateValid();
 		eDelegateResult cbProcStateChanger();
 		eDelegateResult cbAnimate();

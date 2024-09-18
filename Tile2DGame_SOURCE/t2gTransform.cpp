@@ -2,6 +2,9 @@
 #include "t2gTransform.h"
 
 #include "t2gApplication.h"
+#include "t2gCamera.h"
+#include "t2gObject.h"
+
 
 t2g::Transform::Transform()
 	: mLocation(Vector3::Zero())
@@ -22,6 +25,19 @@ void t2g::Transform::Init(const Vector3& location, const Vector3& rotation, cons
 	mLocation = location;
 	mRotation = rotation;
 	mScale = scale;
+
+	//BindToScene
+}
+
+eDelegateResult t2g::Transform::cbTest()
+{
+	SafePtr<Camera> camera = GetOwner()->GetComponent<Camera>(eComponentType::Camera);
+	if (camera.IsEmpty())
+		return eDelegateResult::OK;
+
+
+
+	return eDelegateResult::OK;
 }
 
 void t2g::Transform::showText()

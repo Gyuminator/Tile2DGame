@@ -15,8 +15,8 @@ void t2g::PlayerController::SyncWithOtherComponents()
 
 void t2g::PlayerController::Init()
 {
-	BindToUpdates(&PlayerController::cbCheckTransform);
-	BindToUpdates(&PlayerController::cbProcArrowKeys);
+	BindBackToUpdates(&PlayerController::cbCheckTransform);
+	BindBackToUpdates(&PlayerController::cbProcArrowKeys);
 }
 
 eDelegateResult t2g::PlayerController::cbProcArrowKeys()

@@ -28,18 +28,18 @@ void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
 	SetImageName(eName);
 	mDuration = duration;
 
-	BindToUpdates(&AnimationRenderer::cbCheckTransform);
-	BindToUpdates(&AnimationRenderer::cbCheckStateValid);
-	BindToUpdates(&AnimationRenderer::cbCheckImageLoading);
+	BindBackToUpdates(&AnimationRenderer::cbCheckTransform);
+	BindBackToUpdates(&AnimationRenderer::cbCheckStateValid);
+	BindBackToUpdates(&AnimationRenderer::cbCheckImageLoading);
 
-	BindToUpdates(&AnimationRenderer::cbProcStateChanger);
-	BindToUpdates(&AnimationRenderer::cbAnimate);
+	BindBackToUpdates(&AnimationRenderer::cbProcStateChanger);
+	BindBackToUpdates(&AnimationRenderer::cbAnimate);
 
-	BindToRenders(&AnimationRenderer::cbCheckTransform);
-	BindToRenders(&AnimationRenderer::cbCheckStateValid);
-	BindToRenders(&AnimationRenderer::cbCheckImageLoading);
+	BindBackToRenders(&AnimationRenderer::cbCheckTransform);
+	BindBackToRenders(&AnimationRenderer::cbCheckStateValid);
+	BindBackToRenders(&AnimationRenderer::cbCheckImageLoading);
 
-	BindToRenders(&AnimationRenderer::cbDrawImage);
+	BindBackToRenders(&AnimationRenderer::cbDrawImage);
 }
 
 void t2g::AnimationRenderer::AddFrame(eAnimState eState, Point srcPos)

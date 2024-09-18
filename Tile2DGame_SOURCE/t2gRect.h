@@ -28,6 +28,11 @@ namespace t2g::rect
 		);
 	}
 
+	inline Rect MakeRectByRECT(const RECT& rect)
+	{
+		return Rect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+	}
+
 	inline void ScalingRect(Rect& rect, FLOAT scale)
 	{
 		rect.Width = INT(rect.Width * scale);

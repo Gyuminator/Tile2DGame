@@ -3,6 +3,9 @@
 
 #include "t2gObject.h"
 #include "t2gScene.h"
+#include "t2gApplication.h"
+#include "t2gImageManager.h"
+#include "t2gFunc.h"
 
 //void t2g::TileRenderer::render()
 //{
@@ -11,7 +14,7 @@
 //		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 //		INT(mTileIndex / sceneSize.cx * Application::TileSize),
 //		Application::TileSize, Application::TileSize };
-//	Point srcPoint = { mSrcRect.X, mSrcRect.Y };
+//	Point srcPoint = { mSrcPos.X, mSrcPos.Y };
 //	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfTileDC(),
 //		mImageName, destRect, srcPoint);
 //}
@@ -19,10 +22,20 @@
 void t2g::TileRenderer::Init(eImageName eName, INT srcPosX, INT srcPosY, UINT index)
 {
 	mImageName = eName;
-	mSrcRect.X = srcPosX;
-	mSrcRect.Y = srcPosY;
+	mSrcPos.X = srcPosX;
+	mSrcPos.Y = srcPosY;
 	mTileIndex = index;
-	BindToRenders(&TileRenderer::cbDrawTile);
+	BindBackToRenders(&TileRenderer::cbDrawTile);
+}
+
+void t2g::TileRenderer::DrawTileToHDC(HDC hdc, Size sceneSize)
+{
+	Rect destRect = func::GetTileRectByIndex(sceneSize.Width, mTileIndex);
+	BitBlt(hdc, destRect.X, destRect.Y, destRect.Width, destRect.Height,
+		func::GetBlackTilePieceDC(), 0, 0, SRCCOPY);
+	Graphics graphics(hdc);
+	GET_SINGLETON(ImageManager).DrawImage(graphics,
+		mImageName, destRect, mSrcPos);
 }
 
 eDelegateResult t2g::TileRenderer::cbDrawTile()
@@ -33,7 +46,8 @@ eDelegateResult t2g::TileRenderer::cbDrawTile()
 		INT(mTileIndex / sceneSize.cx * Application::TileSize),
 		Application::TileSize, Application::TileSize };
 	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfTileDC(),
-		mImageName, destRect, mSrcRect);
+		mImageName, destRect, mSrcPos);
 
 	return eDelegateResult::OK;
 }
+

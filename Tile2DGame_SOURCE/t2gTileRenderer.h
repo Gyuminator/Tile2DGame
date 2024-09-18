@@ -1,5 +1,4 @@
 #pragma once
-#include "t2gImageFrame.h"
 #include "t2gComponent.h"
 #include "t2gMath.h"
 
@@ -10,7 +9,7 @@ namespace t2g
 	class TileRenderer : public Component
 	{
 	public:
-		TileRenderer() : mTileIndex(0), mImageName(eImageName::EnumEnd), mSrcRect{} {}
+		TileRenderer() : mSrcPos{}, mTileIndex(0), mImageName(eImageName::EnumEnd) {}
 		virtual ~TileRenderer() {}
 
 	public:
@@ -23,16 +22,25 @@ namespace t2g
 		void Init(eImageName eName, INT srcPosX, INT srcPosY, UINT TileIndex);
 
 	public:
-		void SetTileIndex(UINT i) { mTileIndex = i; }
+		void DrawTileToHDC(HDC hdc, Size sceneSize);
 
-	protected:
+	public:
+		Point GetSrcPos() { return mSrcPos; }
+		UINT GetTileIndex() { return mTileIndex; }
+		eImageName GetImageName() { return mImageName; }
+
+		void SetTileIndex(UINT i) { mTileIndex = i; }
+		void SetSrcPos(Point pos) { mSrcPos = pos; }
+
+	public:
 		eDelegateResult cbDrawTile();
 
 	private:
+		Point mSrcPos;
+
 		UINT mTileIndex;
 		eImageName mImageName;
 
-		Point mSrcRect;
 	};
 }
 

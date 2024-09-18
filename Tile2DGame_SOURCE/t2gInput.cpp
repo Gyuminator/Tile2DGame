@@ -25,7 +25,12 @@ void t2g::Input::Update()
 
 void t2g::Input::Render()
 {
-
+	wstring str = L"X: ";
+	str += std::to_wstring(mMousePos.x);
+	str += L", Y: ";
+	str += std::to_wstring(mMousePos.y);
+	RECT rc(0, 20, 150, 40);
+	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
 }
 
 void t2g::Input::virtualKeyMapping()
@@ -72,6 +77,8 @@ void t2g::Input::checkKeyInput()
 			applyKeyUp(keyInfo.State);
 		}
 	}
+	GetCursorPos(&mMousePos);
+	ScreenToClient(GET_SINGLETON(Application).GetHWnd(), &mMousePos);
 }
 
 void t2g::Input::applyKeyDown(eKeyState& state)

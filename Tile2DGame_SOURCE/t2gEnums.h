@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 
 namespace t2g::enums
 {
@@ -16,6 +15,7 @@ namespace t2g::enums
 
 		END
 	};
+
 	enum class eKeyState : UINT8
 	{
 		None,
@@ -29,6 +29,7 @@ namespace t2g::enums
 		Transform,
 		Script,
 		ImageRenderer,
+		ShapeRenderer,
 		TileRenderer,
 		AnimationRenderer,
 		Camera,
@@ -65,14 +66,20 @@ namespace t2g::enums
 		Loading,
 		Title,
 		Play,
+		TileMapEditing,
 
 		EnumEnd
 	};
 
-	enum class eObjectType : UINT16
+	enum class eObjectTag : UINT16
 	{
 		Player,
+		Enemy,
 		Tile,
+		ToolTile,
+		Camera,
+		TileToolCamera,
+		UI,
 
 		EnumEnd
 	};
@@ -81,9 +88,18 @@ namespace t2g::enums
 	{
 		Player,
 		Plant_00,
-		Tile_01,
+		Tile_Outside_A1_png,
+		Tile_Outside_A2_png,
+		Tile_Dungeon_A1_png,
+		Tile_Dungeon_A2_png,
 
 		EnumEnd
+	};
+
+	enum class eShapeName : UINT8
+	{
+		Ractangle,
+		Ellipse
 	};
 
 	enum class eBufferDCType : UINT8
@@ -115,6 +131,14 @@ namespace t2g::enums
 		Return,
 
 		EnumEnd
+	};
+
+	enum class eEventCallPoint : UINT8
+	{
+		BeginUpdate,
+		EndUpdate,
+		cbRenderTile,
+		cbSyncCameraView
 	};
 
 };

@@ -16,7 +16,7 @@ namespace t2g
 	class Camera : public Component
 	{
 	public:
-		//typedef std::unordered_set<eObjectType> RenderTargetTypes;
+		//typedef std::unordered_set<eObjectTag> RenderTargetTypes;
 
 	public:
 		Camera();
@@ -35,37 +35,45 @@ namespace t2g
 		void Release();
 
 	public:
+		Point GetPosToCameraView(Point viewportPos);
+		//Point CameraViewToViewport(Point cameraViewPos);
+		void InsertExcludeTag(eObjectTag tag) { mRenderExcludeTags.insert(tag); }
+		void EraseExcludeTag(eObjectTag tag) { mRenderExcludeTags.erase(tag); }
 
 	public:
+		const unordered_set<eObjectTag>& GetRenderExcludeTags() { return mRenderExcludeTags; }
 		const Rect& GetViewportRect() { return mViewportRect; }
 		const Rect& GetCameraViewRect() { return mCameraViewRect; }
 		SafePtr<Transform> GetTransform() { return mTransform; }
-		HDC GetCameraDC() { return mCameraDC; }
-		Graphics& GetGraphics() { return mGraphics; }
+		/*HDC GetCameraDC() { return mCameraDC; }
+		Graphics& GetGraphics() { return mGraphics; }*/
 		FLOAT GetDistance() { return mDistance; }
 
+		void SetTargetTileDC(HDC hdc) { mTargetTileDC = hdc; }
+		void SetAnchor(PointF anchor) { mAnchor = anchor; }
 		void SetDistance(FLOAT distance) { mDistance = distance; }
 
-	protected:
+	public:
 		eDelegateResult cbCheckTransform();
 		eDelegateResult cbSyncCameraView();
 		eDelegateResult cbBltToViewport();
 		eDelegateResult cbRenderTile();
+		eDelegateResult cbRenderTileOnce();
 
 	private:
 		void SyncRenderSize(SafePtr<Sprite> sprite) {};
 		void SyncRenderPos(Vector3 location) {};
-		void CreateCameraBuffer();
+		//void CreateCameraBuffer();
 
 	private:
-		unordered_set<eObjectType> mRenderTargetTypes;
+		unordered_set<eObjectTag> mRenderExcludeTags;
 
 		Rect mViewportRect;    // 뷰포트
 		Rect mCameraViewRect;  // 카메라 시야
 
 		const HDC mMainDC;
-		HDC mCameraDC;
-		Graphics mGraphics;
+		HDC mTargetTileDC;
+		//Graphics mGraphics;
 
 		SafePtr<Transform> mTransform;
 
