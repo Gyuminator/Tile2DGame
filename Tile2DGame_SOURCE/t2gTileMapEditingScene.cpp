@@ -14,7 +14,9 @@
 using namespace t2g::rect;
 
 t2g::TileMapEditingScene::TileMapEditingScene()
-	: mToolTiles{}
+	: mCurFileName{}
+	, mMapPath(L"..\\Resource\\Map\\")
+	, mToolTiles{}
 	, mTileToolDC(nullptr)
 	, mSelectedTile{}
 	, mWriteTileMarker{}
@@ -36,7 +38,18 @@ void t2g::TileMapEditingScene::init()
 		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, 0, 0, INT(GetTiles().size() - 1));
 	}*/
 
-	LoadMap();
+	wstring prevFileName = LoadPrevEditInfo();
+	if (prevFileName.empty())
+	{
+		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
+		{
+			AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, 0, 0, INT(GetTiles().size() - 1));
+		}
+	}
+	else
+	{
+		LoadMap(prevFileName);
+	}
 
 	CameraSetting();
 
@@ -49,13 +62,13 @@ void t2g::TileMapEditingScene::init()
 	mWriteTileMarker->BindComponentsToScene();
 }
 
-void t2g::TileMapEditingScene::SaveMap()
+void t2g::TileMapEditingScene::SaveMap(const wstring& fileName)
 {
 	if (func::CheckKey(eKeys::Ctrl, eKeyState::Pressed) &&
 		func::CheckKey(eKeys::S, eKeyState::Down))
 	{
-		wstring path = L"..\\Resource\\Map\\";
-		path += L"map_00.map";
+		wstring path = mMapPath;
+		path += fileName;
 
 		std::ofstream out(path, std::ios::binary);
 
@@ -72,36 +85,77 @@ void t2g::TileMapEditingScene::SaveMap()
 				out.write((char*)(&srcPos), sizeof(srcPos));
 				out.write((char*)(&eImage), sizeof(eImage));
 			}
+
+			SavePrevEditInfo(fileName);
 		}
 	}
 
 }
 
-void t2g::TileMapEditingScene::LoadMap()
+void t2g::TileMapEditingScene::LoadMap(const wstring& fileName)
 {
-	wstring path = L"..\\Resource\\Map\\";
-	path += L"map_00.map";
+	wstring path = mMapPath;
+	path += fileName;
 
-	std::ifstream in(path, std::ios::binary);
+	std::ifstream inMap(path, std::ios::binary);
 
-	if (in.is_open())
+	if (inMap.is_open())
 	{
 		SIZE sceneSize;
-		in.read((char*)(&sceneSize), sizeof(sceneSize));
+		inMap.read((char*)(&sceneSize), sizeof(sceneSize));
 		SetSize(sceneSize);
 
 		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 		{
 			Point srcPos;
-			in.read((char*)(&srcPos), sizeof(srcPos));
+			inMap.read((char*)(&srcPos), sizeof(srcPos));
 			eImageName eImage;
-			in.read((char*)(&eImage), sizeof(eImage));
+			inMap.read((char*)(&eImage), sizeof(eImage));
 
 			AddTile()->AddComponent<TileRenderer>()->Init(eImage, srcPos.X, srcPos.Y,
 				INT(GetTiles().size() - 1));
 		}
 
+		mCurFileName = fileName;
 	}
+}
+
+void t2g::TileMapEditingScene::SavePrevEditInfo(const wstring& fileName)
+{
+	wstring path = mMapPath;
+	path += L"prevEditInfo.editinfo";
+
+	std::ofstream outInfo(path, std::ios::binary);
+
+	if (outInfo.is_open())
+	{
+		INT sizeOfPrevFileName = fileName.size() * 2 + 2; // null 문자 + 2
+		outInfo.write((char*)(&sizeOfPrevFileName), sizeof(sizeOfPrevFileName));
+		outInfo.write((char*)(fileName.c_str()), sizeOfPrevFileName);
+	}
+}
+
+const wstring t2g::TileMapEditingScene::LoadPrevEditInfo()
+{
+	wstring path = mMapPath;
+	path += L"prevEditInfo.editinfo";
+
+	wstring fileName;
+
+	std::ifstream inInfo(path, std::ios::binary);
+
+	if (inInfo.is_open())
+	{
+		INT sizeOfPrevFileName;
+		inInfo.read((char*)(&sizeOfPrevFileName), sizeof(sizeOfPrevFileName));
+
+		unique_ptr<wchar_t[]> prevFileName(new wchar_t[sizeOfPrevFileName / 2]);
+		inInfo.read((char*)(prevFileName.get()), sizeOfPrevFileName);
+
+		fileName = prevFileName.get();
+	}
+
+	return fileName;
 }
 
 void t2g::TileMapEditingScene::cbSceneController()
@@ -126,7 +180,7 @@ void t2g::TileMapEditingScene::CameraSetting()
 		[mainCameraCom, this]()
 		{
 			ClickEventMainTileView(mainCameraCom);
-			SaveMap();
+			SaveMap(L"map_00.map");
 			return eDelegateResult::OK;
 		}
 	);

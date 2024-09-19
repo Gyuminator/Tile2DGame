@@ -28,8 +28,10 @@ namespace t2g
 
 	public:
 		void ChangeMapSize(INT x, INT y);
-		void SaveMap();
-		void LoadMap();
+		void SaveMap(const wstring& fileName);
+		void LoadMap(const wstring& fileName);
+		void SavePrevEditInfo(const wstring& fileName);
+		const wstring LoadPrevEditInfo();
 
 	public:
 		const vector<unique_ptr<Object>>& GetToolTiles() { return mToolTiles; }
@@ -51,6 +53,9 @@ namespace t2g
 		SafePtr<t2g::Object> AddToolTile();
 
 	private:
+		wstring mCurFileName;
+		wstring mMapPath;
+
 		vector<unique_ptr<Object>> mToolTiles;
 
 		HDC mTileToolDC;

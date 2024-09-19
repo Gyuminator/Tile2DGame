@@ -45,6 +45,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gUIRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)stdafx.cpp">
@@ -77,5 +78,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTransform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTypes.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gUIRenderer.cpp" />
   </ItemGroup>
 </Project>
