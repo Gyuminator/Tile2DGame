@@ -28,7 +28,7 @@ t2g::Camera::Camera()
 
 void t2g::Camera::SyncWithOtherComponents()
 {
-	mTransform = GetOwner()->GetComponent(eComponentType::Transform);
+	mTransform = GetOwnerObj()->GetComponent(eComponentType::Transform);
 }
 
 void t2g::Camera::BindToScene(SafePtr<Scene> scene)
@@ -52,7 +52,7 @@ void t2g::Camera::Init(const Rect& viewport)
 	BindBackToUpdates(&Camera::cbCheckTransform);
 	BindBackToUpdates(&Camera::cbSyncCameraView);
 
-	if (GetOwner()->GetTag() == eObjectTag::TileToolCamera)
+	if (GetOwnerObj()->GetTag() == eObjectTag::TileToolCamera)
 		BindBackToUpdates(&Camera::cbRenderTileOnce);
 	else
 		BindBackToUpdates(&Camera::cbRenderTile);
@@ -83,7 +83,7 @@ eDelegateResult t2g::Camera::cbRenderTile()
 		mCameraViewRect.Width, mCameraViewRect.Height,
 		SRCCOPY);
 
-	GetOwner()->EventProc(eEventCallPoint::cbRenderTile);
+	GetOwnerObj()->EventProc(eEventCallPoint::cbRenderTile);
 
 	return eDelegateResult::OK;
 }
@@ -98,7 +98,7 @@ eDelegateResult t2g::Camera::cbRenderTileOnce()
 		mCameraViewRect.Width, mCameraViewRect.Height,
 		SRCCOPY);
 
-	GetOwner()->EventProc(eEventCallPoint::cbRenderTile);
+	GetOwnerObj()->EventProc(eEventCallPoint::cbRenderTile);
 
 	return eDelegateResult::Erase;
 }
@@ -125,7 +125,7 @@ eDelegateResult t2g::Camera::cbSyncCameraView()
 	PositioningRectByAnchor(tempRect, mAnchor);
 	mCameraViewRect = tempRect;
 
-	GetOwner()->EventProc(eEventCallPoint::cbSyncCameraView);
+	GetOwnerObj()->EventProc(eEventCallPoint::cbSyncCameraView);
 
 	return eDelegateResult::OK;
 }

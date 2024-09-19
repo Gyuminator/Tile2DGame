@@ -10,7 +10,7 @@ using namespace std::enums;
 
 void t2g::PlayerController::SyncWithOtherComponents()
 {
-	mTransform = GetOwner()->GetComponent(eComponentType::Transform);
+	mTransform = GetOwnerObj()->GetComponent(eComponentType::Transform);
 }
 
 void t2g::PlayerController::Init()

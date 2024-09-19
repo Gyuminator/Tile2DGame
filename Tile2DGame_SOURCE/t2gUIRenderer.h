@@ -10,9 +10,9 @@ namespace t2g
 		virtual ~UIRenderer() {}
 
 	public:
-		eComponentType GetComponentType() const override { return eComponentType::ImageRenderer; }
+		eComponentType GetComponentType() const override { return eComponentType::UIRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
+		eRenderLayer GetRenderLayer() const override { return eRenderLayer::UI; }
 		void SyncWithOtherComponents() override;
 
 	public:
@@ -22,7 +22,7 @@ namespace t2g
 		eDelegateResult cbDrawUI();
 
 	private:
-		
+
 
 	};
 }

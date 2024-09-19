@@ -9,6 +9,8 @@
 using std::vector;
 #include <list>
 using std::list;
+#include <map>
+using std::map;
 #include <unordered_map>
 using std::unordered_map;
 using std::make_pair;

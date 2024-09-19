@@ -27,7 +27,7 @@ namespace t2g
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::ImageRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
+		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Mid; }
 		void SyncWithOtherComponents() override;
 
 	public:
@@ -36,6 +36,7 @@ namespace t2g
 	public:
 		const Rect& GetRenderRect() { return mRenderRect; }
 		Rect GetSrcRect() { return mSrcRect; }
+		Point GetSrcPos() { return { mSrcRect.X, mSrcRect.Y }; }
 		SafePtr<Transform> GetTransform() { return mTransform; }
 		eImageName GetImageName() { return mImageName; }
 

@@ -9,7 +9,7 @@
 
 //void t2g::TileRenderer::render()
 //{
-//	SIZE sceneSize = GetOwner()->GetOwner()->GetSize();
+//	SIZE sceneSize = GetOwnerObj()->GetOwnerObj()->GetSize();
 //	Rect destRect = {
 //		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 //		INT(mTileIndex / sceneSize.cx * Application::TileSize),
@@ -40,7 +40,7 @@ void t2g::TileRenderer::DrawTileToHDC(HDC hdc, Size sceneSize)
 
 eDelegateResult t2g::TileRenderer::cbDrawTile()
 {
-	SIZE sceneSize = GetOwner()->GetOwner()->GetSize();
+	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
 	Rect destRect = {
 		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 		INT(mTileIndex / sceneSize.cx * Application::TileSize),

@@ -15,9 +15,9 @@ namespace t2g
 	public:
 		typedef eDelegateResult(Component::* DynamicDelegate)();
 		typedef DynamicDelegate DD;
-		//typedef function<eDelegateResult(Component&)> DynamicDelegate;
 		typedef list<DynamicDelegate> MultiDynamicDelegate;
 		typedef MultiDynamicDelegate MDD;
+		typedef unordered_map<eChildrenLayer, vector<unique_ptr<Component>>> Children;
 
 	public:
 		template<typename T>
@@ -29,7 +29,7 @@ namespace t2g
 		}
 
 	protected:
-		Component() : mOwner(nullptr), mIsActive(true) {}
+		Component();
 	public:
 		virtual ~Component() { }
 
@@ -46,8 +46,8 @@ namespace t2g
 		virtual void BindToScene(SafePtr<Scene> scene);
 
 	public:
-		SafePtr<Object> GetOwner() const { return mOwner; }
-		void SetOwner(SafePtr<Object> pObj) { mOwner = pObj; }
+		SafePtr<Object> GetOwnerObj() const { return mOwnerObj; }
+		void SetOwnerObj(SafePtr<Object> pObj) { mOwnerObj = pObj; }
 
 		bool IsActive() const { return mIsActive; }
 
@@ -61,14 +61,22 @@ namespace t2g
 		template<typename T>
 		void BindFrontToRenders(eDelegateResult(T::* dd)());
 
+		template<typename T>
+		SafePtr<T> AddChild(eChildrenLayer layer);
+
 	private:
 		void procDelegates(MultiDynamicDelegate& dd);
 
 	private:
+		Children mChildren;
+
 		MDD mUpdates;
 		MDD mRenders;
 
-		SafePtr<Object> mOwner;
+		SafePtr<Object> mOwnerObj;
+		SafePtr<Component> mOwnerComponent;
+		INT16 mChildID;
+		eChildrenLayer mChildLayer;
 		bool mIsActive;
 	};
 
@@ -95,6 +103,19 @@ namespace t2g
 	{
 		DD castedDD = static_cast<DD>(dd);
 		mRenders.push_front(castedDD);
+	}
+	template<typename T>
+	inline SafePtr<T> Component::AddChild(eChildrenLayer layer)
+	{
+		unique_ptr<T> uptr = CreateComponent<T>();
+		SafePtr<T> sptr = uptr.get();
+		mChildren[layer].push_back(std::move(uptr));
+		sptr->mOwnerComponent = this;
+		sptr->mOwnerObj = mOwnerObj;
+		sptr->mChildID = mChildren[layer].size() - 1;
+		sptr->mChildLayer = layer;
+
+		return sptr;
 	}
 }
 
@@ -134,7 +155,7 @@ namespace t2g
 		tuple_element_t<I, tuple<T...>> getData() { return get<I>(mDatas); }
 
 	private:
-		SafePtr<Object> mOwner;
+		SafePtr<Object> mOwnerObj;
 		tuple<T...> mDatas;
 
 	};

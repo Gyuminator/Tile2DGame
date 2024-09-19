@@ -59,12 +59,12 @@ namespace t2g
 
 	public:
 		const wstring& GetName() const { return mName; }
-		SafePtr<Scene> GetOwner() { return mOwner; }
+		SafePtr<Scene> GetOwnerScene() { return mOwnerScene; }
 		UINT GetID() { return mID; }
 		eObjectTag GetTag() { return mTag; }
 
 		void SetName(const wstring& name) { mName = name; }
-		void SetOwner(SafePtr<Scene> scene) { mOwner = scene; }
+		void SetOwnerScene(SafePtr<Scene> scene) { mOwnerScene = scene; }
 		void SetTag(eObjectTag tag) { mTag = tag; }
 
 
@@ -85,7 +85,7 @@ namespace t2g
 		vector<SafePtr<Object>> mAttachedObjects;
 		SafePtr<Object> mAttacher;
 
-		SafePtr<Scene> mOwner;
+		SafePtr<Scene> mOwnerScene;
 
 		UINT mID;
 		eObjectTag mTag;
@@ -105,7 +105,7 @@ namespace t2g
 	decltype(auto) Object::AddComponent()
 	{
 		unique_ptr<T> uptr = Component::CreateComponent<T>();
-		uptr->SetOwner(this);
+		uptr->SetOwnerObj(this);
 
 		SafePtr<T> sptr = uptr.get();
 

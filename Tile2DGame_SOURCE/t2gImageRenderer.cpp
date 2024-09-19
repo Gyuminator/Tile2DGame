@@ -23,7 +23,7 @@ t2g::ImageRenderer::ImageRenderer()
 
 void t2g::ImageRenderer::SyncWithOtherComponents()
 {
-	mTransform = GetOwner()->GetComponent(eComponentType::Transform);
+	mTransform = GetOwnerObj()->GetComponent(eComponentType::Transform);
 }
 
 void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
@@ -52,9 +52,9 @@ t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
 	DataByAdjustCamera datas;
 	datas.isIntersect = false;
 
-	auto camera = GetOwner()->GetOwner()->GetCurCamera();
+	auto camera = GetOwnerObj()->GetOwnerScene()->GetCurCamera();
 
-	if (camera->GetRenderExcludeTags().contains(GetOwner()->GetTag()))
+	if (camera->GetRenderExcludeTags().contains(GetOwnerObj()->GetTag()))
 		return datas;
 
 	datas.tempRenderRc = GetRenderRect();
@@ -74,9 +74,9 @@ t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
 }
 
 
-
 eDelegateResult t2g::ImageRenderer::cbCheckTransform()
 {
+	mTransform = GetOwnerObj()->GetComponent<Transform>(eComponentType::Transform);
 	if (mTransform.IsEmpty())
 		return eDelegateResult::Return;
 	else
@@ -114,7 +114,7 @@ eDelegateResult t2g::ImageRenderer::cbDrawImage()
 			mSprite, data.resultRenderRc, resultSrcRc);
 	}
 
-	/*auto camera = GetOwner()->GetOwner()->GetCurCamera();
+	/*auto camera = GetOwnerObj()->GetOwnerObj()->GetCurCamera();
 	Rect tempRc;
 	Rect tempRenderRc = GetRenderRect();
 	rect::ScalingRect(tempRenderRc, 1.f / camera->GetDistance());

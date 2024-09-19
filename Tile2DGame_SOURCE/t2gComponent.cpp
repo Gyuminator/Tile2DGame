@@ -3,6 +3,18 @@
 
 #include "t2gScene.h"
 
+t2g::Component::Component()
+	: mChildren{}
+	, mUpdates{}
+	, mRenders{}
+	, mOwnerObj{}
+	, mOwnerComponent{}
+	, mChildID(-1)
+	, mChildLayer(eChildrenLayer::EnumEnd)
+	, mIsActive(true)
+{
+}
+
 void t2g::Component::BindToScene(SafePtr<Scene> scene)
 {
 	scene->BindComponent(this);
@@ -24,12 +36,21 @@ void t2g::Component::procDelegates(MultiDynamicDelegate& delegates)
 	}
 }
 
+
 void t2g::Component::Update()
 {
+	for (auto& child : mChildren[eChildrenLayer::Before])
+		child->Update();
 	procDelegates(mUpdates);
+	for (auto& child : mChildren[eChildrenLayer::After])
+		child->Update();
 }
 
 void t2g::Component::Render()
 {
+	for (auto& child : mChildren[eChildrenLayer::Before])
+		child->Render();
 	procDelegates(mRenders);
+	for (auto& child : mChildren[eChildrenLayer::After])
+		child->Render();
 }

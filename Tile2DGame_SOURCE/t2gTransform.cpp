@@ -31,7 +31,7 @@ void t2g::Transform::Init(const Vector3& location, const Vector3& rotation, cons
 
 eDelegateResult t2g::Transform::cbTest()
 {
-	SafePtr<Camera> camera = GetOwner()->GetComponent<Camera>(eComponentType::Camera);
+	SafePtr<Camera> camera = GetOwnerObj()->GetComponent<Camera>(eComponentType::Camera);
 	if (camera.IsEmpty())
 		return eDelegateResult::OK;
 

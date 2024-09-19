@@ -14,7 +14,7 @@ t2g::Object::Object()
 	, mName{}
 	, mAttachedObjects{}
 	, mAttacher{}
-	, mOwner{}
+	, mOwnerScene{}
 	, mID(AccID++)
 	, mTag(eObjectTag::EnumEnd)
 {
@@ -31,11 +31,11 @@ void t2g::Object::Init(eObjectTag type)
 
 void t2g::Object::BindComponentsToScene()
 {
-	assert(mOwner.IsValid() && "Object::BindComponentsToScene: Empty mOwner");
+	assert(mOwnerScene.IsValid() && "Object::BindComponentsToScene: Empty mOwnerScene");
 
 	for (auto& pair : mComponents)
 	{
-		pair.second->BindToScene(mOwner);
+		pair.second->BindToScene(mOwnerScene);
 	}
 }
 

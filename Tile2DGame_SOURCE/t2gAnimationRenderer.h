@@ -26,7 +26,7 @@ namespace t2g
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::AnimationRenderer; }
 		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::Script; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Middle; }
+		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Mid; }
 		void SyncWithOtherComponents() override;
 
 	public:

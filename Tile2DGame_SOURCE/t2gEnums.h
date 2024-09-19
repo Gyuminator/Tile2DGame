@@ -32,6 +32,7 @@ namespace t2g::enums
 		ShapeRenderer,
 		TileRenderer,
 		AnimationRenderer,
+		UIRenderer,
 		Camera,
 		Controller,
 
@@ -42,7 +43,9 @@ namespace t2g::enums
 	{
 		BackGround,
 		Tile,
-		Middle,
+		Bottom,
+		Mid,
+		Top,
 		Bullet,
 		Effect,
 		UI,
@@ -139,6 +142,14 @@ namespace t2g::enums
 		EndUpdate,
 		cbRenderTile,
 		cbSyncCameraView
+	};
+
+	enum class eChildrenLayer : UINT8
+	{
+		Before,
+		After,
+
+		EnumEnd
 	};
 
 };

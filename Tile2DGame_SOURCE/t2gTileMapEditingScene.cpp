@@ -349,7 +349,7 @@ SafePtr<t2g::Object> t2g::TileMapEditingScene::AddToolTile()
 	unique_ptr<Object> uptr = Object::CreateObject();
 	SafePtr<Object> sptr(uptr.get());
 
-	uptr->SetOwner(this);
+	uptr->SetOwnerScene(this);
 	uptr->SetTag(eObjectTag::ToolTile);
 	mToolTiles.emplace_back(std::move(uptr));
 
