@@ -34,7 +34,7 @@ namespace t2g::enums
 		AnimationRenderer,
 		UIRenderer,
 		Camera,
-		Controller,
+		PlayerController,
 
 		EnumEnd
 	};

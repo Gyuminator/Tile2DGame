@@ -10,11 +10,12 @@
 #include "t2gImageManager.h"
 #include "t2gFunc.h"
 #include "t2gShapeRenderer.h"
+#include "t2gTime.h"
 
 using namespace t2g::rect;
 
 t2g::TileMapEditingScene::TileMapEditingScene()
-	: mCurFileName{}
+	: mCurFilePath{}
 	, mMapPath(L"..\\Resource\\Map\\")
 	, mToolTiles{}
 	, mTileToolDC(nullptr)
@@ -32,6 +33,7 @@ void t2g::TileMapEditingScene::init()
 	CreateTileToolBuffer();
 	CreateToolTiles();
 	DrawTileToolBuffer();
+	//SavePrevEditInfo(L"asdfas");
 
 	/*for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 	{
@@ -41,6 +43,7 @@ void t2g::TileMapEditingScene::init()
 	wstring prevFileName = LoadPrevEditInfo();
 	if (prevFileName.empty())
 	{
+		SetSize({ 19, 12 });
 		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 		{
 			AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, 0, 0, INT(GetTiles().size() - 1));
@@ -51,56 +54,97 @@ void t2g::TileMapEditingScene::init()
 		LoadMap(prevFileName);
 	}
 
+	//ChangeMapSize(42, 28);
+
 	CameraSetting();
 
 	mWriteTileMarker = AddObject(eObjectTag::UI);
 	mWriteTileMarker->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
 	mWriteTileMarker->AddComponent<ShapeRenderer>()->Init(eShapeName::Ractangle,
 		{ func::GetTileSize(), func::GetTileSize() }, Color(255, 0, 255));
-	mWriteTileMarker->GetComponent<ShapeRenderer>(eComponentType::ShapeRenderer)->SetAnchor({ 0.f,0.f });
+	mWriteTileMarker->GET_COMPONENT(ShapeRenderer)->SetAnchor({ 0.f,0.f });
 	mWriteTileMarker->SyncComponents();
 	mWriteTileMarker->BindComponentsToScene();
 }
 
-void t2g::TileMapEditingScene::SaveMap(const wstring& fileName)
+void t2g::TileMapEditingScene::ChangeMapSize(INT x, INT y)
+{
+	SIZE prevSize = GetSize();
+	SetSize({ x, y });
+	GET_SINGLETON(Application).ChangeTileBitmapSize(GetSize());
+	SyncTilesToSceneSize(prevSize);
+}
+
+void t2g::TileMapEditingScene::SaveMapController()
 {
 	if (func::CheckKey(eKeys::Ctrl, eKeyState::Pressed) &&
 		func::CheckKey(eKeys::S, eKeyState::Down))
 	{
-		wstring path = mMapPath;
-		path += fileName;
-
-		std::ofstream out(path, std::ios::binary);
-
-		if (out.is_open())
-		{
-			SIZE sceneSize = GetSize();
-			out.write((char*)(&sceneSize), sizeof(sceneSize));
-			auto& tiles = GetTiles();
-			for (auto& tile : tiles)
-			{
-				SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
-				Point srcPos = tileRender->GetSrcPos();
-				eImageName eImage = tileRender->GetImageName();
-				out.write((char*)(&srcPos), sizeof(srcPos));
-				out.write((char*)(&eImage), sizeof(eImage));
-			}
-
-			SavePrevEditInfo(fileName);
-		}
+		if (mCurFilePath.empty())
+			SaveMapOtherName();
+		else
+			SaveMap(mCurFilePath);
 	}
-
 }
 
-void t2g::TileMapEditingScene::LoadMap(const wstring& fileName)
+void t2g::TileMapEditingScene::SaveMap(const wstring& filePath)
 {
-	wstring path = mMapPath;
-	path += fileName;
+	std::ofstream out(filePath, std::ios::binary);
 
-	std::ifstream inMap(path, std::ios::binary);
+	if (out.is_open())
+	{
+		SIZE sceneSize = GetSize();
+		out.write((char*)(&sceneSize), sizeof(sceneSize));
+		auto& tiles = GetTiles();
+		for (auto& tile : tiles)
+		{
+			SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
+			Point srcPos = tileRender->GetSrcPos();
+			eImageName eImage = tileRender->GetImageName();
+			out.write((char*)(&srcPos), sizeof(srcPos));
+			out.write((char*)(&eImage), sizeof(eImage));
+		}
+
+		SavePrevEditInfo(filePath);
+
+		mCurFilePath = filePath;
+	}
+}
+
+void t2g::TileMapEditingScene::SaveMapOtherName()
+{
+	wchar_t fileName[256] = {};
+	wchar_t fileTitle[256] = {};
+
+	OPENFILENAME ofn = {};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = func::GetHWnd();
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = sizeof(fileName);
+	// 필터 정의
+	ofn.lpstrFilter = L"ALL\0*.*\0TileMap\0*.tilemap\0";
+	ofn.nFilterIndex = 0;
+	ofn.lpstrFileTitle = fileTitle;
+	ofn.nMaxFileTitle = sizeof(fileTitle);
+	ofn.lpstrInitialDir = mMapPath.c_str();
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	if (GetSaveFileName(&ofn))
+	{
+		SetCurrentDirectory(func::GetAppPath());
+		ofn.lpstrFile;
+		SaveMap(fileName);
+	}
+}
+
+void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
+{
+	std::ifstream inMap(filePath, std::ios::binary);
 
 	if (inMap.is_open())
 	{
+		ClearTile();
+
 		SIZE sceneSize;
 		inMap.read((char*)(&sceneSize), sizeof(sceneSize));
 		SetSize(sceneSize);
@@ -116,22 +160,23 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& fileName)
 				INT(GetTiles().size() - 1));
 		}
 
-		mCurFileName = fileName;
+		mCurFilePath = filePath;
 	}
 }
 
-void t2g::TileMapEditingScene::SavePrevEditInfo(const wstring& fileName)
+void t2g::TileMapEditingScene::SavePrevEditInfo(const wstring& filePath)
 {
 	wstring path = mMapPath;
+	//wstring path = L"C:\\Users\\user-pc\\source\\repos\\Tile2DGame_2\\Resource\Map\\";
 	path += L"prevEditInfo.editinfo";
 
 	std::ofstream outInfo(path, std::ios::binary);
 
 	if (outInfo.is_open())
 	{
-		INT sizeOfPrevFileName = fileName.size() * 2 + 2; // null 문자 + 2
-		outInfo.write((char*)(&sizeOfPrevFileName), sizeof(sizeOfPrevFileName));
-		outInfo.write((char*)(fileName.c_str()), sizeOfPrevFileName);
+		INT sizeOfPrevFilePath = filePath.size() * 2 + 2; // null 문자 + 2
+		outInfo.write((char*)(&sizeOfPrevFilePath), sizeof(sizeOfPrevFilePath));
+		outInfo.write((char*)(filePath.c_str()), sizeOfPrevFilePath);
 	}
 }
 
@@ -140,7 +185,7 @@ const wstring t2g::TileMapEditingScene::LoadPrevEditInfo()
 	wstring path = mMapPath;
 	path += L"prevEditInfo.editinfo";
 
-	wstring fileName;
+	wstring fileName{};
 
 	std::ifstream inInfo(path, std::ios::binary);
 
@@ -158,9 +203,38 @@ const wstring t2g::TileMapEditingScene::LoadPrevEditInfo()
 	return fileName;
 }
 
-void t2g::TileMapEditingScene::cbSceneController()
+void t2g::TileMapEditingScene::CameraMoveController()
 {
-	mMainViewCamera;
+	SafePtr<Transform> tr = mMainViewCamera->GetOwnerObj()->GetComponent<Transform>(eComponentType::Transform);
+
+	Vector3 location = tr->GetLocation();
+	Vector3 rotation = tr->GetRotation();
+
+	float speed = 500.f;
+
+	if (func::CheckKey(eKeys::W, eKeyState::Pressed))
+	{
+		location.y -= speed * GET_SINGLETON(Time).GetDT();
+		rotation.z = 180.f;
+	}
+	if (func::CheckKey(eKeys::A, eKeyState::Pressed))
+	{
+		location.x -= speed * GET_SINGLETON(Time).GetDT();
+		rotation.z = 0.f;
+	}
+	if (func::CheckKey(eKeys::S, eKeyState::Pressed))
+	{
+		location.y += speed * GET_SINGLETON(Time).GetDT();
+		rotation.z = 270.f;
+	}
+	if (func::CheckKey(eKeys::D, eKeyState::Pressed))
+	{
+		location.x += speed * GET_SINGLETON(Time).GetDT();
+		rotation.z = 90.f;
+	}
+
+	tr->SetLocation(location);
+	tr->SetRotation(rotation);
 }
 
 void t2g::TileMapEditingScene::CameraSetting()
@@ -172,15 +246,16 @@ void t2g::TileMapEditingScene::CameraSetting()
 	mainCameraObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
 	Rect mainViewRect = MakeRectByAnchors(wndRect, { TileViewAnchorX, 0.f }, { 1.f, 1.0f });
 	mainCameraObj->AddComponent<Camera>()->Init(mainViewRect);
-	auto mainCameraCom = mainCameraObj->GetComponent<Camera>(eComponentType::Camera);
-	mainCameraCom->SetAnchor({ 0.f, 0.f });
+	mMainViewCamera = mainCameraObj->GetComponent<Camera>(eComponentType::Camera);
+	mMainViewCamera->SetAnchor({ 0.f, 0.f });
 
 	// 메인 타일 클릭 이벤트 추가
 	mainCameraObj->BindBackEvent(eEventCallPoint::cbSyncCameraView,
-		[mainCameraCom, this]()
+		[this]()
 		{
-			ClickEventMainTileView(mainCameraCom);
-			SaveMap(L"map_00.map");
+			ClickEventMainTileView(mMainViewCamera);
+			CameraMoveController();
+			SaveMapController();
 			return eDelegateResult::OK;
 		}
 	);
@@ -193,17 +268,17 @@ void t2g::TileMapEditingScene::CameraSetting()
 	toolCameraObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
 	Rect tileToolViewRect = MakeRectByAnchors(wndRect, { 0.f, 0.05f }, { TileViewAnchorX, 1.f });
 	toolCameraObj->AddComponent<Camera>()->Init(tileToolViewRect);
-	auto toolCameraCom = toolCameraObj->GetComponent<Camera>(eComponentType::Camera);
-	toolCameraCom->SetAnchor({ 0.f, 0.f });
-	toolCameraCom->SetDistance(1.25f);
-	toolCameraCom->SetTargetTileDC(mTileToolDC);
-	toolCameraCom->InsertExcludeTag(eObjectTag::UI);
+	mTileViewCamera = toolCameraObj->GetComponent<Camera>(eComponentType::Camera);
+	mTileViewCamera->SetAnchor({ 0.f, 0.f });
+	mTileViewCamera->SetDistance(1.25f);
+	mTileViewCamera->SetTargetTileDC(mTileToolDC);
+	mTileViewCamera->InsertExcludeTag(eObjectTag::UI);
 
 	// 타일 도구 클릭 이벤트 추가
 	toolCameraObj->BindBackEvent(eEventCallPoint::cbSyncCameraView,
-		[toolCameraCom, this]()
+		[this]()
 		{
-			ClickEventToolTileView(toolCameraCom);
+			ClickEventToolTileView(mTileViewCamera);
 			return eDelegateResult::OK;
 		}
 	);

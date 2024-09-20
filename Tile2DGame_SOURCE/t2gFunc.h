@@ -28,6 +28,21 @@ namespace t2g::func
 		return GET_SINGLETON(ImageManager).FindImage(eName);
 	}
 
+	inline const wchar_t* GetAppPath()
+	{
+		return GET_SINGLETON(Application).GetAppPath();
+	}
+
+	inline const HWND GetHWnd()
+	{
+		return GET_SINGLETON(Application).GetHWnd();
+	}
+
+	inline const RECT& GetWndRect()
+	{
+		return GET_SINGLETON(Application).GetWindowRect();
+	}
+
 	inline HDC GetBackDC()
 	{
 		return GET_SINGLETON(Application).GetBackDC();

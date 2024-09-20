@@ -5,3 +5,5 @@
 
 #define GET_SINGLETON(name) t2g::SingletonBase<t2g::name>::GetInst()
 
+#define GET_COMPONENT(name) GetComponent<t2g::name>(t2g::enums::eComponentType::name)
+

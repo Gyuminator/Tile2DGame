@@ -12,6 +12,9 @@ using namespace t2g::enums;
 
 void t2g::ShapeRenderer::Init(const eShapeName eShape, const Size& size, const Color penColor)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+	SetRenderLayer(eRenderLayer::Mid);
+
 	mShape = eShape;
 	SetSrcRect({ 0, 0, size.Width, size.Height });
 	mPenColor = penColor;

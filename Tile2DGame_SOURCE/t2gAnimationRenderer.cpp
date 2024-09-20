@@ -25,21 +25,24 @@ void t2g::AnimationRenderer::SyncWithOtherComponents()
 
 void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
 {
+	SetUpdateLayer(eUpdateLayer::Script);
+	SetRenderLayer(eRenderLayer::Mid);
+
 	SetImageName(eName);
 	mDuration = duration;
 
+	BindBackToUpdates(&AnimationRenderer::cbCheckImageLoading);
 	BindBackToUpdates(&AnimationRenderer::cbCheckTransform);
 	BindBackToUpdates(&AnimationRenderer::cbCheckStateValid);
-	BindBackToUpdates(&AnimationRenderer::cbCheckImageLoading);
 
 	BindBackToUpdates(&AnimationRenderer::cbProcStateChanger);
 	BindBackToUpdates(&AnimationRenderer::cbAnimate);
 
+	BindBackToRenders(&AnimationRenderer::cbCheckImageLoading);
 	BindBackToRenders(&AnimationRenderer::cbCheckTransform);
 	BindBackToRenders(&AnimationRenderer::cbCheckStateValid);
-	BindBackToRenders(&AnimationRenderer::cbCheckImageLoading);
 
-	BindBackToRenders(&AnimationRenderer::cbDrawImage);
+	DrawBindByObjTag(eRenderLayer::Mid);
 }
 
 void t2g::AnimationRenderer::AddFrame(eAnimState eState, Point srcPos)

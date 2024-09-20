@@ -12,9 +12,7 @@ namespace t2g
 		virtual ~PlayerController() {}
 
 	public:
-		eComponentType GetComponentType() const override { return eComponentType::Controller; }
-		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::Input; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
+		eComponentType GetComponentType() const override { return eComponentType::PlayerController; }
 		void SyncWithOtherComponents() override;
 
 	public:

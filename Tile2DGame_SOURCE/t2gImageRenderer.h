@@ -26,8 +26,6 @@ namespace t2g
 
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::ImageRenderer; }
-		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::Mid; }
 		void SyncWithOtherComponents() override;
 
 	public:
@@ -52,11 +50,13 @@ namespace t2g
 	protected:
 		void AdjustRenderRect();
 		DataByAdjustCamera MakeDataByAdjustCamera();
+		void DrawBindByObjTag(eRenderLayer defaultRenderLayer);
 
 	public:
 		eDelegateResult cbCheckTransform();
 		eDelegateResult cbCheckImageLoading();
 		eDelegateResult cbDrawImage();
+		eDelegateResult cbDrawImageUI();
 
 	private:
 		void SyncRenderSize();

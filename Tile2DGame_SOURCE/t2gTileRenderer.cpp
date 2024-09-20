@@ -21,6 +21,9 @@
 
 void t2g::TileRenderer::Init(eImageName eName, INT srcPosX, INT srcPosY, UINT index)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+	SetRenderLayer(eRenderLayer::EnumEnd);
+
 	mImageName = eName;
 	mSrcPos.X = srcPosX;
 	mSrcPos.Y = srcPosY;

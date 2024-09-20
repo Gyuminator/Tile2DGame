@@ -16,6 +16,9 @@ void t2g::UIRenderer::SyncWithOtherComponents()
 
 void t2g::UIRenderer::Init(eImageName eName, INT xPos, INT yPos)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+	SetRenderLayer(eRenderLayer::UI);
+
 	BindBackToRenders(&UIRenderer::cbCheckImageLoading);
 	BindBackToRenders(&UIRenderer::cbCheckTransform);
 	BindBackToRenders(&UIRenderer::cbDrawUI);

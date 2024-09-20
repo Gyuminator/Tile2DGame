@@ -39,13 +39,14 @@ namespace t2g
 
 	public:
 		virtual eComponentType GetComponentType() const = 0;
-		virtual eUpdateLayer GetUpdateLayer() const = 0;
-		virtual eRenderLayer GetRenderLayer() const = 0;
 		virtual void SyncWithOtherComponents() = 0;
 
 		virtual void BindToScene(SafePtr<Scene> scene);
 
 	public:
+		eUpdateLayer GetUpdateLayer() const { return mUpdateLayer; }
+		eRenderLayer GetRenderLayer() const { return mRenderLayer; }
+
 		SafePtr<Object> GetOwnerObj() const { return mOwnerObj; }
 		void SetOwnerObj(SafePtr<Object> pObj) { mOwnerObj = pObj; }
 
@@ -64,6 +65,10 @@ namespace t2g
 		template<typename T>
 		SafePtr<T> AddChild(eChildrenLayer layer);
 
+	protected:
+		void SetUpdateLayer(eUpdateLayer eULayer) { mUpdateLayer = eULayer; }
+		void SetRenderLayer(eRenderLayer eRLayer) { mRenderLayer = eRLayer; }
+
 	private:
 		void procDelegates(MultiDynamicDelegate& dd);
 
@@ -75,8 +80,12 @@ namespace t2g
 
 		SafePtr<Object> mOwnerObj;
 		SafePtr<Component> mOwnerComponent;
+
 		INT16 mChildID;
 		eChildrenLayer mChildLayer;
+
+		eUpdateLayer mUpdateLayer;
+		eRenderLayer mRenderLayer;
 		bool mIsActive;
 	};
 

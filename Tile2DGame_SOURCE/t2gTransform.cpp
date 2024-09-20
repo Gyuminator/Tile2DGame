@@ -22,6 +22,9 @@ void t2g::Transform::SyncWithOtherComponents()
 
 void t2g::Transform::Init(const Vector3& location, const Vector3& rotation, const Vector3& scale)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+	SetRenderLayer(eRenderLayer::Mid);
+
 	mLocation = location;
 	mRotation = rotation;
 	mScale = scale;

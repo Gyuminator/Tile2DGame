@@ -15,6 +15,9 @@ void t2g::PlayerController::SyncWithOtherComponents()
 
 void t2g::PlayerController::Init()
 {
+	SetUpdateLayer(eUpdateLayer::Input);
+	SetRenderLayer(eRenderLayer::EnumEnd);
+
 	BindBackToUpdates(&PlayerController::cbCheckTransform);
 	BindBackToUpdates(&PlayerController::cbProcArrowKeys);
 }

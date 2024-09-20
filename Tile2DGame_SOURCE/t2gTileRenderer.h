@@ -14,8 +14,6 @@ namespace t2g
 
 	public:
 		eComponentType GetComponentType() const override { return eComponentType::TileRenderer; }
-		eUpdateLayer GetUpdateLayer() const override { return eUpdateLayer::EnumEnd; }
-		eRenderLayer GetRenderLayer() const override { return eRenderLayer::EnumEnd; }
 		void SyncWithOtherComponents() override {};
 
 	public:

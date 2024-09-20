@@ -38,6 +38,8 @@ namespace t2g
 		mHdc = GetDC(mHwnd);
 		mWndSize = POINT(mWndRect.right - mWndRect.left, mWndRect.bottom - mWndRect.top);
 
+		SetCurrentDirectory(mAppPath);
+
 		CreateBackBuffer();
 		CreateTileBuffer();
 

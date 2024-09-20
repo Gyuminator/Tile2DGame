@@ -11,6 +11,7 @@
 #include "t2gPlayerController.h"
 #include "t2gAnimationRenderer.h"
 #include "t2gCamera.h"
+#include "t2gFunc.h"
 
 t2g::Scene::Scene()
 	: mObjects{}
@@ -18,7 +19,7 @@ t2g::Scene::Scene()
 	, mRenderComponentsLayers{}
 	, mTiles{}
 	, mCameras{}
-	, mSize{ 1, 1 }
+	, mSize{}
 {
 }
 
@@ -73,6 +74,10 @@ void t2g::Scene::Enter()
 		SafePtr<TileRenderer> tileRender = iter->GetComponent(eComponentType::TileRenderer);
 		tileRender->Render();
 	}
+	Graphics g(func::GetTileDC());
+	Pen p(Color(0, 0, 0));
+	Rect rect = { 0, 0, mSize.cx * func::GetTileSize() - 1, mSize.cy * func::GetTileSize() - 1 };
+	g.DrawRectangle(&p, rect);
 }
 
 SafePtr<t2g::Object> t2g::Scene::AddObject(eObjectTag tag)
@@ -136,6 +141,78 @@ void t2g::Scene::EventProc(eEventCallPoint callPoint)
 		}
 		++iter;
 	}
+}
+
+void t2g::Scene::SyncTilesToSceneSize(SIZE prevSize)
+{
+	if (prevSize.cx < mSize.cx)
+	{
+		INT ix = prevSize.cx;
+		INT dx = mSize.cx - prevSize.cx;
+
+		if (prevSize.cy < mSize.cy)
+		{
+			INT dy = mSize.cy - prevSize.cy;
+
+			for (INT i = 0; i < prevSize.cy; ++i)
+			{
+				for (INT j = 0; j < dx; ++j)
+				{
+					InsertTile(ix + j);
+				}
+				ix += mSize.cx;
+			}
+			for (INT i = 0; i < mSize.cx * dy; ++i)
+			{
+				AddTile();
+			}
+		}
+		else
+		{
+			for (INT i = 0; i < mSize.cy; ++i)
+			{
+				for (INT j = 0; j < dx; ++j)
+				{
+					InsertTile(ix + j);
+				}
+				ix += mSize.cx;
+			}
+		}
+	}
+	else
+	{
+		INT ix = mSize.cx;
+		INT dx = prevSize.cx - mSize.cx;
+
+		if (prevSize.cy < mSize.cy)
+		{
+			INT dy = mSize.cy - prevSize.cy;
+
+			for (INT i = 0; i < mSize.cy; ++i)
+			{
+				mTiles.erase(mTiles.begin() + ix, mTiles.begin() + ix + dx);
+				ix += mSize.cx;
+			}
+			for (INT i = 0; i < mSize.cx * dy; ++i)
+			{
+				AddTile();
+			}
+		}
+		else
+		{
+			for (INT i = 0; i < mSize.cy; ++i)
+			{
+				mTiles.erase(mTiles.begin() + ix, mTiles.begin() + ix + dx);
+				ix += mSize.cx;
+			}
+		}
+	}
+	mTiles.resize(mSize.cx * mSize.cy);
+	for (UINT i = 0; i < mTiles.size(); ++i)
+	{
+		mTiles[i]->GetComponent<TileRenderer>(eComponentType::TileRenderer)->SetTileIndex(i);
+	}
+
 }
 
 void t2g::Scene::init()
@@ -265,6 +342,18 @@ void t2g::Scene::LoadImagesOfScene()
 	GET_SINGLETON(ImageManager).Load(eImageName::Player, L"Character\\plant.png", 3, 4);
 	GET_SINGLETON(ImageManager).Load(eImageName::Plant_00, L"Character\\plant_00.png", 3, 4);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A2_png, L"Tile\\Outside_A2.png", 16, 12);
+}
+
+SafePtr<t2g::Object> t2g::Scene::InsertTile(INT index)
+{
+	unique_ptr<Object> uptr = Object::CreateObject();
+	SafePtr<Object> sptr(uptr.get());
+
+	uptr->SetOwnerScene(this);
+	uptr->SetTag(eObjectTag::Tile);
+	mTiles.emplace(mTiles.begin() + index, std::move(uptr));
+
+	return sptr;
 }
 
 UINT t2g::Object::AccID = 0;

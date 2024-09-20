@@ -28,6 +28,8 @@ void t2g::ImageRenderer::SyncWithOtherComponents()
 
 void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+
 	mSrcRect.X = xPos;
 	mSrcRect.Y = yPos;
 
@@ -35,7 +37,7 @@ void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
 
 	BindBackToRenders(&ImageRenderer::cbCheckImageLoading);
 	BindBackToRenders(&ImageRenderer::cbCheckTransform);
-	BindBackToRenders(&ImageRenderer::cbDrawImage);
+	DrawBindByObjTag(eRenderLayer::Mid);
 }
 
 void t2g::ImageRenderer::AdjustRenderRect()
@@ -71,6 +73,25 @@ t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
 	}
 
 	return datas;
+}
+
+void t2g::ImageRenderer::DrawBindByObjTag(eRenderLayer defaultRenderLayer)
+{
+	switch (GetOwnerObj()->GetTag())
+	{
+	case eObjectTag::UI:
+	{
+		SetRenderLayer(eRenderLayer::UI);
+		BindBackToRenders(&ImageRenderer::cbDrawImageUI);
+		break;
+	}
+	default:
+	{
+		SetRenderLayer(defaultRenderLayer);
+		BindBackToRenders(&ImageRenderer::cbDrawImage);
+		break;
+	}
+	}
 }
 
 
@@ -114,29 +135,13 @@ eDelegateResult t2g::ImageRenderer::cbDrawImage()
 			mSprite, data.resultRenderRc, resultSrcRc);
 	}
 
-	/*auto camera = GetOwnerObj()->GetOwnerObj()->GetCurCamera();
-	Rect tempRc;
-	Rect tempRenderRc = GetRenderRect();
-	rect::ScalingRect(tempRenderRc, 1.f / camera->GetDistance());
+	return eDelegateResult::OK;
+}
 
-	if (Rect::Intersect(tempRc, camera->GetCameraViewRect(), tempRenderRc))
-	{
-		Rect resultRenderRc = tempRc;
-		PointF renderAnchor = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(tempRc.X, tempRc.Y));
-		Point renderPos = rect::GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
-		resultRenderRc.X = renderPos.X;
-		resultRenderRc.Y = renderPos.Y;
+eDelegateResult t2g::ImageRenderer::cbDrawImageUI()
+{
+	AdjustRenderRect();
 
-		PointF ltAnchor = rect::GetAnchorByPos(tempRenderRc,
-			Point(tempRc.GetLeft(), tempRc.GetTop()));
-		PointF rbAnchor = rect::GetAnchorByPos(tempRenderRc,
-			Point(tempRc.GetRight(), tempRc.GetBottom()));
-		Rect resultSrcRc = rect::MakeRectByAnchors(GetSrcRect(), ltAnchor, rbAnchor);
-
-		Graphics graphics(func::GetBackDC());
-		GET_SINGLETON(ImageManager).DrawImage(graphics,
-			mSprite, resultRenderRc, resultSrcRc);
-	}*/
 
 	return eDelegateResult::OK;
 }

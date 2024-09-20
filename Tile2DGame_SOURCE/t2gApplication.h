@@ -31,10 +31,13 @@ namespace t2g
 		HDC GetBackDC() { return mBackHdc; }
 		HDC GetTileDC() { return mTileHdc; }
 		HDC GetBlackTilePieceDC() { return mBlackTilePieceHdc; }
+		wchar_t* GetAppPath() { return mAppPath; }
 
 		const RECT& GetWindowRect() { return mWndRect; }
 
 	private:
+		wchar_t mAppPath[1024];
+
 		HINSTANCE mHinstance;
 		HWND mHwnd;
 		HDC mHdc;

@@ -16,7 +16,7 @@ void t2g::SceneManager::Init()
 	//ChangeScene<PlayScene>(eScene::Play);
 	/*AddScene<Scene>(eScene::Play)->Init(SIZE(80, 60));
 	ChangeScene<Scene>(eScene::Play);*/
-	AddScene<TileMapEditingScene>(eScene::TileMapEditing)->Init(SIZE(80, 60));
+	AddScene<TileMapEditingScene>(eScene::TileMapEditing)->Init(SIZE(0, 0));
 	ChangeScene<TileMapEditingScene>(eScene::TileMapEditing);
 }
 

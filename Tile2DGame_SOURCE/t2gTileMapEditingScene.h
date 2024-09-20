@@ -25,20 +25,21 @@ namespace t2g
 	private:
 		void init() override; // 여기서 메인 카메라와 서브 카메라(칠할 타일 렌더용) 생성
 
-
 	public:
 		void ChangeMapSize(INT x, INT y);
+		void SaveMapController();
 		void SaveMap(const wstring& fileName);
+		void SaveMapOtherName();
 		void LoadMap(const wstring& fileName);
 		void SavePrevEditInfo(const wstring& fileName);
 		const wstring LoadPrevEditInfo();
 
 	public:
 		const vector<unique_ptr<Object>>& GetToolTiles() { return mToolTiles; }
+		const wstring& GetCurFilePath() { return mCurFilePath; }
 
 	protected:
-		void cbSceneController(); // 편집 씬 조작
-		void cbCheckCameras();
+		void CameraMoveController();
 
 	private:
 		void CameraSetting();
@@ -53,7 +54,7 @@ namespace t2g
 		SafePtr<t2g::Object> AddToolTile();
 
 	private:
-		wstring mCurFileName;
+		wstring mCurFilePath;
 		wstring mMapPath;
 
 		vector<unique_ptr<Object>> mToolTiles;

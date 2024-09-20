@@ -56,8 +56,7 @@ namespace t2g
 		void BindFrontEvent(eEventCallPoint callPoint, function<eDelegateResult()> func) { mEvents[callPoint].push_front(func); }
 		void EventProc(eEventCallPoint callPoint);
 
-		/*void BindObject(unique_ptr<Object> object);
-		void UnBindObject(unique_ptr<Object> object);*/
+		void SyncTilesToSceneSize(SIZE prevSize);
 
 	public:
 		const vector<unique_ptr<Object>>& GetTiles() { return mTiles; }
@@ -66,6 +65,9 @@ namespace t2g
 		SIZE GetSize() { return mSize; }
 
 		void SetSize(SIZE sceneSize) { mSize = sceneSize; }
+
+	protected:
+		void ClearTile() { mTiles.clear(); }
 
 	private:
 		virtual void init();
@@ -76,6 +78,7 @@ namespace t2g
 
 	private:
 		void LoadImagesOfScene();
+		SafePtr<t2g::Object> InsertTile(INT index);
 
 	private:
 		Objects mObjects;

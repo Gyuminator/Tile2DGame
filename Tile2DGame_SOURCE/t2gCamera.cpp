@@ -7,6 +7,7 @@
 #include "t2gScene.h"
 #include "t2gTileMapEditingScene.h"
 #include "t2gInput.h"
+#include "t2gFunc.h"
 
 using namespace t2g::rect;
 
@@ -37,17 +38,12 @@ void t2g::Camera::BindToScene(SafePtr<Scene> scene)
 	scene->PushCamera(this);
 }
 
-//void t2g::Camera::render()
-//{
-//	BitBlt(mMainDC, mViewportRect.X, mViewportRect.Y,
-//		mViewportRect.Width, mViewportRect.Height,
-//		mCameraDC, mViewportRect.X, mViewportRect.Y, SRCCOPY);
-//}
-
 void t2g::Camera::Init(const Rect& viewport)
 {
+	SetUpdateLayer(eUpdateLayer::EnumEnd);
+	SetRenderLayer(eRenderLayer::EnumEnd);
+
 	mViewportRect = viewport;
-	//CreateCameraBuffer();
 
 	BindBackToUpdates(&Camera::cbCheckTransform);
 	BindBackToUpdates(&Camera::cbSyncCameraView);
@@ -56,9 +52,6 @@ void t2g::Camera::Init(const Rect& viewport)
 		BindBackToUpdates(&Camera::cbRenderTileOnce);
 	else
 		BindBackToUpdates(&Camera::cbRenderTile);
-
-	//BindBackToRenders(&Camera::cbCheckTransform);
-	//BindBackToRenders(&Camera::cbBltToViewport);
 }
 
 void t2g::Camera::Release()
