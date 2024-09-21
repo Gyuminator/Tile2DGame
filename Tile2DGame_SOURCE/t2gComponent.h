@@ -62,6 +62,14 @@ namespace t2g
 		template<typename T>
 		void BindFrontToRenders(eDelegateResult(T::* dd)());
 
+		void ClearUpdates() { mUpdates.clear(); }
+		void ClearRenders() { mRenders.clear(); }
+		void ClearMDDs()
+		{
+			ClearUpdates();
+			ClearRenders();
+		}
+
 		template<typename T>
 		SafePtr<T> AddChild(eChildrenLayer layer);
 

@@ -26,17 +26,19 @@ namespace t2g
 		void CreateBackBuffer();
 		void CreateTileBuffer();
 	public:
+		wchar_t* GetAppPath() { return mAppPath; }
 		HWND GetHWnd() { return mHwnd; }
 		HDC GetMainDC() { return mHdc; }
 		HDC GetBackDC() { return mBackHdc; }
 		HDC GetTileDC() { return mTileHdc; }
 		HDC GetBlackTilePieceDC() { return mBlackTilePieceHdc; }
-		wchar_t* GetAppPath() { return mAppPath; }
+		SIZE GetTileBufferSize() { return mTileBufferSize; }
 
 		const RECT& GetWindowRect() { return mWndRect; }
 
 	private:
 		wchar_t mAppPath[1024];
+		RECT mWndRect;
 
 		HINSTANCE mHinstance;
 		HWND mHwnd;
@@ -47,8 +49,8 @@ namespace t2g
 		HBITMAP mBackBitmap;
 		HBITMAP mTileBitmap;
 
-		RECT mWndRect;
 		POINT mWndSize;
+		SIZE mTileBufferSize;
 	};
 }
 

@@ -73,6 +73,7 @@ void t2g::TileMapEditingScene::ChangeMapSize(INT x, INT y)
 	SetSize({ x, y });
 	GET_SINGLETON(Application).ChangeTileBitmapSize(GetSize());
 	SyncTilesToSceneSize(prevSize);
+	mMainViewCamera->ClearViewport({ 0, 0, 0 });
 }
 
 void t2g::TileMapEditingScene::SaveMapController()
@@ -245,9 +246,10 @@ void t2g::TileMapEditingScene::CameraSetting()
 	SafePtr<Object> mainCameraObj = AddObject(eObjectTag::Camera);
 	mainCameraObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
 	Rect mainViewRect = MakeRectByAnchors(wndRect, { TileViewAnchorX, 0.f }, { 1.f, 1.0f });
-	mainCameraObj->AddComponent<Camera>()->Init(mainViewRect);
+	mainCameraObj->AddComponent<Camera>()->Init(mainViewRect, func::GetTileDC());
 	mMainViewCamera = mainCameraObj->GetComponent<Camera>(eComponentType::Camera);
 	mMainViewCamera->SetAnchor({ 0.f, 0.f });
+	mMainViewCamera->SetDistance(0.5f);
 
 	// 메인 타일 클릭 이벤트 추가
 	mainCameraObj->BindBackEvent(eEventCallPoint::cbSyncCameraView,
@@ -267,11 +269,10 @@ void t2g::TileMapEditingScene::CameraSetting()
 	SafePtr<Object> toolCameraObj = AddObject(eObjectTag::TileToolCamera);
 	toolCameraObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
 	Rect tileToolViewRect = MakeRectByAnchors(wndRect, { 0.f, 0.05f }, { TileViewAnchorX, 1.f });
-	toolCameraObj->AddComponent<Camera>()->Init(tileToolViewRect);
+	toolCameraObj->AddComponent<Camera>()->Init(tileToolViewRect, mTileToolDC);
 	mTileViewCamera = toolCameraObj->GetComponent<Camera>(eComponentType::Camera);
 	mTileViewCamera->SetAnchor({ 0.f, 0.f });
 	mTileViewCamera->SetDistance(1.25f);
-	mTileViewCamera->SetTargetTileDC(mTileToolDC);
 	mTileViewCamera->InsertExcludeTag(eObjectTag::UI);
 
 	// 타일 도구 클릭 이벤트 추가
@@ -410,6 +411,7 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 					GetTiles()[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 				if (mSelectedTile.IsValid())
 				{
+					tileRenderer->SetImageName(mSelectedTile->GetImageName());
 					tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos());
 					tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
 				}

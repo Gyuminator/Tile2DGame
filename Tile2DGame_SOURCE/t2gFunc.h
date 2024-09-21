@@ -74,11 +74,17 @@ namespace t2g::func
 		INT y = pos.Y / GetTileSize();
 		return (x < numOfBufferTileX) ? y * numOfBufferTileX + x : -1;
 	}
+
 	inline Rect GetTileRectByIndex(INT numOfBufferTileX, INT index)
 	{
 		return { index % numOfBufferTileX * GetTileSize(),
 			index / numOfBufferTileX * GetTileSize(),
 			GetTileSize() , GetTileSize() };
+	}
+
+	inline SIZE GetTileBufferSize()
+	{
+		return GET_SINGLETON(Application).GetTileBufferSize();
 	}
 
 

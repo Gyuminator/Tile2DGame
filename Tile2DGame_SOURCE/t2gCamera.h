@@ -29,7 +29,7 @@ namespace t2g
 		void BindToScene(SafePtr<Scene> scene) override;
 
 	public:
-		void Init(const Rect& viewport);
+		void Init(const Rect& viewport, HDC targetTileDC);
 		void Release();
 
 	public:
@@ -37,6 +37,7 @@ namespace t2g
 		//Point CameraViewToViewport(Point cameraViewPos);
 		void InsertExcludeTag(eObjectTag tag) { mRenderExcludeTags.insert(tag); }
 		void EraseExcludeTag(eObjectTag tag) { mRenderExcludeTags.erase(tag); }
+		void ClearViewport(Color color);
 
 	public:
 		const unordered_set<eObjectTag>& GetRenderExcludeTags() { return mRenderExcludeTags; }
@@ -57,6 +58,7 @@ namespace t2g
 		eDelegateResult cbBltToViewport();
 		eDelegateResult cbRenderTile();
 		eDelegateResult cbRenderTileOnce();
+		eDelegateResult cbDrawOutsideTileBuffer();
 
 	private:
 		void SyncRenderSize(SafePtr<Sprite> sprite) {};

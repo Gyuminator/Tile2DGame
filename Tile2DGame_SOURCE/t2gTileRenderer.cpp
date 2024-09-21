@@ -21,6 +21,8 @@
 
 void t2g::TileRenderer::Init(eImageName eName, INT srcPosX, INT srcPosY, UINT index)
 {
+	ClearMDDs();
+
 	SetUpdateLayer(eUpdateLayer::EnumEnd);
 	SetRenderLayer(eRenderLayer::EnumEnd);
 
@@ -28,6 +30,7 @@ void t2g::TileRenderer::Init(eImageName eName, INT srcPosX, INT srcPosY, UINT in
 	mSrcPos.X = srcPosX;
 	mSrcPos.Y = srcPosY;
 	mTileIndex = index;
+
 	BindBackToRenders(&TileRenderer::cbDrawTile);
 }
 
@@ -48,7 +51,8 @@ eDelegateResult t2g::TileRenderer::cbDrawTile()
 		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 		INT(mTileIndex / sceneSize.cx * Application::TileSize),
 		Application::TileSize, Application::TileSize };
-	GET_SINGLETON(ImageManager).DrawImage(GET_SINGLETON(ImageManager).GetGraphicsOfTileDC(),
+	Graphics g(func::GetTileDC());
+	GET_SINGLETON(ImageManager).DrawImage(g,
 		mImageName, destRect, mSrcPos);
 
 	return eDelegateResult::OK;

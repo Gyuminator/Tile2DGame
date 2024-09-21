@@ -57,49 +57,7 @@ namespace t2g
 			DrawImage(graphics, sprite, dest, srcPos);
 		}
 
-		/*void DrawImage(SafePtr<Sprite> sprite, Rect& dest, const Point& srcPos)
-		{
-			GetGraphicsOfBackDC().DrawImage
-			(
-				(Image*)sprite->GetImage().GetKey(),
-				dest,
-				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
-				sprite->GetFrameWidth(), sprite->GetFrameHeight(),
-				UnitPixel
-			);
-		}
-		void DrawTile(SafePtr<Sprite> sprite, Rect& dest, const Point& srcPos)
-		{
-			GetGraphicsOfTileDC().DrawImage
-			(
-				(Image*)sprite->GetImage().GetKey(),
-				dest,
-				srcPos.X * sprite->GetFrameWidth(), srcPos.Y * sprite->GetFrameHeight(),
-				sprite->GetFrameWidth(), sprite->GetFrameHeight(),
-				UnitPixel
-			);
-		}
-		void DrawTile(eImageName eName, Rect& dest, const Point& srcPos)
-		{
-			if (mImages.find(eName) == mImages.end())
-				return;
-
-			SafePtr<Sprite> sprite = &mImages[eName];
-			DrawTile(sprite, dest, srcPos);
-		}*/
-
 		SafePtr<Sprite> FindImage(const eImageName eName);
-
-		Graphics& GetGraphicsOfBackDC()
-		{
-			static Graphics g(GET_SINGLETON(Application).GetBackDC());
-			return g;
-		}
-		Graphics& GetGraphicsOfTileDC()
-		{
-			static Graphics g(GET_SINGLETON(Application).GetTileDC());
-			return g;
-		}
 
 	private:
 		GdiplusStartupInput mGdiplusStartupInput;

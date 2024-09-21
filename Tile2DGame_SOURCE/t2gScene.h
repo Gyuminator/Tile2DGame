@@ -45,6 +45,7 @@ namespace t2g
 	public:
 		SafePtr<t2g::Object> AddObject(eObjectTag tag);
 		SafePtr<t2g::Object> AddTile();
+		unique_ptr<t2g::Object> CreateTileObj();
 
 		void PushCamera(SafePtr<t2g::Camera> camera);
 
@@ -57,6 +58,8 @@ namespace t2g
 		void EventProc(eEventCallPoint callPoint);
 
 		void SyncTilesToSceneSize(SIZE prevSize);
+
+		void DrawTiles();
 
 	public:
 		const vector<unique_ptr<Object>>& GetTiles() { return mTiles; }

@@ -8,6 +8,16 @@ namespace t2g::rect
 {
 	using namespace math;
 
+	inline bool IsReverseRECT(const RECT& rect)
+	{
+		return (rect.right - rect.left) < 0 || (rect.bottom - rect.top) < 0;
+	}
+
+	inline bool IsReverseRect(const Rect& rect)
+	{
+		return rect.Width < 0 || rect.Height < 0;
+	}
+
 	inline RECT MakeRECTByCenter(POINT point, POINT size)
 	{
 		return RECT(point.x - size.x / 2, point.y - size.y / 2, point.x + size.x / 2, point.y + size.y / 2);
@@ -31,6 +41,10 @@ namespace t2g::rect
 	inline Rect MakeRectByRECT(const RECT& rect)
 	{
 		return Rect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+	}
+	inline RECT MakeRECTByRect(const Rect& rect)
+	{
+		return RECT(rect.X, rect.Y, rect.GetRight(), rect.GetBottom());
 	}
 
 	inline void ScalingRect(Rect& rect, FLOAT scale)

@@ -27,6 +27,7 @@ namespace t2g
 		, mTileBitmap(nullptr)
 		, mWndRect{}
 		, mWndSize{}
+		, mTileBufferSize{}
 	{
 	}
 	void Application::Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect)
@@ -110,17 +111,21 @@ namespace t2g
 		mTileHdc = CreateCompatibleDC(mBackHdc);
 
 		mBlackTilePieceHdc = CreateCompatibleDC(mTileHdc);
-		HBITMAP bitmap = CreateCompatibleBitmap(mTileHdc, TileSize, TileSize);
+
+		mTileBufferSize = { TileSize, TileSize };
+
+		HBITMAP bitmap = CreateCompatibleBitmap(mTileHdc, mTileBufferSize.cx, mTileBufferSize.cy);
 		HBITMAP oldBitmap = (HBITMAP)SelectObject(mBlackTilePieceHdc, bitmap);
 		DeleteObject(oldBitmap);
 	}
 
 	void Application::ChangeTileBitmapSize(SIZE sceneSize)
 	{
+		mTileBufferSize = { sceneSize.cx * TileSize, sceneSize.cy * TileSize };
 		HBITMAP tileBitmap = CreateCompatibleBitmap
 		(
 			GET_SINGLETON(Application).GetBackDC(),
-			sceneSize.cx * Application::TileSize, sceneSize.cy * Application::TileSize
+			mTileBufferSize.cx, mTileBufferSize.cy
 		);
 		HBITMAP oldBitmap = (HBITMAP)SelectObject(mTileHdc, tileBitmap);
 		DeleteObject(oldBitmap);

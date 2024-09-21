@@ -29,6 +29,7 @@ namespace t2g
 
 		void SetTileIndex(UINT i) { mTileIndex = i; }
 		void SetSrcPos(Point pos) { mSrcPos = pos; }
+		void SetImageName(eImageName eName) { mImageName = eName; }
 
 	public:
 		eDelegateResult cbDrawTile();
