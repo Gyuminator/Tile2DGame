@@ -11,6 +11,8 @@ t2g::Component::Component()
 	, mOwnerComponent{}
 	, mChildID(-1)
 	, mChildLayer(eChildrenLayer::EnumEnd)
+	, mUpdateLayer(eUpdateLayer::EnumEnd)
+	, mRenderLayer(eRenderLayer::EnumEnd)
 	, mIsActive(true)
 {
 }

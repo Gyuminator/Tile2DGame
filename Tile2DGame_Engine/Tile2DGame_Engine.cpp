@@ -9,6 +9,7 @@
 #include "..\\Tile2DGame_SOURCE\\t2gSceneManager.h"
 #include "..\\Tile2DGame_SOURCE\\t2gScene.h"
 #include "..\\Tile2DGame_SOURCE\\t2gTileMapEditingScene.h"
+#include "..\\Tile2DGame_SOURCE\\t2gInput.h"
 
 #pragma comment (lib, "..\\x64\\Debug\\Tile2DGame_Lib.lib")
 
@@ -161,6 +162,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+	case WM_MOUSEWHEEL:
+	{
+		int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		GET_SINGLETON(Input).SetWheelDelta(delta);
+	}
+	break;
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
@@ -200,7 +207,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		case IDM_TILEMAP_LOAD:
-			
+
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);

@@ -30,17 +30,21 @@ namespace t2g
 		bool CheckKey(eKeys key, eKeyState state) { return mKeyInfos[(UINT16)key].State == state; }
 		Point GetMousePos() { return { mMousePos.x, mMousePos.y }; }
 
+		void SetWheelDelta(INT delta) { mWheelDelta = delta; }
+
 	private:
 		void virtualKeyMapping();
 		void checkKeyInput();
 		void applyKeyDown(eKeyState& state);
 		void applyKeyUp(eKeyState& state);
+		void applyWheel();
 
 	private:
-		KeyInfo mKeyInfos[(size_t)eKeys::END];
+		KeyInfo mKeyInfos[(size_t)eKeys::EnumEnd];
 		POINT mMousePos;
-		/*std::bitset<(size_t)enums::eKeys::END> mCurPressed;
-		std::bitset<(size_t)enums::eKeys::END> mPrevPressed;*/
+		INT mWheelDelta;
+		/*std::bitset<(size_t)enums::eKeys::EnumEnd> mCurPressed;
+		std::bitset<(size_t)enums::eKeys::EnumEnd> mPrevPressed;*/
 
 	};
 }

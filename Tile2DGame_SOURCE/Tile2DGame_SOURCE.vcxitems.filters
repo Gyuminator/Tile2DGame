@@ -85,18 +85,24 @@
     <Filter Include="Component\Renderer\UIRenderer">
       <UniqueIdentifier>{9f9391e4-4098-46d0-8351-dce7c03c2dff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Status">
+      <UniqueIdentifier>{95da1b88-3c5d-4c3a-a2eb-5a32dec54996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Rect">
+      <UniqueIdentifier>{4b5b27d2-28bf-428b-acfa-fc1926c4b6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\SafePtr">
+      <UniqueIdentifier>{fdb1dd4f-803b-4b7f-933c-47298c12cf5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Math">
+      <UniqueIdentifier>{6fc119da-bea5-48e5-8e59-c60a70f7b07c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonHeaders.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMacro.h">
@@ -117,9 +123,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gScene.h">
       <Filter>Scene</Filter>
@@ -179,6 +182,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gUIRenderer.h">
       <Filter>Component\Renderer\UIRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gStatus.h">
+      <Filter>Component\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gRect.h">
+      <Filter>Utility\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gSafePtr.h">
+      <Filter>Utility\SafePtr</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h">
+      <Filter>Utility\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -190,9 +205,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp">
       <Filter>Object</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp">
-      <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp">
       <Filter>Component</Filter>
@@ -254,6 +266,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gUIRenderer.cpp">
       <Filter>Component\Renderer\UIRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gStatus.cpp">
+      <Filter>Component\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gRect.cpp">
+      <Filter>Utility\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp">
+      <Filter>Utility\SafePtr</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gMath.cpp">
+      <Filter>Utility\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

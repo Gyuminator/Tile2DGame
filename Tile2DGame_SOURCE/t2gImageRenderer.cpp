@@ -60,16 +60,19 @@ t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
 		return datas;
 
 	datas.tempRenderRc = GetRenderRect();
-	rect::ScalingRect(datas.tempRenderRc, 1.f / camera->GetDistance());
+	//rect::ScalingRect(datas.tempRenderRc, 1.f / camera->GetDistance());
 
 	if (Rect::Intersect(datas.tempRc, camera->GetCameraViewRect(), datas.tempRenderRc))
 	{
 		datas.isIntersect = true;
-		datas.resultRenderRc = datas.tempRc;
+		/*datas.resultRenderRc = datas.tempRc;
 		PointF renderAnchor = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.X, datas.tempRc.Y));
 		Point renderPos = rect::GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
 		datas.resultRenderRc.X = renderPos.X;
-		datas.resultRenderRc.Y = renderPos.Y;
+		datas.resultRenderRc.Y = renderPos.Y;*/
+		PointF anchorLT = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.X, datas.tempRc.Y));
+		PointF anchorRB = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.GetRight(), datas.tempRc.GetBottom()));
+		datas.resultRenderRc = MakeRectByAnchors(camera->GetViewportRect(), anchorLT, anchorRB);
 	}
 
 	return datas;

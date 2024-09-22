@@ -7,6 +7,7 @@ namespace t2g
 	{
 	public:
 		constexpr static INT TileSize = 48;
+		constexpr static INT AppPathLength = 1024;
 
 	public:
 		Application();
@@ -37,7 +38,7 @@ namespace t2g
 		const RECT& GetWindowRect() { return mWndRect; }
 
 	private:
-		wchar_t mAppPath[1024];
+		wchar_t mAppPath[AppPathLength];
 		RECT mWndRect;
 
 		HINSTANCE mHinstance;

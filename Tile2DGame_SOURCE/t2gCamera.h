@@ -50,7 +50,7 @@ namespace t2g
 
 		void SetTargetTileDC(HDC hdc) { mTargetTileDC = hdc; }
 		void SetAnchor(PointF anchor) { mAnchor = anchor; }
-		void SetDistance(FLOAT distance) { mDistance = distance; }
+		void SetDistance(FLOAT distance) { if (distance > 0.2) mDistance = distance; }
 
 	public:
 		eDelegateResult cbCheckTransform();

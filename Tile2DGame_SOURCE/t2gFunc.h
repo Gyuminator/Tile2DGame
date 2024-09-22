@@ -4,6 +4,7 @@
 #include "t2gMacro.h"
 #include "t2gSafePtr.h"
 #include "t2gImageManager.h"
+#include "t2gObject.h"
 
 using std::unique_ptr;
 
@@ -87,11 +88,11 @@ namespace t2g::func
 		return GET_SINGLETON(Application).GetTileBufferSize();
 	}
 
-
-	/*template<typename T>
-	inline std::unique_ptr<T> SafeCreate()
+	/*unique_ptr<Object> CreateUnitObj(eUnitType type)
 	{
-		unique_ptr<T> uptr(new T);
-		return std::move(uptr);
+		unique_ptr<Object> uptr = Object::CreateObject();
+		uptr->SetTag(eObjectTag::Unit);
+
+		return uptr;
 	}*/
 }

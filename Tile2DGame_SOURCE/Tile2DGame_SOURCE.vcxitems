@@ -40,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gShapeRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gStatus.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
@@ -65,14 +66,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gInput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gLoadingScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gMath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gPlayerController.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gImageManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gRect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSafePtr.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSceneManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gShapeRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gStatus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />

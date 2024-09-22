@@ -18,11 +18,13 @@ namespace t2g
 {
 	Application::Application()
 		: SingletonBase<Application>()
+		, mAppPath{}
 		, mHinstance(nullptr)
 		, mHwnd(nullptr)
 		, mHdc(nullptr)
 		, mBackHdc(nullptr)
 		, mTileHdc(nullptr)
+		, mBlackTilePieceHdc(nullptr)
 		, mBackBitmap(nullptr)
 		, mTileBitmap(nullptr)
 		, mWndRect{}
@@ -39,7 +41,7 @@ namespace t2g
 		mHdc = GetDC(mHwnd);
 		mWndSize = POINT(mWndRect.right - mWndRect.left, mWndRect.bottom - mWndRect.top);
 
-		SetCurrentDirectory(mAppPath);
+		GetCurrentDirectory(AppPathLength, mAppPath);
 
 		CreateBackBuffer();
 		CreateTileBuffer();

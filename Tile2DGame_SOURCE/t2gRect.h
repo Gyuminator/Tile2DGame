@@ -1,8 +1,5 @@
 #pragma once
-#include "stdafx.h"
-
 #include "t2gMath.h"
-
 
 namespace t2g::rect
 {

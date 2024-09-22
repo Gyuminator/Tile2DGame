@@ -13,7 +13,12 @@ namespace t2g::enums
 		LBtn, RBtn,
 		Ctrl, Alt, LShift, Tab, Esc, Enter,
 
-		END
+		MiddleEnd,
+
+		Wheel,
+
+		EnumEnd
+
 	};
 
 	enum class eKeyState : UINT8
@@ -35,6 +40,7 @@ namespace t2g::enums
 		UIRenderer,
 		Camera,
 		PlayerController,
+		Status,
 
 		EnumEnd
 	};
@@ -83,6 +89,7 @@ namespace t2g::enums
 		Camera,
 		TileToolCamera,
 		UI,
+		Unit,
 
 		EnumEnd
 	};
@@ -148,6 +155,24 @@ namespace t2g::enums
 	{
 		Before,
 		After,
+
+		EnumEnd
+	};
+
+	enum class eStatus : UINT8
+	{
+		HP,
+		MP,
+		Defense,
+		Attack,
+		MovingSpeed,
+
+		EnumEnd
+	};
+
+	enum class eUnitType : UINT8
+	{
+
 
 		EnumEnd
 	};

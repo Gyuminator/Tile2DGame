@@ -17,6 +17,8 @@ namespace t2g
 		constexpr static INT NumOfTileOfToolX = 8;
 		constexpr static INT NumOfTileOfToolY = 24;
 
+		constexpr static INT TilesetMax = 4;
+
 	protected:
 		TileMapEditingScene();
 	public:
@@ -35,29 +37,35 @@ namespace t2g
 		const wstring LoadPrevEditInfo();
 
 	public:
-		const vector<unique_ptr<Object>>& GetToolTiles() { return mToolTiles; }
+		const vector<unique_ptr<Object>>& GetCurTileset() { return mToolTilesets[mToolTilesetIdx]; }
 		const wstring& GetCurFilePath() { return mCurFilePath; }
 
 	protected:
 		void CameraMoveController();
+		void CameraDistanceController();
+		void ChangeTilesetController();
 
 	private:
 		void CameraSetting();
 		void CreateTileToolBuffer();
 		void LoadSprites();
-		void CreateToolTiles();
+		void CreateToolTileset(eImageName eImgName, UINT8 tilesetIdx);
 		void DrawTileToolBuffer();
 		void DrawNearToolTiles(SafePtr<TileRenderer> tile);
 		void ClickEventToolTileView(SafePtr<Camera> camera);
 		void ClickEventMainTileView(SafePtr<Camera> camera);
 
-		SafePtr<t2g::Object> AddToolTile();
+		void ChangeTileset(UINT8 idx);
+
+		unique_ptr<Object> CreateToolTileObj();
 
 	private:
 		wstring mCurFilePath;
 		wstring mMapPath;
 
-		vector<unique_ptr<Object>> mToolTiles;
+		UINT8 mToolTilesetIdx;
+
+		vector<unique_ptr<Object>> mToolTilesets[TilesetMax];
 
 		HDC mTileToolDC;
 

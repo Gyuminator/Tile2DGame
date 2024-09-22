@@ -111,7 +111,6 @@ eDelegateResult t2g::Camera::cbRenderTileOnce()
 
 eDelegateResult t2g::Camera::cbDrawOutsideTileBuffer()
 {
-	RECT tempRc;
 	Rect rects[4] =
 	{
 		{ mCameraViewRect.X, mCameraViewRect.Y,

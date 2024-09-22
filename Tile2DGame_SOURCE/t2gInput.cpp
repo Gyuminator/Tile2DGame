@@ -5,6 +5,8 @@
 
 t2g::Input::Input()
 	: mKeyInfos{}
+	, mMousePos{}
+	, mWheelDelta(0)
 {
 	Init();
 }
@@ -35,7 +37,7 @@ void t2g::Input::Render()
 
 void t2g::Input::virtualKeyMapping()
 {
-	UINT16 vKeys[(size_t)eKeys::END] =
+	UINT16 vKeys[(size_t)eKeys::EnumEnd] =
 	{
 		'1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 		'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
@@ -45,21 +47,24 @@ void t2g::Input::virtualKeyMapping()
 		VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN,
 		VK_LBUTTON, VK_RBUTTON,
 		VK_CONTROL, VK_MENU, VK_LSHIFT, VK_TAB, VK_ESCAPE, VK_RETURN
-		//END
+		//EnumEnd
 	};
-	for (size_t i = 0; i < (size_t)eKeys::END; ++i)
+	for (size_t i = 0; i < (size_t)eKeys::MiddleEnd; ++i)
 	{
 		mKeyInfos[i].VKey = (UINT16)vKeys[i];
 		mKeyInfos[i].State = eKeyState::None;
 	}
+	mKeyInfos[(INT)eKeys::Wheel].VKey = 1000;
+	mKeyInfos[(INT)eKeys::Wheel].State = eKeyState::None;
 }
 
 void t2g::Input::checkKeyInput()
 {
 	if (GetFocus() == GET_SINGLETON(Application).GetHWnd())
 	{
-		for (KeyInfo& keyInfo : mKeyInfos)
+		for (size_t i = 0; i < (size_t)eKeys::MiddleEnd; ++i)
 		{
+			KeyInfo& keyInfo = mKeyInfos[i];
 			if (GetAsyncKeyState(keyInfo.VKey) & 0x8000)
 			{
 				applyKeyDown(keyInfo.State);
@@ -72,13 +77,15 @@ void t2g::Input::checkKeyInput()
 	}
 	else
 	{
-		for (KeyInfo& keyInfo : mKeyInfos)
+		for (size_t i = 0; i < (size_t)eKeys::MiddleEnd; ++i)
 		{
+			KeyInfo& keyInfo = mKeyInfos[i];
 			applyKeyUp(keyInfo.State);
 		}
 	}
 	GetCursorPos(&mMousePos);
 	ScreenToClient(GET_SINGLETON(Application).GetHWnd(), &mMousePos);
+	applyWheel();
 }
 
 void t2g::Input::applyKeyDown(eKeyState& state)
@@ -108,5 +115,23 @@ void t2g::Input::applyKeyUp(eKeyState& state)
 	case eKeyState::Up:
 		state = eKeyState::None;
 		break;
+	}
+}
+
+void t2g::Input::applyWheel()
+{
+	if (mWheelDelta == 0)
+	{
+		mKeyInfos[(INT)eKeys::Wheel].State = eKeyState::None;
+	}
+	else if (mWheelDelta > 0)
+	{
+		mKeyInfos[(INT)eKeys::Wheel].State = eKeyState::Up;
+		mWheelDelta = 0;
+	}
+	else
+	{
+		mKeyInfos[(INT)eKeys::Wheel].State = eKeyState::Down;
+		mWheelDelta = 0;
 	}
 }

@@ -17,7 +17,7 @@ using namespace t2g::rect;
 t2g::TileMapEditingScene::TileMapEditingScene()
 	: mCurFilePath{}
 	, mMapPath(L"..\\Resource\\Map\\")
-	, mToolTiles{}
+	, mToolTilesetIdx(0)
 	, mTileToolDC(nullptr)
 	, mSelectedTile{}
 	, mWriteTileMarker{}
@@ -31,14 +31,12 @@ void t2g::TileMapEditingScene::init()
 	LoadSprites();
 
 	CreateTileToolBuffer();
-	CreateToolTiles();
-	DrawTileToolBuffer();
-	//SavePrevEditInfo(L"asdfas");
+	CreateToolTileset(eImageName::Tile_Dungeon_A1_png, 0);
+	CreateToolTileset(eImageName::Tile_Dungeon_A2_png, 1);
+	CreateToolTileset(eImageName::Tile_Outside_A1_png, 2);
+	CreateToolTileset(eImageName::Tile_Outside_A2_png, 3);
 
-	/*for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
-	{
-		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, 0, 0, INT(GetTiles().size() - 1));
-	}*/
+	ChangeTileset(0);
 
 	wstring prevFileName = LoadPrevEditInfo();
 	if (prevFileName.empty())
@@ -238,6 +236,48 @@ void t2g::TileMapEditingScene::CameraMoveController()
 	tr->SetRotation(rotation);
 }
 
+void t2g::TileMapEditingScene::CameraDistanceController()
+{
+	const Point mousePos = func::GetMousePos();
+	if (mMainViewCamera->GetViewportRect().Contains(mousePos))
+	{
+		if (func::CheckKey(eKeys::Wheel, eKeyState::Up))
+		{
+			FLOAT distance = mMainViewCamera->GetDistance();
+			distance -= 0.1f;
+			mMainViewCamera->SetDistance(distance);
+		}
+		else if (func::CheckKey(eKeys::Wheel, eKeyState::Down))
+		{
+			FLOAT distance = mMainViewCamera->GetDistance();
+			distance += 0.1f;
+			mMainViewCamera->SetDistance(distance);
+		}
+	}
+}
+
+void t2g::TileMapEditingScene::ChangeTilesetController()
+{
+	INT idx = -1;
+	if (func::CheckKey(eKeys::_1, eKeyState::Down))
+		idx = 0;
+	else if (func::CheckKey(eKeys::_2, eKeyState::Down))
+		idx = 1;
+	else if (func::CheckKey(eKeys::_3, eKeyState::Down))
+		idx = 2;
+	else if (func::CheckKey(eKeys::_4, eKeyState::Down))
+		idx = 3;
+
+	if (idx < 0)
+		return;
+
+	if (mToolTilesetIdx != idx)
+	{
+		ChangeTileset(idx);
+		mTileViewCamera->cbRenderTileOnce();
+	}
+}
+
 void t2g::TileMapEditingScene::CameraSetting()
 {
 	Rect wndRect = MakeRectByRECT(GET_SINGLETON(Application).GetWindowRect());
@@ -249,7 +289,7 @@ void t2g::TileMapEditingScene::CameraSetting()
 	mainCameraObj->AddComponent<Camera>()->Init(mainViewRect, func::GetTileDC());
 	mMainViewCamera = mainCameraObj->GetComponent<Camera>(eComponentType::Camera);
 	mMainViewCamera->SetAnchor({ 0.f, 0.f });
-	mMainViewCamera->SetDistance(0.5f);
+	mMainViewCamera->SetDistance(1.f);
 
 	// 메인 타일 클릭 이벤트 추가
 	mainCameraObj->BindBackEvent(eEventCallPoint::cbSyncCameraView,
@@ -257,6 +297,8 @@ void t2g::TileMapEditingScene::CameraSetting()
 		{
 			ClickEventMainTileView(mMainViewCamera);
 			CameraMoveController();
+			CameraDistanceController();
+			ChangeTilesetController();
 			SaveMapController();
 			return eDelegateResult::OK;
 		}
@@ -312,9 +354,10 @@ void t2g::TileMapEditingScene::LoadSprites()
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A2_png, L"Tile\\Dungeon_A2.png", 16, 12);
 }
 
-void t2g::TileMapEditingScene::CreateToolTiles()
+void t2g::TileMapEditingScene::CreateToolTileset(eImageName eImgName, UINT8 tilesetIdx)
 {
-	auto sprite = GET_SINGLETON(ImageManager).FindImage(eImageName::Tile_Dungeon_A2_png);
+	auto sprite = GET_SINGLETON(ImageManager).FindImage(eImgName);
+	vector<unique_ptr<Object>>& targetToolTileset = mToolTilesets[tilesetIdx];
 	INT numOfX = sprite->GetImage().GetWidth() / sprite->GetFrameHeight();
 	INT numOfY = sprite->GetImage().GetHeight() / sprite->GetFrameHeight();
 	INT rx = 0;
@@ -322,7 +365,9 @@ void t2g::TileMapEditingScene::CreateToolTiles()
 	{
 		for (INT x = 0; x < NumOfTileOfToolX; ++x)
 		{
-			AddToolTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Dungeon_A2_png, rx + x, y, INT(GetToolTiles().size() - 1));
+			unique_ptr<Object> uptr = CreateToolTileObj();
+			uptr->AddComponent<TileRenderer>()->Init(eImgName, rx + x, y, INT(targetToolTileset.size()));
+			targetToolTileset.push_back(std::move(uptr));
 
 			if (x == numOfX - 1) // 기본 X축 프레임은 8개 단위지만 규격이 다른 경우를 맞추기 위함.
 				break;
@@ -339,12 +384,11 @@ void t2g::TileMapEditingScene::CreateToolTiles()
 				break;
 		}
 	}
-	mSelectedTile = mToolTiles[0]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 }
 
 void t2g::TileMapEditingScene::DrawTileToolBuffer()
 {
-	for (auto& toolTileObj : mToolTiles)
+	for (auto& toolTileObj : GetCurTileset())
 	{
 		toolTileObj->GetComponent<TileRenderer>(eComponentType::TileRenderer)
 			->DrawTileToHDC(mTileToolDC, { NumOfTileOfToolX , NumOfTileOfToolY });
@@ -358,9 +402,9 @@ void t2g::TileMapEditingScene::DrawNearToolTiles(SafePtr<TileRenderer> tile)
 	{
 		for (INT j = 0; j < 3; ++j)
 		{
-			if (ti >= 0 && ti < mToolTiles.size())
+			if (ti >= 0 && ti < GetCurTileset().size())
 			{
-				mToolTiles[ti]->GetComponent<TileRenderer>(eComponentType::TileRenderer)
+				GetCurTileset()[ti]->GetComponent<TileRenderer>(eComponentType::TileRenderer)
 					->DrawTileToHDC(mTileToolDC, { NumOfTileOfToolX , NumOfTileOfToolY });
 			}
 			++ti;
@@ -378,12 +422,12 @@ void t2g::TileMapEditingScene::ClickEventToolTileView(SafePtr<Camera> camera)
 		{
 			Point pos = camera->GetPosToCameraView(mousePos);
 			INT tileIndex = func::GetTileIndex(NumOfTileOfToolX, pos);
-			if (tileIndex != -1 && tileIndex < mToolTiles.size())
+			if (tileIndex != -1 && tileIndex < GetCurTileset().size())
 			{
 				if (mSelectedTile.IsValid())
 					DrawNearToolTiles(mSelectedTile);
 
-				mSelectedTile = mToolTiles[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
+				mSelectedTile = GetCurTileset()[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 				Rect rect = func::GetTileRectByIndex(NumOfTileOfToolX, mSelectedTile->GetTileIndex());
 				//DrawTileToolBuffer();
 				Rectangle(mTileToolDC, rect.GetLeft(), rect.GetTop(), rect.GetRight(), rect.GetBottom());
@@ -420,15 +464,20 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 	}
 }
 
+void t2g::TileMapEditingScene::ChangeTileset(UINT8 idx)
+{
+	mToolTilesetIdx = idx;
+	mSelectedTile = GetCurTileset()[0]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
+	DrawTileToolBuffer();
+}
 
-SafePtr<t2g::Object> t2g::TileMapEditingScene::AddToolTile()
+
+unique_ptr<t2g::Object> t2g::TileMapEditingScene::CreateToolTileObj()
 {
 	unique_ptr<Object> uptr = Object::CreateObject();
-	SafePtr<Object> sptr(uptr.get());
 
 	uptr->SetOwnerScene(this);
 	uptr->SetTag(eObjectTag::ToolTile);
-	mToolTiles.emplace_back(std::move(uptr));
 
-	return sptr;
+	return std::move(uptr);
 }
