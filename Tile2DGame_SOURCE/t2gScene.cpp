@@ -113,6 +113,11 @@ unique_ptr<t2g::Object> t2g::Scene::CreateTileObj()
 	return uptr;
 }
 
+void t2g::Scene::PushTileObj(unique_ptr<t2g::Object> tileObj)
+{
+	mTiles.emplace_back(std::move(tileObj));
+}
+
 void t2g::Scene::PushCamera(SafePtr<t2g::Camera> camera)
 {
 	for (auto item : mCameras)

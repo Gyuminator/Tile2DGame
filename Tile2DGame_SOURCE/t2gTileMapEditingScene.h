@@ -47,6 +47,7 @@ namespace t2g
 		void CameraMoveController();
 		void CameraDistanceController();
 		void ChangeTilesetController();
+		void ChangeLayerController();
 
 	private:
 		void CameraSetting();
@@ -58,6 +59,7 @@ namespace t2g
 		void ClickEventToolTileView(SafePtr<Camera> camera);
 		void ClickEventMainTileView(SafePtr<Camera> camera);
 		void DrawTextFileName();
+		void DrawTextCurrentLayer();
 
 		void ChangeTileset(UINT8 idx);
 
@@ -67,8 +69,8 @@ namespace t2g
 		wstring mCurFilePath;
 		wstring mMapPath;
 
+		UINT8 mCurLayer;
 		UINT8 mToolTilesetIdx;
-
 		vector<unique_ptr<Object>> mToolTilesets[TilesetMax];
 
 		HDC mTileToolDC;

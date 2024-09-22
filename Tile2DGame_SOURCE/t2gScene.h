@@ -47,6 +47,7 @@ namespace t2g
 		SafePtr<t2g::Object> AddTile();
 		unique_ptr<t2g::Object> CreateTileObj();
 
+		void PushTileObj(unique_ptr<t2g::Object> tileObj);
 		void PushCamera(SafePtr<t2g::Camera> camera);
 
 		void BindComponent(SafePtr<Component> component);

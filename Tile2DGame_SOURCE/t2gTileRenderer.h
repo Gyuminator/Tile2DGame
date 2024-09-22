@@ -9,7 +9,14 @@ namespace t2g
 	class TileRenderer : public Component
 	{
 	public:
-		TileRenderer() : mSrcPos{}, mTileIndex(0), mImageName(eImageName::EnumEnd) {}
+		struct TileLayer
+		{
+			Point SrcPos;
+			eImageName ImgName;
+		};
+
+	public:
+		TileRenderer();
 		virtual ~TileRenderer() {}
 
 	public:
@@ -23,22 +30,25 @@ namespace t2g
 		void DrawTileToHDC(HDC hdc, Size sceneSize);
 
 	public:
-		Point GetSrcPos() { return mSrcPos; }
 		UINT GetTileIndex() { return mTileIndex; }
-		eImageName GetImageName() { return mImageName; }
+		eImageName GetImageName(INT idx = 0);
+		Point GetSrcPos(INT idx = 0);
+		INT GetLayerSize() { return (INT)mTileLayers.size(); }
 
 		void SetTileIndex(UINT i) { mTileIndex = i; }
-		void SetSrcPos(Point pos) { mSrcPos = pos; }
-		void SetImageName(eImageName eName) { mImageName = eName; }
+		void SetSrcPos(Point pos, INT idx = 0);
+		void SetImageName(eImageName eName, INT idx = 0);
 
 	public:
 		eDelegateResult cbDrawTile();
 
 	private:
-		Point mSrcPos;
+		void drawLayer(INT idx, INT sceneWidth, HDC targetDC);
+
+	private:
+		vector<TileLayer> mTileLayers;
 
 		UINT mTileIndex;
-		eImageName mImageName;
 
 	};
 }

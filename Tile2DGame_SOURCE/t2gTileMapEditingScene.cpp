@@ -17,6 +17,7 @@ using namespace t2g::rect;
 t2g::TileMapEditingScene::TileMapEditingScene()
 	: mCurFilePath{}
 	, mMapPath(L"..\\Resource\\Map\\")
+	, mCurLayer(0)
 	, mToolTilesetIdx(0)
 	, mTileToolDC(nullptr)
 	, mSelectedTile{}
@@ -37,6 +38,8 @@ void t2g::TileMapEditingScene::init()
 	CreateToolTileset(eImageName::Tile_Outside_A2_png, 3);
 
 	ChangeTileset(0);
+
+	DrawTextCurrentLayer();
 
 	wstring prevFileName = LoadPrevEditInfo();
 	if (prevFileName.empty())
@@ -98,10 +101,16 @@ void t2g::TileMapEditingScene::SaveMap(const wstring& filePath)
 		for (auto& tile : tiles)
 		{
 			SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
-			Point srcPos = tileRender->GetSrcPos();
-			eImageName eImage = tileRender->GetImageName();
-			out.write((char*)(&srcPos), sizeof(srcPos));
-			out.write((char*)(&eImage), sizeof(eImage));
+
+			INT layerSize = tileRender->GetLayerSize();
+			out.write((char*)(&layerSize), sizeof(layerSize));
+			for (INT i = 0; i < layerSize; ++i)
+			{
+				Point srcPos = tileRender->GetSrcPos(i);
+				out.write((char*)(&srcPos), sizeof(srcPos));
+				eImageName eImage = tileRender->GetImageName(i);
+				out.write((char*)(&eImage), sizeof(eImage));
+			}
 		}
 
 		SavePrevEditInfo(filePath);
@@ -149,13 +158,42 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 
 		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 		{
-			Point srcPos;
+			INT layerSize;
+			inMap.read((char*)(&layerSize), sizeof(layerSize));
+
+			unique_ptr<Object> tileObj = CreateTileObj();
+			SafePtr<TileRenderer> tileCom = tileObj->GET_COMPONENT(TileRenderer);
+			tileCom->Init(eImageName::EnumEnd, 0, 0, 0);
+			tileCom->SetTileIndex(GetTiles().size());
+			PushTileObj(std::move(tileObj));
+
+			for (INT i = 0; i < layerSize; ++i)
+			{
+				Point srcPos;
+				inMap.read((char*)(&srcPos), sizeof(srcPos));
+				tileCom->SetSrcPos(srcPos, i);
+				eImageName eImage;
+				inMap.read((char*)(&eImage), sizeof(eImage));
+				tileCom->SetImageName(eImage, i);
+			}
+
+			/*Point srcPos;
 			inMap.read((char*)(&srcPos), sizeof(srcPos));
 			eImageName eImage;
 			inMap.read((char*)(&eImage), sizeof(eImage));
 
 			AddTile()->AddComponent<TileRenderer>()->Init(eImage, srcPos.X, srcPos.Y,
-				INT(GetTiles().size() - 1));
+				INT(GetTiles().size() - 1));*/
+
+				/*INT layerSize = tileRender->GetLayerSize();
+				out.write((char*)(&layerSize), sizeof(layerSize));
+				for (INT i = 0; i < layerSize; ++i)
+				{
+					Point srcPos = tileRender->GetSrcPos(i);
+					eImageName eImage = tileRender->GetImageName(i);
+					out.write((char*)(&srcPos), sizeof(srcPos));
+					out.write((char*)(&eImage), sizeof(eImage));
+				}*/
 		}
 
 		SetCurFilePath(filePath);
@@ -199,7 +237,7 @@ void t2g::TileMapEditingScene::SavePrevEditInfo(const wstring& filePath)
 
 	if (outInfo.is_open())
 	{
-		INT sizeOfPrevFilePath = filePath.size() * 2 + 2; // null 문자 + 2
+		INT sizeOfPrevFilePath = (INT)filePath.size() * 2 + 2; // null 문자 + 2
 		outInfo.write((char*)(&sizeOfPrevFilePath), sizeof(sizeOfPrevFilePath));
 		outInfo.write((char*)(filePath.c_str()), sizeOfPrevFilePath);
 	}
@@ -304,6 +342,23 @@ void t2g::TileMapEditingScene::ChangeTilesetController()
 	}
 }
 
+void t2g::TileMapEditingScene::ChangeLayerController()
+{
+	INT idx = -1;
+	if (func::CheckKey(eKeys::n1, eKeyState::Down))
+		idx = 0;
+	else if (func::CheckKey(eKeys::n2, eKeyState::Down))
+		idx = 1;
+	else if (func::CheckKey(eKeys::n3, eKeyState::Down))
+		idx = 2;
+
+	if (idx < 0)
+		return;
+
+	mCurLayer = idx;
+	DrawTextCurrentLayer();
+}
+
 void t2g::TileMapEditingScene::CameraSetting()
 {
 	Rect wndRect = MakeRectByRECT(GET_SINGLETON(Application).GetWindowRect());
@@ -325,6 +380,7 @@ void t2g::TileMapEditingScene::CameraSetting()
 			CameraMoveController();
 			CameraDistanceController();
 			ChangeTilesetController();
+			ChangeLayerController();
 			SaveMapController();
 			return eDelegateResult::OK;
 		}
@@ -336,7 +392,7 @@ void t2g::TileMapEditingScene::CameraSetting()
 	// 타일 도구 카메라
 	SafePtr<Object> toolCameraObj = AddObject(eObjectTag::TileToolCamera);
 	toolCameraObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
-	Rect tileToolViewRect = MakeRectByAnchors(wndRect, { 0.f, 0.05f }, { TileViewAnchorX, 1.f });
+	Rect tileToolViewRect = MakeRectByAnchors(wndRect, { 0.f, 0.06f }, { TileViewAnchorX, 1.f });
 	toolCameraObj->AddComponent<Camera>()->Init(tileToolViewRect, mTileToolDC);
 	mTileViewCamera = toolCameraObj->GetComponent<Camera>(eComponentType::Camera);
 	mTileViewCamera->SetAnchor({ 0.f, 0.f });
@@ -481,8 +537,8 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 					GetTiles()[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 				if (mSelectedTile.IsValid())
 				{
-					tileRenderer->SetImageName(mSelectedTile->GetImageName());
-					tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos());
+					tileRenderer->SetImageName(mSelectedTile->GetImageName(), mCurLayer);
+					tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos(), mCurLayer);
 					tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
 				}
 			}
@@ -496,6 +552,18 @@ void t2g::TileMapEditingScene::DrawTextFileName()
 	wstring fileName = mCurFilePath.substr(mCurFilePath.rfind(L"Map\\") + 4);
 	str += fileName;
 	RECT rc(0, 20, 300, 40);
+	Rect rect = MakeRectByRECT(rc);
+	Graphics g(func::GetBackDC());
+	SolidBrush b({ 0, 0, 0 });
+	g.FillRectangle(&b, MakeRectByRECT(rc));
+	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
+}
+
+void t2g::TileMapEditingScene::DrawTextCurrentLayer()
+{
+	wstring str = L"Current Layer: ";
+	str += std::to_wstring(mCurLayer + 1);
+	RECT rc(0, 40, 300, 60);
 	Rect rect = MakeRectByRECT(rc);
 	Graphics g(func::GetBackDC());
 	SolidBrush b({ 0, 0, 0 });
