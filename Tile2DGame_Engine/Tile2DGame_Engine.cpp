@@ -204,11 +204,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				tileScene->SaveMapOtherName();
 			}
-			break;
 		}
+		break;
 		case IDM_TILEMAP_LOAD:
-
-			break;
+		{
+			t2g::Scene* ptr = (t2g::Scene*)GET_SINGLETON(SceneManager).GetCurScene().GetKey();
+			t2g::TileMapEditingScene* tileScene = dynamic_cast<t2g::TileMapEditingScene*>(ptr);
+			if (tileScene)
+			{
+				tileScene->LoadMapOtherName();
+			}
+		}
+		break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}

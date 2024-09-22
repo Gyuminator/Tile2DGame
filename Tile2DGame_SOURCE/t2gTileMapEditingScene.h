@@ -33,12 +33,15 @@ namespace t2g
 		void SaveMap(const wstring& fileName);
 		void SaveMapOtherName();
 		void LoadMap(const wstring& fileName);
+		void LoadMapOtherName();
 		void SavePrevEditInfo(const wstring& fileName);
 		const wstring LoadPrevEditInfo();
 
 	public:
 		const vector<unique_ptr<Object>>& GetCurTileset() { return mToolTilesets[mToolTilesetIdx]; }
 		const wstring& GetCurFilePath() { return mCurFilePath; }
+
+		void SetCurFilePath(const wstring& path) { mCurFilePath = path; DrawTextFileName(); }
 
 	protected:
 		void CameraMoveController();
@@ -54,6 +57,7 @@ namespace t2g
 		void DrawNearToolTiles(SafePtr<TileRenderer> tile);
 		void ClickEventToolTileView(SafePtr<Camera> camera);
 		void ClickEventMainTileView(SafePtr<Camera> camera);
+		void DrawTextFileName();
 
 		void ChangeTileset(UINT8 idx);
 

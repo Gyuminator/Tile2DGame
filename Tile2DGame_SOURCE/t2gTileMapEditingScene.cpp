@@ -106,7 +106,7 @@ void t2g::TileMapEditingScene::SaveMap(const wstring& filePath)
 
 		SavePrevEditInfo(filePath);
 
-		mCurFilePath = filePath;
+		SetCurFilePath(filePath);
 	}
 }
 
@@ -122,7 +122,7 @@ void t2g::TileMapEditingScene::SaveMapOtherName()
 	ofn.nMaxFile = sizeof(fileName);
 	// 필터 정의
 	ofn.lpstrFilter = L"ALL\0*.*\0TileMap\0*.tilemap\0";
-	ofn.nFilterIndex = 0;
+	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = fileTitle;
 	ofn.nMaxFileTitle = sizeof(fileTitle);
 	ofn.lpstrInitialDir = mMapPath.c_str();
@@ -131,7 +131,6 @@ void t2g::TileMapEditingScene::SaveMapOtherName()
 	if (GetSaveFileName(&ofn))
 	{
 		SetCurrentDirectory(func::GetAppPath());
-		ofn.lpstrFile;
 		SaveMap(fileName);
 	}
 }
@@ -159,7 +158,34 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 				INT(GetTiles().size() - 1));
 		}
 
-		mCurFilePath = filePath;
+		SetCurFilePath(filePath);
+	}
+}
+
+void t2g::TileMapEditingScene::LoadMapOtherName()
+{
+	wchar_t fileName[256] = {};
+	wchar_t fileTitle[256] = {};
+
+	OPENFILENAME ofn = {};
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = func::GetHWnd();
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = sizeof(fileName);
+	// 필터 정의
+	ofn.lpstrFilter = L"ALL\0*.*\0TileMap\0*.tlm\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = fileTitle;
+	ofn.nMaxFileTitle = sizeof(fileTitle);
+	ofn.lpstrInitialDir = mMapPath.c_str();
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	if (GetSaveFileName(&ofn))
+	{
+		SetCurrentDirectory(func::GetAppPath());
+		LoadMap(fileName);
+		GET_SINGLETON(Application).ChangeTileBitmapSize(GetSize());
+		DrawTiles();
 	}
 }
 
@@ -462,6 +488,19 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 			}
 		}
 	}
+}
+
+void t2g::TileMapEditingScene::DrawTextFileName()
+{
+	wstring str = L"Current File: ";
+	wstring fileName = mCurFilePath.substr(mCurFilePath.rfind(L"Map\\") + 4);
+	str += fileName;
+	RECT rc(0, 20, 300, 40);
+	Rect rect = MakeRectByRECT(rc);
+	Graphics g(func::GetBackDC());
+	SolidBrush b({ 0, 0, 0 });
+	g.FillRectangle(&b, MakeRectByRECT(rc));
+	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
 }
 
 void t2g::TileMapEditingScene::ChangeTileset(UINT8 idx)
