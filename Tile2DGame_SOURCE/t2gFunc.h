@@ -5,6 +5,7 @@
 #include "t2gSafePtr.h"
 #include "t2gImageManager.h"
 #include "t2gObject.h"
+#include "t2gTransform.h"
 
 using std::unique_ptr;
 
@@ -13,7 +14,6 @@ using t2g::enums::eKeyState;
 
 namespace t2g::func
 {
-
 	inline bool CheckKey(eKeys key, eKeyState state)
 	{
 		return GET_SINGLETON(Input).CheckKey(key, state);
@@ -76,6 +76,15 @@ namespace t2g::func
 		return (x < numOfBufferTileX) ? y * numOfBufferTileX + x : -1;
 	}
 
+	inline INT GetTileIndexSafety(Size sceneSize, UINT posX, UINT posY)
+	{
+		posX /= GetTileSize();
+		posY /= GetTileSize();
+		if (posX > (UINT)sceneSize.Width) return -1;
+		if (posY > (UINT)sceneSize.Height) return -1;
+		return posY * (UINT)sceneSize.Width + posX;
+	}
+
 	inline Rect GetTileRectByIndex(INT numOfBufferTileX, INT index)
 	{
 		return { index % numOfBufferTileX * GetTileSize(),
@@ -87,6 +96,20 @@ namespace t2g::func
 	{
 		return GET_SINGLETON(Application).GetTileBufferSize();
 	}
+
+	inline eDelegateResult CheckTransform(SafePtr<Object> obj, SafePtr<Transform>& sptr)
+	{
+		sptr = obj->GET_COMPONENT(Transform);
+		if (sptr.IsEmpty())
+			return eDelegateResult::Return;
+
+		return eDelegateResult::Erase;
+	}
+
+	/*Point MakePosByTileIndex(INT numOfTileX, INT tileIndex)
+	{
+		return { (tileIndex % numOfTileX) * GetTileSize(), (tileIndex / numOfTileX) * GetTileSize() };
+	}*/
 
 	/*unique_ptr<Object> CreateUnitObj(eUnitType type)
 	{

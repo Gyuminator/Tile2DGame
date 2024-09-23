@@ -1,6 +1,8 @@
 #pragma once
 #include "t2gMath.h"
 
+#include "t2gTransform.h"
+
 namespace t2g::rect
 {
 	using namespace math;
@@ -78,6 +80,35 @@ namespace t2g::rect
 		return Point(rect.X + INT(FLOAT(rect.Width) * anchor.X),
 			rect.Y + INT(FLOAT(rect.Height) * anchor.Y));
 	}
-
+	inline Point GetCenterOfRect(const Rect& rect)
+	{
+		return Point(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
+	}
+	inline Rect MakeRectByTransform3DSizeAnchorOffset(SafePtr<Transform> transform, Size size, PointF anchor, Point offset)
+	{
+		Rect rect
+		{
+			INT(transform->GetLocation().x),
+			INT(transform->GetLocation().y + transform->GetLocation().z),
+			size.Width,
+			size.Height
+		};
+		ScalingRectbyScale(rect, transform->GetScale());
+		PositioningRectByAnchor(rect, anchor);
+		return rect;
+	}
+	inline Rect MakeRectByTransform2DSizeAnchorOffset(SafePtr<Transform> transform, Size size, PointF anchor, Point offset)
+	{
+		Rect rect
+		{
+			INT(transform->GetLocation().x),
+			INT(transform->GetLocation().y),
+			size.Width,
+			size.Height
+		};
+		ScalingRectbyScale(rect, transform->GetScale());
+		PositioningRectByAnchor(rect, anchor);
+		return rect;
+	}
 
 }

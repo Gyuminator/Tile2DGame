@@ -30,13 +30,15 @@ namespace t2g
 		, mWndRect{}
 		, mWndSize{}
 		, mTileBufferSize{}
+		, mAppType(enums::eApplicationType::Client)
 	{
 	}
-	void Application::Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect)
+	void Application::Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect, enums::eApplicationType eAppType)
 	{
 		mHinstance = hInst;
 		mHwnd = hWnd;
 		mWndRect = desktopRect;
+		mAppType = eAppType;
 
 		mHdc = GetDC(mHwnd);
 		mWndSize = POINT(mWndRect.right - mWndRect.left, mWndRect.bottom - mWndRect.top);
@@ -80,10 +82,10 @@ namespace t2g
 
 		GET_SINGLETON(Time).Render();
 
-		if (GET_SINGLETON(Input).CheckKey(eKeys::LBtn, eKeyState::Pressed))
+		/*if (GET_SINGLETON(Input).CheckKey(eKeys::LBtn, eKeyState::Pressed))
 		{
 			GET_SINGLETON(Input).Render();
-		}
+		}*/
 
 		BitBlt(mHdc, mWndRect.left, mWndRect.top, mWndSize.x, mWndSize.y,
 			mBackHdc, mWndRect.left, mWndRect.top, SRCCOPY);

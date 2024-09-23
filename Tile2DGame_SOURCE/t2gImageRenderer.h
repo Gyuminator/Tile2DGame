@@ -67,7 +67,7 @@ namespace t2g
 		Rect mSrcRect;
 
 		PointF mAnchor;
-		POINT mOffset;
+		Point mOffset;
 
 		SafePtr<Transform> mTransform;
 		SafePtr<Sprite> mSprite;

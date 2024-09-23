@@ -24,6 +24,7 @@ t2g::TileMapEditingScene::TileMapEditingScene()
 	, mWriteTileMarker{}
 	, mMainViewCamera{}
 	, mTileViewCamera{}
+	, mEditMode(eEditMode::Tiling)
 {
 }
 
@@ -59,13 +60,9 @@ void t2g::TileMapEditingScene::init()
 
 	CameraSetting();
 
-	mWriteTileMarker = AddObject(eObjectTag::UI);
-	mWriteTileMarker->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
-	mWriteTileMarker->AddComponent<ShapeRenderer>()->Init(eShapeName::Ractangle,
-		{ func::GetTileSize(), func::GetTileSize() }, Color(255, 0, 255));
-	mWriteTileMarker->GET_COMPONENT(ShapeRenderer)->SetAnchor({ 0.f,0.f });
-	mWriteTileMarker->SyncComponents();
-	mWriteTileMarker->BindComponentsToScene();
+	CreateMarkerObj();
+	//CreateBorderObj();
+	//SyncBorderObjSize();
 }
 
 void t2g::TileMapEditingScene::ChangeMapSize(INT x, INT y)
@@ -75,6 +72,7 @@ void t2g::TileMapEditingScene::ChangeMapSize(INT x, INT y)
 	GET_SINGLETON(Application).ChangeTileBitmapSize(GetSize());
 	SyncTilesToSceneSize(prevSize);
 	mMainViewCamera->ClearViewport({ 0, 0, 0 });
+	//SyncBorderObjSize();
 }
 
 void t2g::TileMapEditingScene::SaveMapController()
@@ -176,24 +174,6 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 				inMap.read((char*)(&eImage), sizeof(eImage));
 				tileCom->SetImageName(eImage, i);
 			}
-
-			/*Point srcPos;
-			inMap.read((char*)(&srcPos), sizeof(srcPos));
-			eImageName eImage;
-			inMap.read((char*)(&eImage), sizeof(eImage));
-
-			AddTile()->AddComponent<TileRenderer>()->Init(eImage, srcPos.X, srcPos.Y,
-				INT(GetTiles().size() - 1));*/
-
-				/*INT layerSize = tileRender->GetLayerSize();
-				out.write((char*)(&layerSize), sizeof(layerSize));
-				for (INT i = 0; i < layerSize; ++i)
-				{
-					Point srcPos = tileRender->GetSrcPos(i);
-					eImageName eImage = tileRender->GetImageName(i);
-					out.write((char*)(&srcPos), sizeof(srcPos));
-					out.write((char*)(&eImage), sizeof(eImage));
-				}*/
 		}
 
 		SetCurFilePath(filePath);
@@ -359,6 +339,18 @@ void t2g::TileMapEditingScene::ChangeLayerController()
 	DrawTextCurrentLayer();
 }
 
+void t2g::TileMapEditingScene::ChangeModeController()
+{
+	if (func::CheckKey(eKeys::F1, eKeyState::Down))
+	{
+		mEditMode = eEditMode::Tiling;
+	}
+	else if (func::CheckKey(eKeys::F2, eKeyState::Down))
+	{
+		mEditMode = eEditMode::Blocking;
+	}
+}
+
 void t2g::TileMapEditingScene::CameraSetting()
 {
 	Rect wndRect = MakeRectByRECT(GET_SINGLETON(Application).GetWindowRect());
@@ -371,8 +363,9 @@ void t2g::TileMapEditingScene::CameraSetting()
 	mMainViewCamera = mainCameraObj->GetComponent<Camera>(eComponentType::Camera);
 	mMainViewCamera->SetAnchor({ 0.f, 0.f });
 	mMainViewCamera->SetDistance(1.f);
+	mMainViewCamera->SetOutsideColor({ 32, 32, 32 });
 
-	// 메인 타일 클릭 이벤트 추가
+	// 메인 카메라 이벤트 cbSyncCameraView
 	mainCameraObj->BindBackEvent(eEventCallPoint::cbSyncCameraView,
 		[this]()
 		{
@@ -381,6 +374,7 @@ void t2g::TileMapEditingScene::CameraSetting()
 			CameraDistanceController();
 			ChangeTilesetController();
 			ChangeLayerController();
+
 			SaveMapController();
 			return eDelegateResult::OK;
 		}
@@ -537,6 +531,7 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 					GetTiles()[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 				if (mSelectedTile.IsValid())
 				{
+					tileRenderer->SetLayerSize(mCurLayer + 1);
 					tileRenderer->SetImageName(mSelectedTile->GetImageName(), mCurLayer);
 					tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos(), mCurLayer);
 					tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
@@ -569,6 +564,34 @@ void t2g::TileMapEditingScene::DrawTextCurrentLayer()
 	SolidBrush b({ 0, 0, 0 });
 	g.FillRectangle(&b, MakeRectByRECT(rc));
 	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
+}
+
+void t2g::TileMapEditingScene::CreateMarkerObj()
+{
+	mWriteTileMarker = AddObject(eObjectTag::UI);
+	mWriteTileMarker->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
+	mWriteTileMarker->AddComponent<ShapeRenderer>()->Init(eShapeName::Ractangle,
+		{ func::GetTileSize(), func::GetTileSize() }, Color(255, 0, 255));
+	mWriteTileMarker->GET_COMPONENT(ShapeRenderer)->SetAnchor({ 0.f,0.f });
+	mWriteTileMarker->SyncComponents();
+	mWriteTileMarker->BindComponentsToScene();
+}
+
+void t2g::TileMapEditingScene::CreateBorderObj()
+{
+	mBorderObj = AddObject(eObjectTag::Static);
+	mBorderObj->AddComponent<Transform>()->Init(Vector3::Zero(), Vector3::Zero(), Vector3::One());
+	mBorderObj->AddComponent<ShapeRenderer>()->Init(eShapeName::RactangleBy4Line,
+		{ func::GetTileSize(), func::GetTileSize() }, Color(255, 255, 255));
+	mBorderObj->GET_COMPONENT(ShapeRenderer)->SetAnchor({ 0.f,0.f });
+	mBorderObj->SyncComponents();
+	mBorderObj->BindComponentsToScene();
+}
+
+void t2g::TileMapEditingScene::SyncBorderObjSize()
+{
+	mBorderObj->GET_COMPONENT(Transform)->SetScale(
+		{ (float)GetSize().cx, (float)GetSize().cy, 1.f });
 }
 
 void t2g::TileMapEditingScene::ChangeTileset(UINT8 idx)

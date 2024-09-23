@@ -1,6 +1,8 @@
 #pragma once
 #include "t2gSingletonBase.h"
 
+#include "t2gEnums.h"
+
 namespace t2g
 {
 	class Application : public SingletonBase<Application>
@@ -18,7 +20,7 @@ namespace t2g
 		void Render() override;
 	public:
 		void GameLoop();
-		void Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect);
+		void Init(HINSTANCE hInst, HWND hWnd, RECT desktopRect, enums::eApplicationType eAppType);
 		void Release();
 
 		void ChangeTileBitmapSize(SIZE sceneSize);
@@ -27,15 +29,15 @@ namespace t2g
 		void CreateBackBuffer();
 		void CreateTileBuffer();
 	public:
-		wchar_t* GetAppPath() { return mAppPath; }
+		const wchar_t* GetAppPath() { return mAppPath; }
 		HWND GetHWnd() { return mHwnd; }
 		HDC GetMainDC() { return mHdc; }
 		HDC GetBackDC() { return mBackHdc; }
 		HDC GetTileDC() { return mTileHdc; }
 		HDC GetBlackTilePieceDC() { return mBlackTilePieceHdc; }
 		SIZE GetTileBufferSize() { return mTileBufferSize; }
-
 		const RECT& GetWindowRect() { return mWndRect; }
+		enums::eApplicationType GetAppType() { return mAppType; }
 
 	private:
 		wchar_t mAppPath[AppPathLength];
@@ -52,6 +54,8 @@ namespace t2g
 
 		POINT mWndSize;
 		SIZE mTileBufferSize;
+
+		enums::eApplicationType mAppType;
 	};
 }
 

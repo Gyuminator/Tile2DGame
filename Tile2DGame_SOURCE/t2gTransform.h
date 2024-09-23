@@ -36,6 +36,10 @@ namespace t2g
 		void SetRotation(const Vector3& vector3) { mRotation = vector3; }
 		void SetScale(const Vector3& vector3) { mScale = vector3; }
 
+		void AddLocationX(float x) { mLocation.x += x; }
+		void AddLocationY(float y) { mLocation.y += y; }
+		void AddLocationZ(float z) { mLocation.z += z; }
+
 	public:
 		eDelegateResult cbTest();
 

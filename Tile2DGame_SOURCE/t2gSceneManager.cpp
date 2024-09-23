@@ -2,13 +2,16 @@
 #include "t2gSceneManager.h"
 
 #include "t2gTileMapEditingScene.h"
+#include "t2gApplication.h"
 
 t2g::SceneManager::SceneManager()
-	: mCurScene{}
+	: mMapDirectoryPath(L"..\\Resource\\Map\\")
+	, mCurScene{}
 	, mLoadingScene{}
 	, mNextScene{}
 	, mScenes{}
 {
+
 }
 
 void t2g::SceneManager::Init()
@@ -16,8 +19,21 @@ void t2g::SceneManager::Init()
 	//ChangeScene<PlayScene>(eScene::Play);
 	/*AddScene<Scene>(eScene::Play)->Init(SIZE(80, 60));
 	ChangeScene<Scene>(eScene::Play);*/
-	AddScene<TileMapEditingScene>(eScene::TileMapEditing)->Init(SIZE(0, 0));
-	ChangeScene<TileMapEditingScene>(eScene::TileMapEditing);
+	switch (GET_SINGLETON(Application).GetAppType())
+	{
+	case eApplicationType::Client:
+	{
+		AddScene<Scene>(eScene::Start)->Init(L"layerTest_2.tlm");
+		ChangeScene<Scene>(eScene::Start);
+	}
+	break;
+	case eApplicationType::Engine:
+	{
+		AddScene<TileMapEditingScene>(eScene::TileMapEditing)->Init(SIZE(0, 0));
+		ChangeScene<TileMapEditingScene>(eScene::TileMapEditing);
+	}
+	break;
+	}
 }
 
 void t2g::SceneManager::Update()

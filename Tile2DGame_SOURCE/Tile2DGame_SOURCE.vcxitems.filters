@@ -97,6 +97,9 @@
     <Filter Include="Utility\Math">
       <UniqueIdentifier>{6fc119da-bea5-48e5-8e59-c60a70f7b07c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Collider">
+      <UniqueIdentifier>{8a6ec7dd-03a6-474f-8c75-2ba7a0cdb6bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gInterfaces.h">
@@ -194,6 +197,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gMath.h">
       <Filter>Utility\Math</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gCollider.h">
+      <Filter>Component\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -278,6 +284,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gMath.cpp">
       <Filter>Utility\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gCollider.cpp">
+      <Filter>Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

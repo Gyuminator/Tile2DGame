@@ -53,15 +53,17 @@ namespace t2g
 			EnterNextScene(iter->second.get());
 		}
 
-
 	public:
 		SafePtr<Scene> GetCurScene() { return mCurScene; }
+		const wstring& GetMapDirPath() { return mMapDirectoryPath; }
 
 	private:
 		void ExitCurScene();
 		void EnterNextScene(SafePtr<Scene> nextScene);
 
 	private:
+		wstring mMapDirectoryPath;
+
 		SafePtr<Scene> mCurScene;
 		SafePtr<Scene> mLoadingScene;
 		SafePtr<Scene> mNextScene;

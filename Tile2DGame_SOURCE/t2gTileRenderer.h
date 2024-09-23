@@ -34,10 +34,13 @@ namespace t2g
 		eImageName GetImageName(INT idx = 0);
 		Point GetSrcPos(INT idx = 0);
 		INT GetLayerSize() { return (INT)mTileLayers.size(); }
+		bool GetIsBlocking() { return mIsBlocking; }
 
 		void SetTileIndex(UINT i) { mTileIndex = i; }
-		void SetSrcPos(Point pos, INT idx = 0);
 		void SetImageName(eImageName eName, INT idx = 0);
+		void SetSrcPos(Point pos, INT idx = 0);
+		void SetLayerSize(INT size) { mTileLayers.resize(size); }
+		void SetIsBlocking(bool isblocking) { mIsBlocking = isblocking; }
 
 	public:
 		eDelegateResult cbDrawTile();
@@ -49,7 +52,7 @@ namespace t2g
 		vector<TileLayer> mTileLayers;
 
 		UINT mTileIndex;
-
+		bool mIsBlocking;
 	};
 }
 

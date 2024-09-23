@@ -29,7 +29,9 @@ void t2g::ShapeRenderer::Init(const eShapeName eShape, const Size& size, const C
 	case eShapeName::Ellipse:
 		BindBackToRenders(&ShapeRenderer::cbDrawEllipse);
 		break;
-
+	case eShapeName::RactangleBy4Line:
+		BindBackToRenders(&ShapeRenderer::cbDrawRactangleBy4Line);
+		break;
 	}
 }
 
@@ -59,6 +61,30 @@ eDelegateResult t2g::ShapeRenderer::cbDrawEllipse()
 		Graphics graphics(func::GetBackDC());
 		Pen pen(mPenColor);
 		graphics.DrawEllipse(&pen, data.resultRenderRc);
+	}
+	return eDelegateResult::OK;
+}
+
+eDelegateResult t2g::ShapeRenderer::cbDrawRactangleBy4Line()
+{
+	AdjustRenderRect();
+
+	DataByAdjustCamera data = MakeDataByAdjustCamera();
+
+	if (data.isIntersect)
+	{
+		Graphics graphics(func::GetBackDC());
+		Pen pen(mPenColor);
+		Point points[5] =
+		{
+			{ data.resultRenderRc.X, data.resultRenderRc.Y },
+			{ data.resultRenderRc.GetRight(), data.resultRenderRc.Y },
+			{ data.resultRenderRc.GetRight(), data.resultRenderRc.GetBottom() },
+			{ data.resultRenderRc.X, data.resultRenderRc.GetBottom() },
+			{ data.resultRenderRc.X, data.resultRenderRc.Y }
+		};
+		graphics.DrawLines(&pen, points, 5);
+
 	}
 	return eDelegateResult::OK;
 }

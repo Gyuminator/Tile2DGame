@@ -13,6 +13,8 @@
 #include "t2gCamera.h"
 #include "t2gFunc.h"
 #include "t2gMacro.h"
+#include "t2gSceneManager.h"
+#include "t2gCollider.h"
 
 t2g::Scene::Scene()
 	: mObjects{}
@@ -21,6 +23,8 @@ t2g::Scene::Scene()
 	, mTiles{}
 	, mCameras{}
 	, mSize{}
+	, mIsInited(false)
+	, mTileMapFileName{}
 {
 }
 
@@ -60,9 +64,55 @@ void t2g::Scene::Init(SIZE sceneSize)
 	init();
 }
 
+void t2g::Scene::Init(const wstring tileMapFileName)
+{
+	mTileMapFileName = tileMapFileName;
+	init();
+}
+
 void t2g::Scene::Exit()
 {
 
+}
+
+void t2g::Scene::LoadMap(const wstring& filePath)
+{
+	std::ifstream inMap(filePath, std::ios::binary);
+	LoadMap(inMap);
+}
+
+void t2g::Scene::LoadMap(std::ifstream& inMap)
+{
+	if (inMap.is_open())
+	{
+		ClearTile();
+
+		SIZE sceneSize;
+		inMap.read((char*)(&sceneSize), sizeof(sceneSize));
+		SetSize(sceneSize);
+
+		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
+		{
+			INT layerSize;
+			inMap.read((char*)(&layerSize), sizeof(layerSize));
+
+			unique_ptr<Object> tileObj = CreateTileObj();
+			SafePtr<TileRenderer> tileCom = tileObj->GET_COMPONENT(TileRenderer);
+			tileCom->Init(eImageName::EnumEnd, 0, 0, 0);
+			tileCom->SetTileIndex(GetTiles().size());
+			PushTileObj(std::move(tileObj));
+
+			for (INT i = 0; i < layerSize; ++i)
+			{
+				Point srcPos;
+				inMap.read((char*)(&srcPos), sizeof(srcPos));
+				tileCom->SetSrcPos(srcPos, i);
+				eImageName eImage;
+				inMap.read((char*)(&eImage), sizeof(eImage));
+				tileCom->SetImageName(eImage, i);
+			}
+		}
+	}
 }
 
 void t2g::Scene::Enter()
@@ -71,11 +121,6 @@ void t2g::Scene::Enter()
 	LoadImagesOfScene();
 
 	DrawTiles();
-
-	/*Graphics g(func::GetTileDC());
-	Pen p(Color(0, 0, 0));
-	Rect rect = { 0, 0, mSize.cx * func::GetTileSize() - 1, mSize.cy * func::GetTileSize() - 1 };
-	g.DrawRectangle(&p, rect);*/
 }
 
 SafePtr<t2g::Object> t2g::Scene::AddObject(eObjectTag tag)
@@ -306,12 +351,17 @@ void t2g::Scene::DrawTiles()
 
 void t2g::Scene::init()
 {
-	for (size_t i = 0; i < mSize.cx * mSize.cy; ++i)
+	wstring filePath = GET_SINGLETON(SceneManager).GetMapDirPath() + mTileMapFileName;
+	std::ifstream inMap(filePath, std::ios::binary);
+	LoadMap(inMap);
+
+	/*for (size_t i = 0; i < mSize.cx * mSize.cy; ++i)
 	{
 		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Outside_A2_png, 0, 0, INT(mTiles.size() - 1));
-	}
+	}*/
 
 	SafePtr<Object> player = AddObject(eObjectTag::Player);
+	player->AddComponent<Collider>()->Init({ 48, 48 }, { 0.5f, 0.5f }, { 0, 0 });
 	player->AddComponent<Transform>()->Init
 	(
 		Vector3(1000.f, 1000.f, 0.f),
@@ -426,13 +476,18 @@ void t2g::Scene::init()
 
 	camera3->SyncComponents();
 	camera3->BindComponentsToScene();
+
+	GetTiles()[0]->GET_COMPONENT(TileRenderer)->SetIsBlocking(true);
 }
 
 void t2g::Scene::LoadImagesOfScene()
 {
 	GET_SINGLETON(ImageManager).Load(eImageName::Player, L"Character\\plant.png", 3, 4);
 	GET_SINGLETON(ImageManager).Load(eImageName::Plant_00, L"Character\\plant_00.png", 3, 4);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A1_png, L"Tile\\Outside_A1.png", 16, 12);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A2_png, L"Tile\\Outside_A2.png", 16, 12);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A1_png, L"Tile\\Dungeon_A1.png", 16, 12);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A2_png, L"Tile\\Dungeon_A2.png", 16, 12);
 }
 
 SafePtr<t2g::Object> t2g::Scene::InsertTile(INT index)

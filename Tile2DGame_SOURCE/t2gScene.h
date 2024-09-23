@@ -37,10 +37,15 @@ namespace t2g
 
 	public:
 		void Init(SIZE sceneSize);
+		void Init(const wstring tileMapFileName);
 		void Enter();
 		void Update();
 		void Render();
 		void Exit();
+
+	public:
+		virtual void LoadMap(const wstring& filePath);
+		virtual void LoadMap(std::ifstream& inMap);
 
 	public:
 		SafePtr<t2g::Object> AddObject(eObjectTag tag);
@@ -98,7 +103,8 @@ namespace t2g
 		SafePtr<Camera> mCurCamera;
 
 		SIZE mSize;
-
+		bool mIsInited;
+		wstring mTileMapFileName;
 	};
 }
 

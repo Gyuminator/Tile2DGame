@@ -6,6 +6,7 @@
 #include "Tile2DGame_Client.h"
 
 #include "..\\Tile2DGame_SOURCE\\t2gApplication.h"
+#include "..\\Tile2DGame_SOURCE\\t2gInput.h"
 
 #pragma comment (lib, "..\\x64\\Debug\\Tile2DGame_Lib.lib")
 
@@ -51,7 +52,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TILE2DGAMECLIENT));
 
-	GET_SINGLETON(Application).Init(hInstance, hWnd, DesktopRect);
+	GET_SINGLETON(Application).Init(hInstance, hWnd, DesktopRect,
+		t2g::enums::eApplicationType::Client);
 
 	MSG msg;
 
@@ -155,6 +157,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+	case WM_MOUSEWHEEL:
+	{
+		int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		GET_SINGLETON(Input).SetWheelDelta(delta);
+	}
+	break;
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);

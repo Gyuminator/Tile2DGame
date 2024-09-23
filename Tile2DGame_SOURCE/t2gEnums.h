@@ -2,6 +2,12 @@
 
 namespace t2g::enums
 {
+	enum class eApplicationType : UINT8
+	{
+		Client,
+		Engine,
+	};
+
 	enum class eKeys : UINT16
 	{
 		_1, _2, _3, _4, _5, _6, _7, _8, _9, _0,
@@ -12,6 +18,7 @@ namespace t2g::enums
 		Left, Right, Up, Down,
 		LBtn, RBtn,
 		Ctrl, Alt, LShift, Tab, Esc, Enter,
+		F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 
 		MiddleEnd,
 
@@ -41,6 +48,7 @@ namespace t2g::enums
 		Camera,
 		PlayerController,
 		Status,
+		Collider,
 
 		EnumEnd
 	};
@@ -72,6 +80,7 @@ namespace t2g::enums
 
 	enum class eScene : UINT16
 	{
+		Start,
 		Loading,
 		Title,
 		Play,
@@ -90,6 +99,7 @@ namespace t2g::enums
 		TileToolCamera,
 		UI,
 		Unit,
+		Static,
 
 		EnumEnd
 	};
@@ -109,7 +119,8 @@ namespace t2g::enums
 	enum class eShapeName : UINT8
 	{
 		Ractangle,
-		Ellipse
+		Ellipse,
+		RactangleBy4Line
 	};
 
 	enum class eBufferDCType : UINT8
@@ -175,6 +186,12 @@ namespace t2g::enums
 
 
 		EnumEnd
+	};
+
+	enum class eEditMode : UINT8
+	{
+		Tiling,
+		Blocking,
 	};
 
 };

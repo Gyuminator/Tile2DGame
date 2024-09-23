@@ -3,6 +3,7 @@
 #include "t2gRect.h"
 #include "t2gSprite.h"
 #include "t2gEnums.h"
+#include "t2gFunc.h"
 
 using namespace t2g::math;
 using namespace t2g::enums;
@@ -47,13 +48,15 @@ namespace t2g
 		/*HDC GetCameraDC() { return mCameraDC; }
 		Graphics& GetGraphics() { return mGraphics; }*/
 		FLOAT GetDistance() { return mDistance; }
+		HDC GetTargetTileDC() { return mTargetTileDC; }
 
 		void SetTargetTileDC(HDC hdc) { mTargetTileDC = hdc; }
 		void SetAnchor(PointF anchor) { mAnchor = anchor; }
 		void SetDistance(FLOAT distance) { if (distance > 0.2) mDistance = distance; }
+		void SetOutsideColor(Color color) { mOutsideColor = color; }
 
 	public:
-		eDelegateResult cbCheckTransform();
+		eDelegateResult cbCheckTransform() { return func::CheckTransform(GetOwnerObj(), mTransform); }
 		eDelegateResult cbSyncCameraView();
 		eDelegateResult cbBltToViewport();
 		eDelegateResult cbRenderTile();
@@ -81,6 +84,7 @@ namespace t2g
 		Point mOffset;
 
 		FLOAT mDistance;
+		Color mOutsideColor;
 	};
 }
 

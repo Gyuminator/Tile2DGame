@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gCamera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gCollider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEnums.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gEvent.h" />
@@ -59,6 +60,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gAnimationRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gCamera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gCollider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEnums.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gEvent.cpp" />

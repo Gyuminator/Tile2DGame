@@ -7,7 +7,6 @@
 #include "t2gScene.h"
 #include "t2gTileMapEditingScene.h"
 #include "t2gInput.h"
-#include "t2gFunc.h"
 
 using namespace t2g::rect;
 
@@ -23,6 +22,7 @@ t2g::Camera::Camera()
 	, mGraphics(mCameraDC)*/
 	, mTransform{}
 	, mDistance(1.f)
+	, mOutsideColor{}
 {
 
 }
@@ -138,20 +138,12 @@ eDelegateResult t2g::Camera::cbDrawOutsideTileBuffer()
 			Rect resultRect = MakeRectByAnchors(mViewportRect, anchorLT, anchorRB);
 
 			Graphics g(func::GetBackDC());
-			SolidBrush b({ 0, 0, 0 });
+			SolidBrush b(mOutsideColor);
 			g.FillRectangle(&b, resultRect);
 		}
 	}
 
 	return eDelegateResult::OK;
-}
-
-eDelegateResult t2g::Camera::cbCheckTransform()
-{
-	if (mTransform.IsEmpty())
-		return eDelegateResult::Return;
-
-	return eDelegateResult::Erase;
 }
 
 eDelegateResult t2g::Camera::cbSyncCameraView()

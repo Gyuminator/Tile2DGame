@@ -19,6 +19,7 @@ namespace t2g
 	public:
 		eDelegateResult cbDrawRactangle();
 		eDelegateResult cbDrawEllipse();
+		eDelegateResult cbDrawRactangleBy4Line();
 
 	private:
 		Color mPenColor;

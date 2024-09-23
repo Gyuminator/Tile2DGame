@@ -22,6 +22,7 @@
 t2g::TileRenderer::TileRenderer()
 	: mTileLayers{}
 	, mTileIndex(0)
+	, mIsBlocking(false)
 {
 	mTileLayers.push_back({ {0, 0}, eImageName::EnumEnd });
 }

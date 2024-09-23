@@ -42,11 +42,13 @@ void t2g::ImageRenderer::Init(eImageName eName, INT xPos, INT yPos)
 
 void t2g::ImageRenderer::AdjustRenderRect()
 {
-	SyncRenderPos(mTransform->GetLocation());
+	mRenderRect = MakeRectByTransform3DSizeAnchorOffset(mTransform,
+		{ mSrcRect.Width, mSrcRect.Height }, mAnchor, mOffset);
+	/*SyncRenderPos(mTransform->GetLocation());
 	SyncRenderSize();
 
 	std::rect::ScalingRectbyScale(mRenderRect, mTransform->GetScale());
-	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);
+	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);*/
 }
 
 t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
