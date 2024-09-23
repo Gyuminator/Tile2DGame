@@ -44,8 +44,8 @@ namespace t2g
 		void Exit();
 
 	public:
-		virtual void LoadMap(const wstring& filePath);
-		virtual void LoadMap(std::ifstream& inMap);
+		virtual bool LoadMap(const wstring& filePath);
+		virtual bool LoadMap(std::ifstream& inMap);
 
 	public:
 		SafePtr<t2g::Object> AddObject(eObjectTag tag);

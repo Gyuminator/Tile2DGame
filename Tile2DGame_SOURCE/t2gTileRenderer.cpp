@@ -56,6 +56,35 @@ void t2g::TileRenderer::DrawTileToHDC(HDC hdc, Size sceneSize)
 	}
 }
 
+void t2g::TileRenderer::DrawBlocking(INT sceneWidth, HDC targetDC)
+{
+	Rect rect = rect::MakeRectByCenter
+	(
+		{
+			(INT)mTileIndex % sceneWidth * Application::TileSize + Application::TileSize / 2,
+			(INT)mTileIndex / sceneWidth * Application::TileSize + Application::TileSize / 2
+		},
+		{ Application::TileSize / 2, Application::TileSize / 2 }
+	);
+
+	Graphics g(targetDC);
+	if (mIsBlocking)
+	{
+		Pen p({ 255, 0, 0 }, 2.f);
+		Point pt1 = { rect.GetLeft(), rect.GetTop() };
+		Point pt2 = { rect.GetRight(), rect.GetBottom() };
+		g.DrawLine(&p, pt1, pt2);
+		pt1 = { rect.GetRight() , rect.GetTop() };
+		pt2 = { rect.GetLeft() , rect.GetBottom() };
+		g.DrawLine(&p, pt1, pt2);
+	}
+	else
+	{
+		Pen p({ 0, 255, 0 }, 2.f);
+		g.DrawEllipse(&p, rect);
+	}
+}
+
 eImageName t2g::TileRenderer::GetImageName(INT idx)
 {
 	assert(idx < mTileLayers.size() && "TileRenderer::GetImageName: idx >= mTileLayers.size()");
@@ -98,6 +127,10 @@ eDelegateResult t2g::TileRenderer::cbDrawTile()
 		mTileLayers[0].ImgName, destRect, mTileLayers[0].SrcPos);*/
 
 	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
+	Rect destRect = func::GetTileRectByIndex(sceneSize.cx, mTileIndex);
+	BitBlt(func::GetTileDC(), destRect.X, destRect.Y, destRect.Width, destRect.Height,
+		func::GetBlackTilePieceDC(), 0, 0, SRCCOPY);
+
 	for (INT i = 0; i < mTileLayers.size(); ++i)
 	{
 		drawLayer(i, sceneSize.cx, func::GetTileDC());
@@ -108,10 +141,11 @@ eDelegateResult t2g::TileRenderer::cbDrawTile()
 
 void t2g::TileRenderer::drawLayer(INT idx, INT sceneWidth, HDC targetDC)
 {
-	Rect destRect = {
+	Rect destRect = func::GetTileRectByIndex(sceneWidth, mTileIndex);
+	/*Rect destRect = {
 		INT(mTileIndex % sceneWidth * Application::TileSize),
 		INT(mTileIndex / sceneWidth * Application::TileSize),
-		Application::TileSize, Application::TileSize };
+		Application::TileSize, Application::TileSize };*/
 	Graphics g(targetDC);
 	GET_SINGLETON(ImageManager).DrawImage(g,
 		mTileLayers[idx].ImgName, destRect, mTileLayers[idx].SrcPos);

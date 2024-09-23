@@ -70,8 +70,22 @@ eDelegateResult t2g::Collider::cbCheckTileCollision()
 			{
 				Point Center = rect::GetCenterOfRect(tempRect);
 				Point delta = Center - pos;
-				(tempRect.Width < tempRect.Height) ?
-					mTransform->AddLocationX(delta.X) : mTransform->AddLocationY(delta.Y);
+				if (tempRect.Width < tempRect.Height)
+				{
+					if (delta.X < 0)
+						mTransform->SetLocationX(tileRect.GetLeft() - mRect.Width / 2);
+					else
+						mTransform->SetLocationX(tileRect.GetRight() + mRect.Width / 2);
+				}
+				else if (tempRect.Width > tempRect.Height)
+				{
+					if (delta.Y < 0)
+						mTransform->SetLocationY(tileRect.GetTop() - mRect.Height / 2);
+					else
+						mTransform->SetLocationY(tileRect.GetBottom() + mRect.Height / 2);
+				}
+				/*(tempRect.Width < tempRect.Height) ?
+					mTransform->AddLocationX(delta.X) : mTransform->AddLocationY(delta.Y);*/
 			}
 		}
 	}

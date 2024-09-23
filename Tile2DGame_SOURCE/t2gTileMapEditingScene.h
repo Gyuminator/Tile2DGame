@@ -32,7 +32,7 @@ namespace t2g
 		void SaveMapController();
 		void SaveMap(const wstring& filePath);
 		void SaveMapOtherName();
-		void LoadMap(const wstring& filePath) override;
+		bool LoadMap(const wstring& filePath) override;
 		void LoadMapOtherName();
 		void SavePrevEditInfo(const wstring& filePath);
 		const wstring LoadPrevEditInfo();
@@ -49,6 +49,7 @@ namespace t2g
 		void ChangeTilesetController();
 		void ChangeLayerController();
 		void ChangeModeController();
+		void ChangeBlockingController();
 
 	private:
 		void CameraSetting();
@@ -60,12 +61,12 @@ namespace t2g
 		void ClickEventToolTileView(SafePtr<Camera> camera);
 		void ClickEventMainTileView(SafePtr<Camera> camera);
 		void DrawTextFileName();
-		void DrawTextCurrentLayer();
+		void DrawTextCurrentInfo();
 		void CreateMarkerObj();
 		void CreateBorderObj();
 		void SyncBorderObjSize();
-
 		void ChangeTileset(UINT8 idx);
+		void DrawBlocking();
 
 		unique_ptr<Object> CreateToolTileObj();
 
@@ -87,6 +88,7 @@ namespace t2g
 		SafePtr<Camera> mTileViewCamera;
 
 		eEditMode mEditMode;
+		bool mCurBlocking;
 	};
 }
 

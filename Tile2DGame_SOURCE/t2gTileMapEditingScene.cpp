@@ -25,6 +25,7 @@ t2g::TileMapEditingScene::TileMapEditingScene()
 	, mMainViewCamera{}
 	, mTileViewCamera{}
 	, mEditMode(eEditMode::Tiling)
+	, mCurBlocking(false)
 {
 }
 
@@ -40,7 +41,7 @@ void t2g::TileMapEditingScene::init()
 
 	ChangeTileset(0);
 
-	DrawTextCurrentLayer();
+	DrawTextCurrentInfo();
 
 	wstring prevFileName = LoadPrevEditInfo();
 	if (prevFileName.empty())
@@ -99,6 +100,8 @@ void t2g::TileMapEditingScene::SaveMap(const wstring& filePath)
 		for (auto& tile : tiles)
 		{
 			SafePtr<TileRenderer> tileRender = tile->GetComponent<TileRenderer>(eComponentType::TileRenderer);
+			bool isBlocking = tileRender->GetIsBlocking();
+			out.write((char*)(&isBlocking), sizeof(isBlocking));
 
 			INT layerSize = tileRender->GetLayerSize();
 			out.write((char*)(&layerSize), sizeof(layerSize));
@@ -142,9 +145,15 @@ void t2g::TileMapEditingScene::SaveMapOtherName()
 	}
 }
 
-void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
+bool t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 {
-	std::ifstream inMap(filePath, std::ios::binary);
+	bool isSuccess = Scene::LoadMap(filePath);
+	if (isSuccess)
+		SetCurFilePath(filePath);
+	return isSuccess;
+
+
+	/*std::ifstream inMap(filePath, std::ios::binary);
 
 	if (inMap.is_open())
 	{
@@ -156,14 +165,18 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 
 		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 		{
-			INT layerSize;
-			inMap.read((char*)(&layerSize), sizeof(layerSize));
-
 			unique_ptr<Object> tileObj = CreateTileObj();
 			SafePtr<TileRenderer> tileCom = tileObj->GET_COMPONENT(TileRenderer);
 			tileCom->Init(eImageName::EnumEnd, 0, 0, 0);
 			tileCom->SetTileIndex(GetTiles().size());
 			PushTileObj(std::move(tileObj));
+
+			bool isBlocking;
+			inMap.read((char*)(&isBlocking), sizeof(isBlocking));
+			tileCom->SetIsBlocking(isBlocking);
+
+			INT layerSize;
+			inMap.read((char*)(&layerSize), sizeof(layerSize));
 
 			for (INT i = 0; i < layerSize; ++i)
 			{
@@ -177,7 +190,7 @@ void t2g::TileMapEditingScene::LoadMap(const wstring& filePath)
 		}
 
 		SetCurFilePath(filePath);
-	}
+	}*/
 }
 
 void t2g::TileMapEditingScene::LoadMapOtherName()
@@ -336,19 +349,47 @@ void t2g::TileMapEditingScene::ChangeLayerController()
 		return;
 
 	mCurLayer = idx;
-	DrawTextCurrentLayer();
+	DrawTextCurrentInfo();
 }
 
 void t2g::TileMapEditingScene::ChangeModeController()
 {
+	eEditMode mode = eEditMode::EnumEnd;
 	if (func::CheckKey(eKeys::F1, eKeyState::Down))
 	{
-		mEditMode = eEditMode::Tiling;
+		mode = eEditMode::Tiling;
 	}
 	else if (func::CheckKey(eKeys::F2, eKeyState::Down))
 	{
-		mEditMode = eEditMode::Blocking;
+		mode = eEditMode::Blocking;
 	}
+
+	if (mode == eEditMode::EnumEnd || mode == mEditMode)
+		return;
+
+	mEditMode = mode;
+	switch (mEditMode)
+	{
+	case eEditMode::Tiling:
+	{
+		DrawTiles();
+	}
+	break;
+	case eEditMode::Blocking:
+	{
+		DrawBlocking();
+	}
+	break;
+	}
+	DrawTextCurrentInfo();
+}
+
+void t2g::TileMapEditingScene::ChangeBlockingController()
+{
+	if (func::CheckKey(eKeys::n0, eKeyState::Down))
+		mCurBlocking = !mCurBlocking;
+
+	DrawTextCurrentInfo();
 }
 
 void t2g::TileMapEditingScene::CameraSetting()
@@ -374,6 +415,8 @@ void t2g::TileMapEditingScene::CameraSetting()
 			CameraDistanceController();
 			ChangeTilesetController();
 			ChangeLayerController();
+			ChangeModeController();
+			ChangeBlockingController();
 
 			SaveMapController();
 			return eDelegateResult::OK;
@@ -531,10 +574,24 @@ void t2g::TileMapEditingScene::ClickEventMainTileView(SafePtr<Camera> camera)
 					GetTiles()[tileIndex]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 				if (mSelectedTile.IsValid())
 				{
-					tileRenderer->SetLayerSize(mCurLayer + 1);
-					tileRenderer->SetImageName(mSelectedTile->GetImageName(), mCurLayer);
-					tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos(), mCurLayer);
-					tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
+					switch (mEditMode)
+					{
+					case eEditMode::Tiling:
+					{
+						tileRenderer->SetLayerSize(mCurLayer + 1);
+						tileRenderer->SetImageName(mSelectedTile->GetImageName(), mCurLayer);
+						tileRenderer->SetSrcPos(mSelectedTile->GetSrcPos(), mCurLayer);
+						tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
+					}
+					break;
+					case eEditMode::Blocking:
+					{
+						tileRenderer->SetIsBlocking(mCurBlocking);
+						tileRenderer->DrawTileToHDC(func::GetTileDC(), { GetSize().cx, GetSize().cy });
+						tileRenderer->DrawBlocking(GetSize().cx, func::GetTileDC());
+					}
+					break;
+					}
 				}
 			}
 		}
@@ -554,15 +611,30 @@ void t2g::TileMapEditingScene::DrawTextFileName()
 	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
 }
 
-void t2g::TileMapEditingScene::DrawTextCurrentLayer()
+void t2g::TileMapEditingScene::DrawTextCurrentInfo()
 {
-	wstring str = L"Current Layer: ";
-	str += std::to_wstring(mCurLayer + 1);
 	RECT rc(0, 40, 300, 60);
 	Rect rect = MakeRectByRECT(rc);
 	Graphics g(func::GetBackDC());
 	SolidBrush b({ 0, 0, 0 });
 	g.FillRectangle(&b, MakeRectByRECT(rc));
+	wstring str;
+	switch (mEditMode)
+	{
+	case eEditMode::Tiling:
+	{
+		str = L"Current Layer: ";
+		str += std::to_wstring(mCurLayer + 1);
+	}
+	break;
+	case eEditMode::Blocking:
+	{
+		str = L"Current Blocking: ";
+		str += mCurBlocking ? L"True" : L"False";
+
+	}
+	break;
+	}
 	DrawText(GET_SINGLETON(Application).GetBackDC(), str.c_str(), int(str.length()), &rc, DT_LEFT | DT_TOP);
 }
 
@@ -599,6 +671,14 @@ void t2g::TileMapEditingScene::ChangeTileset(UINT8 idx)
 	mToolTilesetIdx = idx;
 	mSelectedTile = GetCurTileset()[0]->GetComponent<TileRenderer>(eComponentType::TileRenderer);
 	DrawTileToolBuffer();
+}
+
+void t2g::TileMapEditingScene::DrawBlocking()
+{
+	for (auto& tileObj : GetTiles())
+	{
+		tileObj->GET_COMPONENT(TileRenderer)->DrawBlocking(GetSize().cx, func::GetTileDC());
+	}
 }
 
 

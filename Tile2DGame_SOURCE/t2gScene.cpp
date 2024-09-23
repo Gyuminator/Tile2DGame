@@ -75,15 +75,17 @@ void t2g::Scene::Exit()
 
 }
 
-void t2g::Scene::LoadMap(const wstring& filePath)
+bool t2g::Scene::LoadMap(const wstring& filePath)
 {
 	std::ifstream inMap(filePath, std::ios::binary);
-	LoadMap(inMap);
+	return LoadMap(inMap);
 }
 
-void t2g::Scene::LoadMap(std::ifstream& inMap)
+bool t2g::Scene::LoadMap(std::ifstream& inMap)
 {
-	if (inMap.is_open())
+	bool isSuccess = inMap.is_open();
+
+	if (isSuccess)
 	{
 		ClearTile();
 
@@ -93,14 +95,18 @@ void t2g::Scene::LoadMap(std::ifstream& inMap)
 
 		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
 		{
-			INT layerSize;
-			inMap.read((char*)(&layerSize), sizeof(layerSize));
-
 			unique_ptr<Object> tileObj = CreateTileObj();
 			SafePtr<TileRenderer> tileCom = tileObj->GET_COMPONENT(TileRenderer);
 			tileCom->Init(eImageName::EnumEnd, 0, 0, 0);
 			tileCom->SetTileIndex(GetTiles().size());
 			PushTileObj(std::move(tileObj));
+
+			bool isBlocking;
+			inMap.read((char*)(&isBlocking), sizeof(isBlocking));
+			tileCom->SetIsBlocking(isBlocking);
+
+			INT layerSize;
+			inMap.read((char*)(&layerSize), sizeof(layerSize));
 
 			for (INT i = 0; i < layerSize; ++i)
 			{
@@ -113,6 +119,7 @@ void t2g::Scene::LoadMap(std::ifstream& inMap)
 			}
 		}
 	}
+	return isSuccess;
 }
 
 void t2g::Scene::Enter()

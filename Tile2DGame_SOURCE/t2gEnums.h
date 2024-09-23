@@ -192,6 +192,8 @@ namespace t2g::enums
 	{
 		Tiling,
 		Blocking,
+
+		EnumEnd
 	};
 
 };

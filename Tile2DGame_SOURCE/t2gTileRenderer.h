@@ -28,6 +28,7 @@ namespace t2g
 
 	public:
 		void DrawTileToHDC(HDC hdc, Size sceneSize);
+		void DrawBlocking(INT sceneWidth, HDC targetDC);
 
 	public:
 		UINT GetTileIndex() { return mTileIndex; }
