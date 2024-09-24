@@ -484,7 +484,6 @@ void t2g::Scene::init()
 	camera3->SyncComponents();
 	camera3->BindComponentsToScene();
 
-	GetTiles()[0]->GET_COMPONENT(TileRenderer)->SetIsBlocking(true);
 }
 
 void t2g::Scene::LoadImagesOfScene()

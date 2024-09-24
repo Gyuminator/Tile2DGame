@@ -11,6 +11,8 @@ t2g::Collider::Collider()
 	, mSize{}
 	, mAnchor{}
 	, mOffset{}
+	, mAddXFlag(false)
+	, mAddYFlag(false)
 {
 }
 
@@ -30,7 +32,8 @@ void t2g::Collider::Init(const Size size, const PointF anchor, const Point offse
 
 	BindBackToUpdates(&Collider::cbCheckTransform);
 	BindBackToUpdates(&Collider::cbAdjustRect);
-	BindBackToUpdates(&Collider::cbCheckTileCollision);
+	BindBackToUpdates(&Collider::cbCheckCollisionBySceneRect);
+	BindBackToUpdates(&Collider::cbCheckCollisionByTiles);
 }
 
 eDelegateResult t2g::Collider::cbAdjustRect()
@@ -41,54 +44,106 @@ eDelegateResult t2g::Collider::cbAdjustRect()
 	return eDelegateResult::OK;
 }
 
-eDelegateResult t2g::Collider::cbCheckTileCollision()
+eDelegateResult t2g::Collider::cbCheckCollisionByTiles()
 {
 	if (mTransform->GetLocation().z > 0.01f)
 		return eDelegateResult::OK;
 
-	Point points[4] =
-	{
-		{ mRect.X, mRect.Y },
-		{ mRect.GetRight(), mRect.Y },
-		{ mRect.GetRight(), mRect.GetBottom() },
-		{ mRect.X, mRect.GetBottom() }
-	};
+	SIZE sceneSIZE = GetOwnerObj()->GetOwnerScene()->GetSize();
+	Size sceneSize = { sceneSIZE.cx, sceneSIZE.cy };
 
+	mAddXFlag = false;
+	mAddYFlag = false;
+	TileBlockingByVertex
+	(
+		sceneSize, { mRect.X, mRect.Y },
+		[](const Rect& rect) { return Point(rect.Width, rect.Height); }
+	);
+	TileBlockingByVertex
+	(
+		sceneSize, { mRect.GetRight(), mRect.Y },
+		[](const Rect& rect) {	return Point(-rect.Width, rect.Height); }
+	);
+	TileBlockingByVertex
+	(
+		sceneSize, { mRect.GetRight(), mRect.GetBottom() },
+		[](const Rect& rect) { return Point(-rect.Width, -rect.Height); }
+	);
+	TileBlockingByVertex
+	(
+		sceneSize, { mRect.X, mRect.GetBottom() },
+		[](const Rect& rect) { return Point(rect.Width, -rect.Height); }
+	);
+
+	return eDelegateResult::OK;
+}
+
+eDelegateResult t2g::Collider::cbCheckCollisionBySceneRect()
+{
 	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
-	const auto& tiles = GetOwnerObj()->GetOwnerScene()->GetTiles();
-
-	for (Point pos : points)
+	Rect sceneRect = { 0, 0,
+				sceneSize.cx * func::GetTileSize(), sceneSize.cy * func::GetTileSize() };
+	Rect tempRect;
+	if (Rect::Intersect(tempRect, mRect, sceneRect))
 	{
-		INT i = func::GetTileIndexSafety({ sceneSize.cx, sceneSize.cy }, pos.X, pos.Y);
-		if (i < 0)
-			continue; //  여기 바깥 나가는 부분이라 continue가 아니라 따로 블로킹 해줘야함.
-		if (tiles[i]->GET_COMPONENT(TileRenderer)->GetIsBlocking())
+		if (tempRect.GetLeft() != mRect.GetLeft())
 		{
-			Rect tileRect = func::GetTileRectByIndex(sceneSize.cx, i);
-			Rect tempRect;
-			if (Rect::Intersect(tempRect, mRect, tileRect))
-			{
-				Point Center = rect::GetCenterOfRect(tempRect);
-				Point delta = Center - pos;
-				if (tempRect.Width < tempRect.Height)
-				{
-					if (delta.X < 0)
-						mTransform->SetLocationX(tileRect.GetLeft() - mRect.Width / 2);
-					else
-						mTransform->SetLocationX(tileRect.GetRight() + mRect.Width / 2);
-				}
-				else if (tempRect.Width > tempRect.Height)
-				{
-					if (delta.Y < 0)
-						mTransform->SetLocationY(tileRect.GetTop() - mRect.Height / 2);
-					else
-						mTransform->SetLocationY(tileRect.GetBottom() + mRect.Height / 2);
-				}
-				/*(tempRect.Width < tempRect.Height) ?
-					mTransform->AddLocationX(delta.X) : mTransform->AddLocationY(delta.Y);*/
-			}
+			mTransform->AddLocationX(tempRect.GetLeft() - mRect.GetLeft());
+		}
+		else if (tempRect.GetRight() != mRect.GetRight())
+		{
+			mTransform->AddLocationX(tempRect.GetRight() - mRect.GetRight());
+		}
+
+		if (tempRect.GetTop() != mRect.GetTop())
+		{
+			mTransform->AddLocationY(tempRect.GetTop() - mRect.GetTop());
+		}
+		else if (tempRect.GetBottom() != mRect.GetBottom())
+		{
+			mTransform->AddLocationY(tempRect.GetBottom() - mRect.GetBottom());
 		}
 	}
 
 	return eDelegateResult::OK;
+}
+
+void t2g::Collider::TileBlockingByVertex(Size sceneSize, Point vertex, function<Point(const Rect&)> deltaPosGetter)
+{
+	Rect tempRect;
+	INT i = func::GetTileIndexSafety(sceneSize, vertex.X, vertex.Y);
+
+	const auto& tiles = GetOwnerObj()->GetOwnerScene()->GetTiles();
+
+	if (i < 0)
+		return;
+	if (tiles[i]->GET_COMPONENT(TileRenderer)->GetIsBlocking() == false)
+		return;
+
+	Rect tileRect = func::GetTileRectByIndex(sceneSize.Width, i);
+	if (Rect::Intersect(tempRect, mRect, tileRect))
+	{
+		Point delta = deltaPosGetter(tempRect);
+		Point deltaAbs =
+		{
+			((delta.X < 0) ? -delta.X : delta.X),
+			((delta.Y < 0) ? -delta.Y : delta.Y)
+		};
+		if (deltaAbs.X < deltaAbs.Y)
+		{
+			if (mAddXFlag == false)
+			{
+				mAddXFlag = true;
+				mTransform->AddLocationX(delta.X);
+			}
+		}
+		else if (deltaAbs.X > deltaAbs.Y)
+		{
+			if (mAddYFlag == false)
+			{
+				mAddYFlag = true;
+				mTransform->AddLocationY(delta.Y);
+			}
+		}
+	}
 }

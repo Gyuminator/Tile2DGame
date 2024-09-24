@@ -80,8 +80,8 @@ namespace t2g::func
 	{
 		posX /= GetTileSize();
 		posY /= GetTileSize();
-		if (posX > (UINT)sceneSize.Width) return -1;
-		if (posY > (UINT)sceneSize.Height) return -1;
+		if (posX >= (UINT)sceneSize.Width) return -1;
+		if (posY >= (UINT)sceneSize.Height) return -1;
 		return posY * (UINT)sceneSize.Width + posX;
 	}
 

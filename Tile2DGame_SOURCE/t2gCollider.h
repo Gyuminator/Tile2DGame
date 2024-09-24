@@ -23,7 +23,11 @@ namespace t2g
 	public:
 		eDelegateResult cbCheckTransform() { return func::CheckTransform(GetOwnerObj(), mTransform); }
 		eDelegateResult cbAdjustRect();
-		eDelegateResult cbCheckTileCollision();
+		eDelegateResult cbCheckCollisionByTiles();
+		eDelegateResult cbCheckCollisionBySceneRect();
+
+	private:
+		void TileBlockingByVertex(Size sceneSize, Point vertex, function<Point(const Rect&)> deltaPosGetter);
 
 	private:
 		SafePtr<Transform> mTransform;
@@ -32,6 +36,9 @@ namespace t2g
 		Size mSize;
 		PointF mAnchor;
 		Point mOffset;
+
+		bool mAddXFlag;
+		bool mAddYFlag;
 	};
 }
 
