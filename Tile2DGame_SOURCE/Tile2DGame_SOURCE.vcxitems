@@ -42,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSingletonBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gSprite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gStatus.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTextRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTileRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gTime.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gShapeRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gSprite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gStatus.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTextRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileMapEditingScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTileRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gTime.cpp" />

@@ -9,7 +9,7 @@
 
 //void t2g::TileRenderer::render()
 //{
-//	SIZE sceneSize = GetOwnerObj()->GetOwnerObj()->GetSize();
+//	SIZE sceneSize = GetOwnerObj()->GetOwnerObj()->GetSIZE();
 //	Rect destRect = {
 //		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 //		INT(mTileIndex / sceneSize.cx * Application::TileSize),
@@ -117,7 +117,7 @@ void t2g::TileRenderer::SetImageName(eImageName eName, INT idx)
 
 eDelegateResult t2g::TileRenderer::cbDrawTile()
 {
-	/*SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
+	/*SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSIZE();
 	Rect destRect = {
 		INT(mTileIndex % sceneSize.cx * Application::TileSize),
 		INT(mTileIndex / sceneSize.cx * Application::TileSize),
@@ -126,7 +126,7 @@ eDelegateResult t2g::TileRenderer::cbDrawTile()
 	GET_SINGLETON(ImageManager).DrawImage(g,
 		mTileLayers[0].ImgName, destRect, mTileLayers[0].SrcPos);*/
 
-	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
+	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSIZE();
 	Rect destRect = func::GetTileRectByIndex(sceneSize.cx, mTileIndex);
 	BitBlt(func::GetTileDC(), destRect.X, destRect.Y, destRect.Width, destRect.Height,
 		func::GetBlackTilePieceDC(), 0, 0, SRCCOPY);
@@ -151,3 +151,23 @@ void t2g::TileRenderer::drawLayer(INT idx, INT sceneWidth, HDC targetDC)
 		mTileLayers[idx].ImgName, destRect, mTileLayers[idx].SrcPos);
 }
 
+eDelegateResult t2g::TileRenderer::cbDrawIndex()
+{
+	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSIZE();
+	Rect destRect = func::GetTileRectByIndex(sceneSize.cx, mTileIndex);
+
+	Graphics graphics(func::GetTileDC());
+	Pen pen({ 255, 0 ,255 });
+	graphics.DrawRectangle(&pen, destRect);
+	SolidBrush brush({ 255, 0 ,255 });
+	Font font(L"Arial", 14.f);
+	wstring strIndex = std::to_wstring(mTileIndex);
+	graphics.DrawString(
+		strIndex.c_str(),
+		strIndex.length(),
+		&font,
+		{ (REAL)(destRect.X + 8), (REAL)(destRect.Y + 12) },
+		&brush);
+
+	return eDelegateResult::OK;
+}

@@ -30,7 +30,7 @@ void t2g::AnimationRenderer::Init(eImageName eName, FLOAT duration)
 
 	SetImageName(eName);
 	mDuration = duration;
-
+	
 	BindBackToUpdates(&AnimationRenderer::cbCheckImageLoading);
 	BindBackToUpdates(&AnimationRenderer::cbCheckTransform);
 	BindBackToUpdates(&AnimationRenderer::cbCheckStateValid);

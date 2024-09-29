@@ -27,12 +27,7 @@ namespace t2g
 		typedef unordered_set<SafePtr<Component>> SafeComponentSet;
 
 	public:
-		static unique_ptr<Object> CreateObject()
-		{
-			unique_ptr<Object> uptr(new Object);
-
-			return std::move(uptr);
-		}
+		static unique_ptr<Object> CreateObject() { return unique_ptr<Object>(new Object); }
 
 	private:
 		Object();

@@ -157,7 +157,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 //
 
-INT_PTR CALLBACK TileMapReSizeProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK t2g::TileMapReSizeProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -182,11 +182,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		case IDM_TILEMAP_RESIZE:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_TILEMAP_SIZE), hWnd, TileMapReSizeProc);
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_TILEMAP_SIZE), hWnd, t2g::TileMapReSizeProc);
 			break;
 		case IDM_TILEMAP_SAVE:
 		{
-			t2g::Scene* ptr = (t2g::Scene*)GET_SINGLETON(SceneManager).GetCurScene().GetKey();
+			t2g::Scene* ptr = GET_SINGLETON(SceneManager).GetCurScene().get();
 			t2g::TileMapEditingScene* tileScene = dynamic_cast<t2g::TileMapEditingScene*>(ptr);
 			if (tileScene)
 			{
@@ -199,7 +199,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		case IDM_TILEMAP_SAVE_OTHER:
 		{
-			t2g::Scene* ptr = (t2g::Scene*)GET_SINGLETON(SceneManager).GetCurScene().GetKey();
+			t2g::Scene* ptr = GET_SINGLETON(SceneManager).GetCurScene().get();
 			t2g::TileMapEditingScene* tileScene = dynamic_cast<t2g::TileMapEditingScene*>(ptr);
 			if (tileScene)
 			{
@@ -209,7 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 		case IDM_TILEMAP_LOAD:
 		{
-			t2g::Scene* ptr = (t2g::Scene*)GET_SINGLETON(SceneManager).GetCurScene().GetKey();
+			t2g::Scene* ptr = GET_SINGLETON(SceneManager).GetCurScene().get();
 			t2g::TileMapEditingScene* tileScene = dynamic_cast<t2g::TileMapEditingScene*>(ptr);
 			if (tileScene)
 			{
@@ -250,43 +250,6 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-		{
-			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
-		}
-		break;
-	}
-	return (INT_PTR)FALSE;
-}
-
-// ==================================
-// TileMap ReSize Proc
-// ==================================
-INT_PTR CALLBACK TileMapReSizeProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
-
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK)
-		{
-			int sizeX = GetDlgItemInt(hDlg, IDC_TILEMAP_SIZE_X, nullptr, false);
-			int sizeY = GetDlgItemInt(hDlg, IDC_TILEMAP_SIZE_Y, nullptr, false);
-
-			t2g::Scene* ptr = (t2g::Scene*)GET_SINGLETON(SceneManager).GetCurScene().GetKey();
-			t2g::TileMapEditingScene* tileScene = dynamic_cast<t2g::TileMapEditingScene*>(ptr);
-			if (tileScene)
-			{
-				tileScene->ChangeMapSize(sizeX, sizeY);
-			}
-
-			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
-		}
-		else if (LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;

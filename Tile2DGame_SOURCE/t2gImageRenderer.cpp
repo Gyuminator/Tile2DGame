@@ -47,7 +47,7 @@ void t2g::ImageRenderer::AdjustRenderRect()
 	/*SyncRenderPos(mTransform->GetLocation());
 	SyncRenderSize();
 
-	std::rect::ScalingRectbyScale(mRenderRect, mTransform->GetScale());
+	std::rect::ScalingRectbyVectorScale(mRenderRect, mTransform->GetScale());
 	std::rect::PositioningRectByAnchor(mRenderRect, mAnchor);*/
 }
 
@@ -61,19 +61,17 @@ t2g::DataByAdjustCamera t2g::ImageRenderer::MakeDataByAdjustCamera()
 	if (camera->GetRenderExcludeTags().contains(GetOwnerObj()->GetTag()))
 		return datas;
 
-	datas.tempRenderRc = GetRenderRect();
-	//rect::ScalingRect(datas.tempRenderRc, 1.f / camera->GetDistance());
+	datas.baseRenderRc = GetRenderRect();
 
-	if (Rect::Intersect(datas.tempRc, camera->GetCameraViewRect(), datas.tempRenderRc))
+	if (Rect::Intersect(datas.tempRc, camera->GetCameraViewRect(), datas.baseRenderRc))
 	{
 		datas.isIntersect = true;
-		/*datas.resultRenderRc = datas.tempRc;
-		PointF renderAnchor = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.X, datas.tempRc.Y));
-		Point renderPos = rect::GetPosByAnchor(camera->GetViewportRect(), renderAnchor);
-		datas.resultRenderRc.X = renderPos.X;
-		datas.resultRenderRc.Y = renderPos.Y;*/
-		PointF anchorLT = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.X, datas.tempRc.Y));
-		PointF anchorRB = rect::GetAnchorByPos(camera->GetCameraViewRect(), Point(datas.tempRc.GetRight(), datas.tempRc.GetBottom()));
+
+		PointF anchorLT = rect::GetAnchorByPos(camera->GetCameraViewRect(),
+			Point(datas.tempRc.GetLeft(), datas.tempRc.GetTop()));
+		PointF anchorRB = rect::GetAnchorByPos(camera->GetCameraViewRect(),
+			Point(datas.tempRc.GetRight(), datas.tempRc.GetBottom()));
+
 		datas.resultRenderRc = MakeRectByAnchors(camera->GetViewportRect(), anchorLT, anchorRB);
 	}
 
@@ -129,15 +127,16 @@ eDelegateResult t2g::ImageRenderer::cbDrawImage()
 
 	if (data.isIntersect)
 	{
-		PointF ltAnchor = rect::GetAnchorByPos(data.tempRenderRc,
-			Point(data.tempRc.GetLeft(), data.tempRc.GetTop()));
-		PointF rbAnchor = rect::GetAnchorByPos(data.tempRenderRc,
-			Point(data.tempRc.GetRight(), data.tempRc.GetBottom()));
-		Rect resultSrcRc = rect::MakeRectByAnchors(GetSrcRect(), ltAnchor, rbAnchor);
+		Rect resultSrcRc =
+		{
+			data.tempRc.X - data.baseRenderRc.X + GetSrcRect().X,
+			data.tempRc.Y - data.baseRenderRc.Y + GetSrcRect().Y,
+			data.tempRc.Width,
+			data.tempRc.Height
+		};
 
 		Graphics graphics(func::GetBackDC());
-		GET_SINGLETON(ImageManager).DrawImage(graphics,
-			mSprite, data.resultRenderRc, resultSrcRc);
+		GET_SINGLETON(ImageManager).DrawImage(graphics, mSprite, data.resultRenderRc, resultSrcRc);
 	}
 
 	return eDelegateResult::OK;

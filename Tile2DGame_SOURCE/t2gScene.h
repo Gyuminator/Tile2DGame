@@ -53,7 +53,7 @@ namespace t2g
 		unique_ptr<t2g::Object> CreateTileObj();
 
 		void PushTileObj(unique_ptr<t2g::Object> tileObj);
-		void PushCamera(SafePtr<t2g::Camera> camera);
+		void PushCamera(SafePtr<t2g::Camera> otherCamera);
 
 		void BindComponent(SafePtr<Component> component);
 
@@ -71,7 +71,8 @@ namespace t2g
 		const vector<unique_ptr<Object>>& GetTiles() { return mTiles; }
 		const vector<SafePtr<Camera>>& GetCameras() { return mCameras; }
 		SafePtr<Camera> GetCurCamera() { return mCurCamera; }
-		SIZE GetSize() { return mSize; }
+		SIZE GetSIZE() { return mSize; }
+
 
 		void SetSize(SIZE sceneSize) { mSize = sceneSize; }
 
@@ -85,7 +86,7 @@ namespace t2g
 		virtual void render() {}
 		virtual void exit() {}
 
-	private:
+	protected:
 		void LoadImagesOfScene();
 		SafePtr<t2g::Object> InsertTile(INT index);
 

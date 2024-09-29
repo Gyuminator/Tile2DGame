@@ -5,13 +5,11 @@ namespace t2g
 	template<typename T>
 	class SafePtr
 	{
-		friend size_t std::hash<SafePtr<T>>::operator()(const SafePtr<T>& t) const;
-
 	public:
 		SafePtr() : ptr(nullptr) {}
 		SafePtr(T* p) : ptr(p) {}
 		template<typename T1>
-		SafePtr(SafePtr<T1> other) : ptr(static_cast<T*>((T1*)other.GetKey())) {}
+		SafePtr(SafePtr<T1> other) : ptr(static_cast<T*>((T1*)other.get())) {}
 
 	public:
 		T& operator*() const { return *ptr; }
@@ -20,32 +18,24 @@ namespace t2g
 		{
 			return this->ptr == other.ptr;
 		}
-		/*void operator=(const T* ptr)
-		{
-			this->ptr = ptr;
-		}*/
 
 	public:
 		bool IsEmpty() const { return ptr == nullptr; }
 		bool IsValid() const { return ptr != nullptr; }
-		long long GetKey() const { return (long long)ptr; }
+		T* get() const { return ptr; }
 
 	private:
 		T* ptr;
 	};
 }
 
-namespace std
+template <typename T>
+struct std::hash<t2g::SafePtr<T>>
 {
-	using namespace t2g;
-
-	template <typename T>
-	struct std::hash<SafePtr<T>>
+	size_t operator()(const t2g::SafePtr<T>& t) const
 	{
-		size_t operator()(const SafePtr<T>& t) const {
-			hash<T*> hash_func;
+		hash<T*> hash_func;
 
-			return hash_func(t.ptr);
-		}
-	};
-}
+		return hash_func(t.get());
+	}
+};

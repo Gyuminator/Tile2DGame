@@ -49,19 +49,19 @@ eDelegateResult t2g::Collider::cbCheckCollisionByTiles()
 	if (mTransform->GetLocation().z > 0.01f)
 		return eDelegateResult::OK;
 
-	SIZE sceneSIZE = GetOwnerObj()->GetOwnerScene()->GetSize();
+	SIZE sceneSIZE = GetOwnerObj()->GetOwnerScene()->GetSIZE();
 	Size sceneSize = { sceneSIZE.cx, sceneSIZE.cy };
 
 	mAddXFlag = false;
 	mAddYFlag = false;
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.X, mRect.Y },
+		sceneSize, { mRect.GetLeft(), mRect.GetTop() },
 		[](const Rect& rect) { return Point(rect.Width, rect.Height); }
 	);
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.GetRight(), mRect.Y },
+		sceneSize, { mRect.GetRight(), mRect.GetTop() },
 		[](const Rect& rect) {	return Point(-rect.Width, rect.Height); }
 	);
 	TileBlockingByVertex
@@ -71,7 +71,7 @@ eDelegateResult t2g::Collider::cbCheckCollisionByTiles()
 	);
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.X, mRect.GetBottom() },
+		sceneSize, { mRect.GetLeft(), mRect.GetBottom() },
 		[](const Rect& rect) { return Point(rect.Width, -rect.Height); }
 	);
 
@@ -80,7 +80,7 @@ eDelegateResult t2g::Collider::cbCheckCollisionByTiles()
 
 eDelegateResult t2g::Collider::cbCheckCollisionBySceneRect()
 {
-	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSize();
+	SIZE sceneSize = GetOwnerObj()->GetOwnerScene()->GetSIZE();
 	Rect sceneRect = { 0, 0,
 				sceneSize.cx * func::GetTileSize(), sceneSize.cy * func::GetTileSize() };
 	Rect tempRect;
@@ -112,9 +112,7 @@ void t2g::Collider::TileBlockingByVertex(Size sceneSize, Point vertex, function<
 {
 	Rect tempRect;
 	INT i = func::GetTileIndexSafety(sceneSize, vertex.X, vertex.Y);
-
 	const auto& tiles = GetOwnerObj()->GetOwnerScene()->GetTiles();
-
 	if (i < 0)
 		return;
 	if (tiles[i]->GET_COMPONENT(TileRenderer)->GetIsBlocking() == false)

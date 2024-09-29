@@ -65,7 +65,7 @@ void t2g::Camera::Release()
 	//DeleteDC(mCameraDC);
 }
 
-Point t2g::Camera::GetPosToCameraView(Point viewportPos)
+Point t2g::Camera::GetPosToCameraWorld(Point viewportPos)
 {
 	PointF anchor = GetAnchorByPos(mViewportRect, viewportPos);
 
@@ -77,6 +77,41 @@ void t2g::Camera::ClearViewport(Color color)
 	Graphics graphics(func::GetBackDC());
 	SolidBrush brush(color);
 	graphics.FillRectangle(&brush, mViewportRect);
+}
+
+void t2g::Camera::DrawOutsideTileBuffer(SIZE bufferSize)
+{
+	Rect rects[4] =
+	{
+		{ mCameraViewRect.X, mCameraViewRect.Y,
+		mCameraViewRect.Width, -mCameraViewRect.Y },
+
+		{ mCameraViewRect.X, -1,
+		-mCameraViewRect.X, bufferSize.cy + 1 },
+
+		{ bufferSize.cx, 0,
+		mCameraViewRect.GetRight() - bufferSize.cx,
+		bufferSize.cy },
+
+		{ mCameraViewRect.X, bufferSize.cy - 1,
+		mCameraViewRect.Width,
+		mCameraViewRect.GetBottom() - bufferSize.cy + 1 }
+	};
+
+	for (Rect& rect : rects)
+	{
+		if (IsReverseRect(rect) == false)
+		{
+			PointF anchorLT = GetAnchorByPos(mCameraViewRect, { rect.GetLeft(), rect.GetTop() });
+			PointF anchorRB = GetAnchorByPos(mCameraViewRect, { rect.GetRight(), rect.GetBottom() });
+
+			Rect resultRect = MakeRectByAnchors(mViewportRect, anchorLT, anchorRB);
+
+			Graphics g(func::GetBackDC());
+			SolidBrush b(mOutsideColor);
+			g.FillRectangle(&b, resultRect);
+		}
+	}
 }
 
 eDelegateResult t2g::Camera::cbRenderTile()
@@ -111,54 +146,21 @@ eDelegateResult t2g::Camera::cbRenderTileOnce()
 
 eDelegateResult t2g::Camera::cbDrawOutsideTileBuffer()
 {
-	Rect rects[4] =
-	{
-		{ mCameraViewRect.X, mCameraViewRect.Y,
-		mCameraViewRect.Width, -mCameraViewRect.Y },
-
-		{ mCameraViewRect.X, -1,
-		-mCameraViewRect.X, func::GetTileBufferSize().cy + 1 },
-
-		{ func::GetTileBufferSize().cx, 0,
-		mCameraViewRect.GetRight() - func::GetTileBufferSize().cx,
-		func::GetTileBufferSize().cy },
-
-		{ mCameraViewRect.X, func::GetTileBufferSize().cy - 1,
-		mCameraViewRect.Width,
-		mCameraViewRect.GetBottom() - func::GetTileBufferSize().cy + 1 }
-	};
-
-	for (Rect& rect : rects)
-	{
-		if (IsReverseRect(rect) == false)
-		{
-			PointF anchorLT = GetAnchorByPos(mCameraViewRect, { rect.X, rect.Y });
-			PointF anchorRB = GetAnchorByPos(mCameraViewRect, { rect.GetRight(), rect.GetBottom() });
-
-			Rect resultRect = MakeRectByAnchors(mViewportRect, anchorLT, anchorRB);
-
-			Graphics g(func::GetBackDC());
-			SolidBrush b(mOutsideColor);
-			g.FillRectangle(&b, resultRect);
-		}
-	}
+	DrawOutsideTileBuffer(func::GetTileBufferSize());
 
 	return eDelegateResult::OK;
 }
 
 eDelegateResult t2g::Camera::cbSyncCameraView()
 {
-	Vector3 location = GetTransform()->GetLocation();
-	/*mCameraViewRect = MakeRectByCenter(Point(INT(location.x), INT(location.y)),
-		Size(INT(FLOAT(mViewportRect.Width) * mDistance),
-			INT(FLOAT(mViewportRect.Height) * mDistance)));*/
+	Vector3 location = mTransform->GetLocation();
 
-	Rect tempRect = { INT(location.x), INT(location.y),
-		INT(FLOAT(mViewportRect.Width) * mDistance),
-		INT(FLOAT(mViewportRect.Height) * mDistance) };
+	mCameraViewRect.X = INT(location.x);
+	mCameraViewRect.Y = INT(location.y);
+	mCameraViewRect.Width = INT(FLOAT(mViewportRect.Width) * mDistance);
+	mCameraViewRect.Height = INT(FLOAT(mViewportRect.Height) * mDistance);
 
-	PositioningRectByAnchor(tempRect, mAnchor);
-	mCameraViewRect = tempRect;
+	PositioningRectByAnchor(mCameraViewRect, mAnchor);
 
 	GetOwnerObj()->EventProc(eEventCallPoint::cbSyncCameraView);
 

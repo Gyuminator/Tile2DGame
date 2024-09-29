@@ -2,6 +2,8 @@
 
 namespace t2g::enums
 {
+	// =========================================================
+
 	enum class eApplicationType : UINT8
 	{
 		Client,
@@ -49,6 +51,7 @@ namespace t2g::enums
 		PlayerController,
 		Status,
 		Collider,
+		TextRenderer,
 
 		EnumEnd
 	};
@@ -110,8 +113,12 @@ namespace t2g::enums
 		Plant_00,
 		Tile_Outside_A1_png,
 		Tile_Outside_A2_png,
+		Tile_Outside_A5_png,
+		Tile_Outside_B_png,
 		Tile_Dungeon_A1_png,
 		Tile_Dungeon_A2_png,
+		Tile_Dungeon_A5_png,
+		Tile_Dungeon_B_png,
 
 		EnumEnd
 	};
@@ -137,10 +144,10 @@ namespace t2g::enums
 		Idle_Down,
 		Idle_Left,
 		Idle_Up,
-		Walk_Left,
 		Walk_Right,
-		Walk_Up,
 		Walk_Down,
+		Walk_Left,
+		Walk_Up,
 
 		EnumEnd
 	};
@@ -192,6 +199,7 @@ namespace t2g::enums
 	{
 		Tiling,
 		Blocking,
+		ShowIndex,
 
 		EnumEnd
 	};

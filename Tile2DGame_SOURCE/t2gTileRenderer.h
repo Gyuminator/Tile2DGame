@@ -11,8 +11,8 @@ namespace t2g
 	public:
 		struct TileLayer
 		{
-			Point SrcPos;
-			eImageName ImgName;
+			Point SrcPos = { 0, 0 };
+			eImageName ImgName = eImageName::EnumEnd;
 		};
 
 	public:
@@ -45,6 +45,7 @@ namespace t2g
 
 	public:
 		eDelegateResult cbDrawTile();
+		eDelegateResult cbDrawIndex();
 
 	private:
 		void drawLayer(INT idx, INT sceneWidth, HDC targetDC);

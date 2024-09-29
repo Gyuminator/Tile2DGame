@@ -37,6 +37,11 @@ void t2g::Scene::Update()
 			components->Update();
 		}
 	}
+	for (auto camera : mCameras)
+	{
+		mCurCamera = camera;
+		camera->Update();
+	}
 	update();
 }
 
@@ -45,7 +50,7 @@ void t2g::Scene::Render()
 	for (auto camera : mCameras)
 	{
 		mCurCamera = camera;
-		camera->Update();
+		//camera->Update();
 		for (const auto& componentsLayer : mRenderComponentsLayers)
 		{
 			for (auto components : componentsLayer)
@@ -93,7 +98,7 @@ bool t2g::Scene::LoadMap(std::ifstream& inMap)
 		inMap.read((char*)(&sceneSize), sizeof(sceneSize));
 		SetSize(sceneSize);
 
-		for (size_t i = 0; i < GetSize().cx * GetSize().cy; ++i)
+		for (size_t i = 0; i < GetSIZE().cx * GetSIZE().cy; ++i)
 		{
 			unique_ptr<Object> tileObj = CreateTileObj();
 			SafePtr<TileRenderer> tileCom = tileObj->GET_COMPONENT(TileRenderer);
@@ -170,16 +175,16 @@ void t2g::Scene::PushTileObj(unique_ptr<t2g::Object> tileObj)
 	mTiles.emplace_back(std::move(tileObj));
 }
 
-void t2g::Scene::PushCamera(SafePtr<t2g::Camera> camera)
+void t2g::Scene::PushCamera(SafePtr<t2g::Camera> otherCamera)
 {
-	for (auto item : mCameras)
+	for (auto camera : mCameras)
 	{
 		// 카메라 중복 방지
-		if (item.GetKey() == camera.GetKey())
+		if (camera.get() == otherCamera.get())
 			return;
 	}
 
-	mCameras.push_back(camera);
+	mCameras.push_back(otherCamera);
 }
 
 void t2g::Scene::BindComponent(SafePtr<Component> component)
@@ -220,37 +225,28 @@ void t2g::Scene::SyncTilesToSceneSize(SIZE prevSize)
 	int dy = mSize.cy - prevSize.cy;
 	UINT width = (dx > 0) ? prevSize.cx : mSize.cx;
 	UINT height = (dy > 0) ? prevSize.cy : mSize.cy;
-	int ti = 0;
-	unordered_map<UINT, TileDatas> tileDatas;
+	int stdX = 0;
+	unordered_map<UINT, vector<TileDatas>> tileDatas;
 	for (UINT y = 0; y < height; ++y)
 	{
 		for (UINT x = 0; x < width; ++x)
 		{
-			auto& tileObj = mTiles[ti + x];
-			auto tileCom = tileObj->GET_COMPONENT(TileRenderer);
-			TileDatas datas;
-			datas.srcPos = tileCom->GetSrcPos();
-			datas.imageName = tileCom->GetImageName();
-			UINT index = tileCom->GetTileIndex();
+			auto& tileObj = mTiles[stdX + x];
+			auto tileComponent = tileObj->GET_COMPONENT(TileRenderer);
+			UINT index = tileComponent->GetTileIndex();
 			index += (index / prevSize.cx) * dx;
-			tileDatas.insert(make_pair(index, datas));
+			tileDatas.insert(make_pair(index, vector<TileDatas>()));
+			for (int i = 0; i < tileComponent->GetLayerSize(); ++i)
+			{
+				TileDatas datas;
+				datas.srcPos = tileComponent->GetSrcPos(i);
+				datas.imageName = tileComponent->GetImageName(i);
+				tileDatas.find(index)->second.push_back(datas);
+			}
 		}
-		ti += prevSize.cx;
+		stdX += prevSize.cx;
 	}
-	/*for (auto& tileObj : mTiles)
-	{
-		auto tileCom = tileObj->GET_COMPONENT(TileRenderer);
-		TileDatas datas;
-		datas.srcPos = tileCom->GetSrcPos();
-		datas.imageName = tileCom->GetImageName();
-		UINT index = tileCom->GetTileIndex();
-		int dx = mSize.cx - prevSize.cx;
-		index += (index / prevSize.cx) * dx;
-		if (tileDatas.find(index) == tileDatas.end())
-		{
-			tileDatas.insert(make_pair(index, datas));
-		}
-	}*/
+
 	mTiles.resize(mSize.cx * mSize.cy);
 	for (UINT i = 0; i < mTiles.size(); ++i)
 	{
@@ -258,91 +254,27 @@ void t2g::Scene::SyncTilesToSceneSize(SIZE prevSize)
 		{
 			mTiles[i] = CreateTileObj();
 		}
+		mTiles[i]->GET_COMPONENT(TileRenderer)->Init(
+			eImageName::EnumEnd, 0, 0, i);
+
 		const auto iter = tileDatas.find(i);
-		if (iter == tileDatas.end())
+
+		if (iter != tileDatas.end())
 		{
+			const vector<TileDatas>& vecDatas = iter->second;
 			mTiles[i]->GET_COMPONENT(TileRenderer)->Init(
 				eImageName::EnumEnd, 0, 0, i);
-		}
-		else
-		{
-			const TileDatas& datas = iter->second;
-			mTiles[i]->GET_COMPONENT(TileRenderer)->Init(
-				datas.imageName, datas.srcPos.X, datas.srcPos.Y, i);
-		}
-	}
-
-	/*if (prevSize.cx < mSize.cx)
-	{
-		INT ix = prevSize.cx;
-		INT dx = mSize.cx - prevSize.cx;
-
-		if (prevSize.cy < mSize.cy)
-		{
-			INT dy = mSize.cy - prevSize.cy;
-
-			for (INT i = 0; i < prevSize.cy; ++i)
+			INT layerI = 0;
+			for (const auto& datas : vecDatas)
 			{
-				for (INT j = 0; j < dx; ++j)
-				{
-					InsertTile(ix + j)->AddComponent<TileRenderer>()->
-						Init(eImageName::EnumEnd, 0, 0, 0);
-				}
-				ix += mSize.cx;
-			}
-			for (INT i = 0; i < mSize.cx * dy; ++i)
-			{
-				AddTile()->AddComponent<TileRenderer>()->
-					Init(eImageName::EnumEnd, 0, 0, 0);
-			}
-		}
-		else
-		{
-			for (INT i = 0; i < mSize.cy; ++i)
-			{
-				for (INT j = 0; j < dx; ++j)
-				{
-					InsertTile(ix + j)->AddComponent<TileRenderer>()->
-						Init(eImageName::EnumEnd, 0, 0, 0);
-				}
-				ix += mSize.cx;
+				mTiles[i]->GET_COMPONENT(TileRenderer)->SetSrcPos(
+					{ datas.srcPos.X, datas.srcPos.Y }, layerI);
+				mTiles[i]->GET_COMPONENT(TileRenderer)->SetImageName(
+					datas.imageName, layerI);
+				++layerI;
 			}
 		}
 	}
-	else if (prevSize.cx > mSize.cx)
-	{
-		INT ix = mSize.cx;
-		INT dx = prevSize.cx - mSize.cx;
-
-		if (prevSize.cy < mSize.cy)
-		{
-			INT dy = mSize.cy - prevSize.cy;
-
-			for (INT i = 0; i < mSize.cy; ++i)
-			{
-				mTiles.erase(mTiles.begin() + ix, mTiles.begin() + ix + dx);
-				ix += mSize.cx;
-			}
-			for (INT i = 0; i < mSize.cx * dy; ++i)
-			{
-				AddTile()->AddComponent<TileRenderer>()->
-					Init(eImageName::EnumEnd, 0, 0, 0);
-			}
-		}
-		else if (prevSize.cy < mSize.cy)
-		{
-			for (INT i = 0; i < mSize.cy; ++i)
-			{
-				mTiles.erase(mTiles.begin() + ix, mTiles.begin() + ix + dx);
-				ix += mSize.cx;
-			}
-		}
-	}
-	mTiles.resize(mSize.cx * mSize.cy);
-	for (UINT i = 0; i < mTiles.size(); ++i)
-	{
-		mTiles[i]->GetComponent<TileRenderer>(eComponentType::TileRenderer)->SetTileIndex(i);
-	}*/
 
 	DrawTiles();
 }
@@ -361,11 +293,6 @@ void t2g::Scene::init()
 	wstring filePath = GET_SINGLETON(SceneManager).GetMapDirPath() + mTileMapFileName;
 	std::ifstream inMap(filePath, std::ios::binary);
 	LoadMap(inMap);
-
-	/*for (size_t i = 0; i < mSize.cx * mSize.cy; ++i)
-	{
-		AddTile()->AddComponent<TileRenderer>()->Init(eImageName::Tile_Outside_A2_png, 0, 0, INT(mTiles.size() - 1));
-	}*/
 
 	SafePtr<Object> player = AddObject(eObjectTag::Player);
 	player->AddComponent<Collider>()->Init({ 48, 48 }, { 0.5f, 0.5f }, { 0, 0 });
@@ -413,7 +340,7 @@ void t2g::Scene::init()
 	SafePtr<Object> enemy = AddObject(eObjectTag::Enemy);
 	enemy->AddComponent<Transform>()->Init
 	(
-		Vector3(1000.f, 1000.f, 0.f),
+		Vector3(1000.f, 700.f, 0.f),
 		Vector3(0.f, 0.f, 0.f),
 		Vector3(1.f, 1.f, 0.f)
 	);
@@ -464,7 +391,7 @@ void t2g::Scene::init()
 	SafePtr<Object> camera3 = AddObject(eObjectTag::Camera);
 	camera3->AddComponent<Transform>()->Init
 	(
-		Vector3(900.f, 900.f, 0.f),
+		Vector3(700.f, 400.f, 0.f),
 		Vector3(0.f, 0.f, 0.f),
 		Vector3(1.f, 1.f, 0.f)
 	);
@@ -492,8 +419,12 @@ void t2g::Scene::LoadImagesOfScene()
 	GET_SINGLETON(ImageManager).Load(eImageName::Plant_00, L"Character\\plant_00.png", 3, 4);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A1_png, L"Tile\\Outside_A1.png", 16, 12);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A2_png, L"Tile\\Outside_A2.png", 16, 12);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_A5_png, L"Tile\\Outside_A5.png", 8, 16);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Outside_B_png, L"Tile\\Outside_B.png", 16, 16);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A1_png, L"Tile\\Dungeon_A1.png", 16, 12);
 	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A2_png, L"Tile\\Dungeon_A2.png", 16, 12);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_A5_png, L"Tile\\Dungeon_A5.png", 8, 16);
+	GET_SINGLETON(ImageManager).Load(eImageName::Tile_Dungeon_B_png, L"Tile\\Dungeon_B.png", 16, 16);
 }
 
 SafePtr<t2g::Object> t2g::Scene::InsertTile(INT index)

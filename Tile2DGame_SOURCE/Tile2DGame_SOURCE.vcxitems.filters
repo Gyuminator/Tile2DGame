@@ -200,6 +200,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)t2gCollider.h">
       <Filter>Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)t2gTextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gApplication.cpp" />
@@ -288,5 +289,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)t2gCollider.cpp">
       <Filter>Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)t2gTextRenderer.cpp" />
   </ItemGroup>
 </Project>

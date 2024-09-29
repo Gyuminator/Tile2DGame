@@ -13,7 +13,7 @@ namespace t2g
 	struct DataByAdjustCamera
 	{
 		Rect tempRc;
-		Rect tempRenderRc;
+		Rect baseRenderRc;
 		Rect resultRenderRc;
 		bool isIntersect;
 	};

@@ -14,10 +14,11 @@ namespace t2g
 
 	private:
 		constexpr static FLOAT TileViewAnchorX = 0.2f;
-		constexpr static INT NumOfTileOfToolX = 8;
-		constexpr static INT NumOfTileOfToolY = 24;
+		constexpr static INT NumOfTileToolX = 8;
+		constexpr static INT NumOfTileToolY = 24;
 
 		constexpr static INT TilesetMax = 4;
+		constexpr static SIZE BasicSceneSIZE = { 19, 12 };
 
 	protected:
 		TileMapEditingScene();
@@ -26,6 +27,7 @@ namespace t2g
 
 	private:
 		void init() override; // 여기서 메인 카메라와 서브 카메라(칠할 타일 렌더용) 생성
+		void update() override;
 
 	public:
 		void ChangeMapSize(INT x, INT y);
@@ -56,6 +58,7 @@ namespace t2g
 		void CreateTileToolBuffer();
 		void LoadSprites();
 		void CreateToolTileset(eImageName eImgName, UINT8 tilesetIdx);
+		void CreateToolTilesets();
 		void DrawTileToolBuffer();
 		void DrawNearToolTiles(SafePtr<TileRenderer> tile);
 		void ClickEventToolTileView(SafePtr<Camera> camera);
@@ -67,12 +70,14 @@ namespace t2g
 		void SyncBorderObjSize();
 		void ChangeTileset(UINT8 idx);
 		void DrawBlocking();
+		void DrawIndex();
+		void TryLoadPrevEditInfo();
 
 		unique_ptr<Object> CreateToolTileObj();
 
 	private:
 		wstring mCurFilePath;
-		wstring mMapPath;
+		wstring mMapDirPath;
 
 		UINT8 mCurLayer;
 		UINT8 mToolTilesetIdx;
@@ -90,5 +95,7 @@ namespace t2g
 		eEditMode mEditMode;
 		bool mCurBlocking;
 	};
+
+	INT_PTR CALLBACK TileMapReSizeProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 }
 

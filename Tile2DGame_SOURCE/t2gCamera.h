@@ -34,11 +34,12 @@ namespace t2g
 		void Release();
 
 	public:
-		Point GetPosToCameraView(Point viewportPos);
+		Point GetPosToCameraWorld(Point viewportPos);
 		//Point CameraViewToViewport(Point cameraViewPos);
 		void InsertExcludeTag(eObjectTag tag) { mRenderExcludeTags.insert(tag); }
 		void EraseExcludeTag(eObjectTag tag) { mRenderExcludeTags.erase(tag); }
 		void ClearViewport(Color color);
+		void DrawOutsideTileBuffer(SIZE bufferSize);
 
 	public:
 		const unordered_set<eObjectTag>& GetRenderExcludeTags() { return mRenderExcludeTags; }

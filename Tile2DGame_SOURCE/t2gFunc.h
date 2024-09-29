@@ -39,7 +39,7 @@ namespace t2g::func
 		return GET_SINGLETON(Application).GetHWnd();
 	}
 
-	inline const RECT& GetWndRect()
+	inline const RECT& GetWndRECT()
 	{
 		return GET_SINGLETON(Application).GetWindowRect();
 	}
@@ -76,13 +76,22 @@ namespace t2g::func
 		return (x < numOfBufferTileX) ? y * numOfBufferTileX + x : -1;
 	}
 
-	inline INT GetTileIndexSafety(Size sceneSize, UINT posX, UINT posY)
+	inline INT GetTileIndexSafety(Size numOfTiles, UINT posX, UINT posY)
 	{
 		posX /= GetTileSize();
 		posY /= GetTileSize();
-		if (posX >= (UINT)sceneSize.Width) return -1;
-		if (posY >= (UINT)sceneSize.Height) return -1;
-		return posY * (UINT)sceneSize.Width + posX;
+		if (posX >= (UINT)numOfTiles.Width) return -1;
+		if (posY >= (UINT)numOfTiles.Height) return -1;
+		return posY * (UINT)numOfTiles.Width + posX;
+	}
+
+	inline INT GetTileIndexSafety(SIZE numOfTiles, UINT posX, UINT posY)
+	{
+		posX /= GetTileSize();
+		posY /= GetTileSize();
+		if (posX >= (UINT)numOfTiles.cx) return -1;
+		if (posY >= (UINT)numOfTiles.cy) return -1;
+		return posY * (UINT)numOfTiles.cx + posX;
 	}
 
 	inline Rect GetTileRectByIndex(INT numOfBufferTileX, INT index)

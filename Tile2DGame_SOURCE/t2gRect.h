@@ -11,22 +11,18 @@ namespace t2g::rect
 	{
 		return (rect.right - rect.left) < 0 || (rect.bottom - rect.top) < 0;
 	}
-
 	inline bool IsReverseRect(const Rect& rect)
 	{
 		return rect.Width < 0 || rect.Height < 0;
 	}
-
 	inline RECT MakeRECTByCenter(POINT point, POINT size)
 	{
 		return RECT(point.x - size.x / 2, point.y - size.y / 2, point.x + size.x / 2, point.y + size.y / 2);
 	}
-
 	inline Rect MakeRectByCenter(Point point, Size size)
 	{
 		return Rect(point.X - size.Width / 2, point.Y - size.Height / 2, size.Width, size.Height);
 	}
-
 	inline Rect MakeRectByAnchors(const Rect& rect, PointF leftTop, PointF rightBottom)
 	{
 		return Rect(
@@ -36,7 +32,6 @@ namespace t2g::rect
 			INT(FLOAT(rect.Height) * (rightBottom.Y - leftTop.Y))
 		);
 	}
-
 	inline Rect MakeRectByRECT(const RECT& rect)
 	{
 		return Rect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
@@ -45,31 +40,26 @@ namespace t2g::rect
 	{
 		return RECT(rect.X, rect.Y, rect.GetRight(), rect.GetBottom());
 	}
-
 	inline void ScalingRect(Rect& rect, FLOAT scale)
 	{
 		rect.Width = INT(rect.Width * scale);
 		rect.Height = INT(rect.Height * scale);
 	}
-
 	inline void ScalingRect(Rect& rect, PointF scale)
 	{
 		rect.Width = INT(rect.Width * scale.X);
 		rect.Height = INT(rect.Height * scale.Y);
 	}
-
-	inline void ScalingRectbyScale(Rect& rect, Vector3 scale)
+	inline void ScalingRectbyVectorScale(Rect& rect, Vector3 scale)
 	{
 		rect.Width = INT(rect.Width * scale.x);
 		rect.Height = INT(rect.Height * scale.y);
 	}
-
 	inline void PositioningRectByAnchor(Rect& rect, PointF anchor)
 	{
 		rect.X = rect.X - INT(rect.Width * anchor.X);
 		rect.Y = rect.Y - INT(rect.Height * anchor.Y);
 	}
-
 	inline PointF GetAnchorByPos(const Rect& rect, Point pos)
 	{
 		return PointF(FLOAT(pos.X - rect.X) / FLOAT(rect.Width),
@@ -93,7 +83,7 @@ namespace t2g::rect
 			size.Width,
 			size.Height
 		};
-		ScalingRectbyScale(rect, transform->GetScale());
+		ScalingRectbyVectorScale(rect, transform->GetScale());
 		PositioningRectByAnchor(rect, anchor);
 		return rect;
 	}
@@ -106,7 +96,7 @@ namespace t2g::rect
 			size.Width,
 			size.Height
 		};
-		ScalingRectbyScale(rect, transform->GetScale());
+		ScalingRectbyVectorScale(rect, transform->GetScale());
 		PositioningRectByAnchor(rect, anchor);
 		return rect;
 	}

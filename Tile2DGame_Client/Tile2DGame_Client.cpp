@@ -125,9 +125,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	GetWindowRect(GetDesktopWindow(), &DesktopRect);
 
-	/*hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-	   CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);*/
-
 	hWnd = CreateWindowW(szWindowClass, szTitle, WS_EX_TOPMOST | WS_POPUP,
 		DesktopRect.left, DesktopRect.top, DesktopRect.right, DesktopRect.bottom,
 		nullptr, nullptr, hInstance, nullptr);

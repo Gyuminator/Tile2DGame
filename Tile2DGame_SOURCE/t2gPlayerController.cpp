@@ -6,7 +6,7 @@
 #include "t2gTransform.h"
 #include "t2gTime.h"
 
-using namespace std::enums;
+using namespace t2g::enums;
 
 void t2g::PlayerController::SyncWithOtherComponents()
 {
