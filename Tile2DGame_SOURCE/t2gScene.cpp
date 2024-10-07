@@ -24,6 +24,7 @@ t2g::Scene::Scene()
 	, mCameras{}
 	, mSize{}
 	, mIsInited(false)
+	, mIsLoopTileMap(false)
 	, mTileMapFileName{}
 {
 }
@@ -63,15 +64,17 @@ void t2g::Scene::Render()
 	render();
 }
 
-void t2g::Scene::Init(SIZE sceneSize)
+void t2g::Scene::Init(SIZE sceneSize, bool isLoopTileMap)
 {
 	mSize = sceneSize;
+	mIsLoopTileMap = isLoopTileMap;
 	init();
 }
 
-void t2g::Scene::Init(const wstring tileMapFileName)
+void t2g::Scene::Init(const wstring tileMapFileName, bool isLoopTileMap)
 {
 	mTileMapFileName = tileMapFileName;
+	mIsLoopTileMap = isLoopTileMap;
 	init();
 }
 

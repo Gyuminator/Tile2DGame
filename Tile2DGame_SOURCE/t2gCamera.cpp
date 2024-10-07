@@ -48,15 +48,21 @@ void t2g::Camera::Init(const Rect& viewport, HDC targetTileDC)
 
 	BindBackToUpdates(&Camera::cbCheckTransform);
 	BindBackToUpdates(&Camera::cbSyncCameraView);
-
-	if (GetOwnerObj()->GetTag() == eObjectTag::TileToolCamera)
-		BindBackToUpdates(&Camera::cbRenderTileOnce);
-	else
-		BindBackToUpdates(&Camera::cbRenderTile);
-
-	if (mTargetTileDC == func::GetTileDC())
+	if (GetOwnerObj()->GetOwnerScene()->GetIsLoopTileMap())
 	{
-		BindBackToUpdates(&Camera::cbDrawOutsideTileBuffer);
+		BindBackToUpdates(&Camera::cbDrawLoopTileMap);
+	}
+	else
+	{
+		if (GetOwnerObj()->GetTag() == eObjectTag::TileToolCamera)
+			BindBackToUpdates(&Camera::cbRenderTileOnce);
+		else
+			BindBackToUpdates(&Camera::cbRenderTile);
+
+		if (mTargetTileDC == func::GetTileDC())
+		{
+			BindBackToUpdates(&Camera::cbDrawOutsideTileBuffer);
+		}
 	}
 }
 
@@ -79,7 +85,7 @@ void t2g::Camera::ClearViewport(Color color)
 	graphics.FillRectangle(&brush, mViewportRect);
 }
 
-void t2g::Camera::DrawOutsideTileBuffer(SIZE bufferSize)
+void t2g::Camera::DrawOutsideTileBuffer(SIZE bufferSIZE)
 {
 	Rect rects[4] =
 	{
@@ -87,23 +93,21 @@ void t2g::Camera::DrawOutsideTileBuffer(SIZE bufferSize)
 		mCameraViewRect.Width, -mCameraViewRect.Y },
 
 		{ mCameraViewRect.X, -1,
-		-mCameraViewRect.X, bufferSize.cy + 1 },
+		-mCameraViewRect.X, bufferSIZE.cy + 1 },
 
-		{ bufferSize.cx, 0,
-		mCameraViewRect.GetRight() - bufferSize.cx,
-		bufferSize.cy },
+		{ bufferSIZE.cx, 0,
+		mCameraViewRect.GetRight() - bufferSIZE.cx, bufferSIZE.cy },
 
-		{ mCameraViewRect.X, bufferSize.cy - 1,
-		mCameraViewRect.Width,
-		mCameraViewRect.GetBottom() - bufferSize.cy + 1 }
+		{ mCameraViewRect.X, bufferSIZE.cy - 1,
+		mCameraViewRect.Width, mCameraViewRect.GetBottom() - bufferSIZE.cy + 1 }
 	};
 
-	for (Rect& rect : rects)
+	for (Rect& rc : rects)
 	{
-		if (IsReverseRect(rect) == false)
+		if (IsReverseRect(rc) == false)
 		{
-			PointF anchorLT = GetAnchorByPos(mCameraViewRect, { rect.GetLeft(), rect.GetTop() });
-			PointF anchorRB = GetAnchorByPos(mCameraViewRect, { rect.GetRight(), rect.GetBottom() });
+			PointF anchorLT = GetAnchorByPos(mCameraViewRect, { rc.GetLeft(), rc.GetTop() });
+			PointF anchorRB = GetAnchorByPos(mCameraViewRect, { rc.GetRight(), rc.GetBottom() });
 
 			Rect resultRect = MakeRectByAnchors(mViewportRect, anchorLT, anchorRB);
 
@@ -149,6 +153,47 @@ eDelegateResult t2g::Camera::cbDrawOutsideTileBuffer()
 	DrawOutsideTileBuffer(func::GetTileBufferSize());
 
 	return eDelegateResult::OK;
+}
+
+eDelegateResult t2g::Camera::cbDrawLoopTileMap()
+{
+	SIZE SceneSIZE = GetOwnerObj()->GetOwnerScene()->GetSIZE();
+	Size bufferSize = { SceneSIZE.cx * func::GetTileSize(), SceneSIZE.cy * func::GetTileSize() };
+	DrawLoopTileMap(bufferSize);
+
+	return eDelegateResult::OK;
+}
+
+void t2g::Camera::DrawLoopTileMap(Size bufferSize)
+{
+	Point coordLT = GetCoordByPosOnTileSize(bufferSize, { mCameraViewRect.GetLeft(), mCameraViewRect.GetTop() });
+	Point coordRT = GetCoordByPosOnTileSize(bufferSize, { mCameraViewRect.GetRight(), mCameraViewRect.GetTop() });
+	Point coordLB = GetCoordByPosOnTileSize(bufferSize, { mCameraViewRect.GetLeft(), mCameraViewRect.GetBottom() });
+
+	INT bx = coordLT.X;
+	INT ex = coordRT.X + 1;
+	INT by = coordLT.Y;
+	INT ey = coordLB.Y + 1;
+
+	Rect temp;
+	for (int iy = by; iy < ey; ++iy)
+	{
+		for (int ix = bx; ix < ex; ++ix)
+		{
+			Rect containedBufferTile = rect::MakeRectByCoordOnTileSize(bufferSize, { ix, iy });
+			Rect::Intersect(temp, mCameraViewRect, containedBufferTile);
+			Rect readRect = rect::MakeRectMovedToOriginTileRect(temp, { ix, iy }, bufferSize);
+			Rect writeRect = rect::MakeInnerRectInTargetRectByInnerRectInOtherRect(
+				mViewportRect, mCameraViewRect, temp);
+			StretchBlt(GET_SINGLETON(Application).GetBackDC(),
+				writeRect.X, writeRect.Y,
+				writeRect.Width, writeRect.Height,
+				mTargetTileDC,
+				readRect.X, readRect.Y,
+				readRect.Width, readRect.Height,
+				SRCCOPY);
+		}
+	}
 }
 
 eDelegateResult t2g::Camera::cbSyncCameraView()

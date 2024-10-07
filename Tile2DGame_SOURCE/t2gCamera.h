@@ -39,7 +39,7 @@ namespace t2g
 		void InsertExcludeTag(eObjectTag tag) { mRenderExcludeTags.insert(tag); }
 		void EraseExcludeTag(eObjectTag tag) { mRenderExcludeTags.erase(tag); }
 		void ClearViewport(Color color);
-		void DrawOutsideTileBuffer(SIZE bufferSize);
+		void DrawOutsideTileBuffer(SIZE bufferSIZE);
 
 	public:
 		const unordered_set<eObjectTag>& GetRenderExcludeTags() { return mRenderExcludeTags; }
@@ -63,10 +63,12 @@ namespace t2g
 		eDelegateResult cbRenderTile();
 		eDelegateResult cbRenderTileOnce();
 		eDelegateResult cbDrawOutsideTileBuffer();
+		eDelegateResult cbDrawLoopTileMap();
 
 	private:
 		void SyncRenderSize(SafePtr<Sprite> sprite) {};
 		void SyncRenderPos(Vector3 location) {};
+		void DrawLoopTileMap(Size bufferSize);
 		//void CreateCameraBuffer();
 
 	private:

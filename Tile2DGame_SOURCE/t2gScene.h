@@ -36,8 +36,8 @@ namespace t2g
 		}
 
 	public:
-		void Init(SIZE sceneSize);
-		void Init(const wstring tileMapFileName);
+		void Init(SIZE sceneSize, bool isLoopTileMap = false);
+		void Init(const wstring tileMapFileName, bool isLoopTileMap = false);
 		void Enter();
 		void Update();
 		void Render();
@@ -72,6 +72,7 @@ namespace t2g
 		const vector<SafePtr<Camera>>& GetCameras() { return mCameras; }
 		SafePtr<Camera> GetCurCamera() { return mCurCamera; }
 		SIZE GetSIZE() { return mSize; }
+		bool GetIsLoopTileMap() { return mIsLoopTileMap; }
 
 
 		void SetSize(SIZE sceneSize) { mSize = sceneSize; }
@@ -105,6 +106,7 @@ namespace t2g
 
 		SIZE mSize;
 		bool mIsInited;
+		bool mIsLoopTileMap;
 		wstring mTileMapFileName;
 	};
 }

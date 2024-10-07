@@ -32,7 +32,9 @@ void t2g::Collider::Init(const Size size, const PointF anchor, const Point offse
 
 	BindBackToUpdates(&Collider::cbCheckTransform);
 	BindBackToUpdates(&Collider::cbAdjustRect);
-	BindBackToUpdates(&Collider::cbCheckCollisionBySceneRect);
+	if (GetOwnerObj()->GetOwnerScene()->GetIsLoopTileMap() == false)
+		BindBackToUpdates(&Collider::cbCheckCollisionBySceneRect);
+
 	BindBackToUpdates(&Collider::cbCheckCollisionByTiles);
 }
 

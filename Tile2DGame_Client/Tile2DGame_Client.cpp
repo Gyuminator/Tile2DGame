@@ -51,7 +51,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_TILE2DGAMECLIENT));
-
+	
+	GET_SINGLETON(Application);
 	GET_SINGLETON(Application).Init(hInstance, hWnd, DesktopRect,
 		t2g::enums::eApplicationType::Client);
 

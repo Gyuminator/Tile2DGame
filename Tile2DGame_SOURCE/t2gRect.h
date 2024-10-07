@@ -100,5 +100,33 @@ namespace t2g::rect
 		PositioningRectByAnchor(rect, anchor);
 		return rect;
 	}
+	inline Point GetCoordByPosOnTileSize(Size tileSize, Point pos)
+	{
+		Point result = { pos.X / tileSize.Width, pos.Y / tileSize.Height };
+		if (pos.X < 0) --result.X;
+		if (pos.Y < 0) --result.Y;
 
+		return result;
+	}
+	inline Rect MakeRectByCoordOnTileSize(Size tileSize, Point coord)
+	{
+		return Rect(coord.X * tileSize.Width, coord.Y * tileSize.Height, tileSize.Width, tileSize.Height);
+	}
+	inline void MoveRectPieceToOriginTileRect(Rect& targetRect, Point coord, Size tileSize)
+	{
+		targetRect.X += -coord.X * tileSize.Width;
+		targetRect.Y += -coord.Y * tileSize.Height;
+	}
+	inline Rect MakeRectMovedToOriginTileRect(Rect targetRect, Point coord, Size tileSize)
+	{
+		targetRect.X += -coord.X * tileSize.Width;
+		targetRect.Y += -coord.Y * tileSize.Height;
+		return targetRect;
+	}
+	inline Rect MakeInnerRectInTargetRectByInnerRectInOtherRect(const Rect& targetRect, const Rect& otherRect, const Rect& innerRect)
+	{
+		PointF anchorLT = rect::GetAnchorByPos(otherRect, { innerRect.GetLeft(), innerRect.GetTop() });
+		PointF anchorRB = rect::GetAnchorByPos(otherRect, { innerRect.GetRight(), innerRect.GetBottom() });
+		return rect::MakeRectByAnchors(targetRect, anchorLT, anchorRB);
+	}
 }

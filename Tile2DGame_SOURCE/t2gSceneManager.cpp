@@ -23,7 +23,7 @@ void t2g::SceneManager::Init()
 	{
 	case eApplicationType::Client:
 	{
-		AddScene<Scene>(eScene::Start)->Init(L"startMap.tlm");
+		AddScene<Scene>(eScene::Start)->Init(L"startMap.tlm", true);
 		ChangeScene<Scene>(eScene::Start);
 	}
 	break;

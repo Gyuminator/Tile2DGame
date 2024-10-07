@@ -21,8 +21,6 @@ void t2g::ImageManager::Init()
 {
 	if (GdiplusStartup(&mGdiplusToken, &mGdiplusStartupInput, NULL) != S_OK)
 		assert(false && "failed GdiplusStartup");
-
-
 }
 
 void t2g::ImageManager::Release()
