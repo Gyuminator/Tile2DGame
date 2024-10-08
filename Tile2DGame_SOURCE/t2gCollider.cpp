@@ -54,26 +54,34 @@ eDelegateResult t2g::Collider::cbCheckCollisionByTiles()
 	SIZE sceneSIZE = GetOwnerObj()->GetOwnerScene()->GetSIZE();
 	Size sceneSize = { sceneSIZE.cx, sceneSIZE.cy };
 
+	Size bufferSize = { sceneSize.Width * func::GetTileSize(),sceneSize.Height * func::GetTileSize() };
+
+	Rect modRect = mRect;
+	modRect.X %= bufferSize.Width;
+	if (mRect.X < 0) modRect.X += bufferSize.Width;
+	modRect.Y %= bufferSize.Height;
+	if (mRect.Y < 0) modRect.Y += bufferSize.Height;
+
 	mAddXFlag = false;
 	mAddYFlag = false;
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.GetLeft(), mRect.GetTop() },
+		sceneSize, { modRect.GetLeft(), modRect.GetTop() }, modRect,
 		[](const Rect& rect) { return Point(rect.Width, rect.Height); }
 	);
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.GetRight(), mRect.GetTop() },
+		sceneSize, { modRect.GetRight(), modRect.GetTop() }, modRect,
 		[](const Rect& rect) {	return Point(-rect.Width, rect.Height); }
 	);
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.GetRight(), mRect.GetBottom() },
+		sceneSize, { modRect.GetRight(), modRect.GetBottom() }, modRect,
 		[](const Rect& rect) { return Point(-rect.Width, -rect.Height); }
 	);
 	TileBlockingByVertex
 	(
-		sceneSize, { mRect.GetLeft(), mRect.GetBottom() },
+		sceneSize, { modRect.GetLeft(), modRect.GetBottom() }, modRect,
 		[](const Rect& rect) { return Point(rect.Width, -rect.Height); }
 	);
 
@@ -110,7 +118,7 @@ eDelegateResult t2g::Collider::cbCheckCollisionBySceneRect()
 	return eDelegateResult::OK;
 }
 
-void t2g::Collider::TileBlockingByVertex(Size sceneSize, Point vertex, function<Point(const Rect&)> deltaPosGetter)
+void t2g::Collider::TileBlockingByVertex(Size sceneSize, Point vertex, Rect& modRect, function<Point(const Rect&)> deltaPosGetter)
 {
 	Rect tempRect;
 	INT i = func::GetTileIndexSafety(sceneSize, vertex.X, vertex.Y);
@@ -121,7 +129,7 @@ void t2g::Collider::TileBlockingByVertex(Size sceneSize, Point vertex, function<
 		return;
 
 	Rect tileRect = func::GetTileRectByIndex(sceneSize.Width, i);
-	if (Rect::Intersect(tempRect, mRect, tileRect))
+	if (Rect::Intersect(tempRect, modRect, tileRect))
 	{
 		Point delta = deltaPosGetter(tempRect);
 		Point deltaAbs =

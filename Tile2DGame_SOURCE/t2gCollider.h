@@ -27,7 +27,7 @@ namespace t2g
 		eDelegateResult cbCheckCollisionBySceneRect();
 
 	private:
-		void TileBlockingByVertex(Size sceneSize, Point vertex, function<Point(const Rect&)> deltaPosGetter);
+		void TileBlockingByVertex(Size sceneSize, Point vertex, Rect& modRect, function<Point(const Rect&)> deltaPosGetter);
 
 	private:
 		SafePtr<Transform> mTransform;
